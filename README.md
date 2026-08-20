@@ -4,10 +4,6 @@
 WRF and WRF-LES output, preparing WPS workflows, and coupling WRF-LES wind
 planes to TurbSim/OpenFAST.
 
-The package is being rebuilt from the preserved scripts under
-`source_collections/`. New modules do not contain machine-specific paths,
-fixed case names, fixed grid sizes, or fixed time ranges.
-
 ## Install for development
 
 ```powershell
