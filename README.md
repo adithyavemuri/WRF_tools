@@ -295,8 +295,6 @@ wrf-tools openfast-info simulation.outb
 ## Scope and limitations
 
 - This is a post-processing package; it does not compile or configure WRF.
-- COAWST setup/conversion, ROSCO tuning, FAST MATLAB GUI, and NCToolbox are out
-  of scope.
 - Multi-file concatenation handles sequential files from one domain, not
   mixed-domain mosaics.
 - WRF output files are not distributed with the repository.
