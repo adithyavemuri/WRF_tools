@@ -7,6 +7,7 @@ import xarray as xr
 
 from ..diagnostics.turbulence import resolved_tke, reynolds_flux
 from ..grid import destagger
+from ..filters import butterworth_spatial, top_hat_coarsen
 
 
 def load_velocity(
@@ -56,3 +57,30 @@ def calculate_total_tke(
     if subgrid_tke is not None:
         total = total + np.asarray(subgrid_tke)
     return total
+
+
+def load_sgs_stress(dataset: xr.Dataset, *, names: Mapping[str, str] | None = None) -> dict[str, xr.DataArray]:
+    """Load the six independent WRF SGS stress components."""
+    mapping = {name: name for name in ("m11", "m12", "m13", "m22", "m23", "m33")}
+    if names:
+        mapping.update(names)
+    missing = [source for source in mapping.values() if source not in dataset]
+    if missing:
+        raise KeyError(f"Missing SGS stress variables: {', '.join(missing)}")
+    return {key: dataset[source] for key, source in mapping.items()}
+
+
+def sgs_tke(stress: Mapping[str, Any]) -> np.ndarray:
+    """Return SGS TKE from normal stress components."""
+    return 0.5 * (np.asarray(stress["m11"]) + np.asarray(stress["m22"]) + np.asarray(stress["m33"]))
+
+
+def filtered_tke(u: Any, v: Any, w: Any, *, method: str = "butterworth", spatial_axes=(-2, -1), **kwargs: Any) -> np.ndarray:
+    """Calculate resolved TKE after a spatial filter/coarsening operation."""
+    if method == "butterworth":
+        filtered = [butterworth_spatial(value, axes=spatial_axes, **kwargs) for value in (u, v, w)]
+    elif method in {"top_hat", "honnert"}:
+        filtered = [top_hat_coarsen(value, axes=spatial_axes, **kwargs) for value in (u, v, w)]
+    else:
+        raise ValueError("method must be butterworth, top_hat, or honnert")
+    return resolved_tke(*filtered, axis=spatial_axes)

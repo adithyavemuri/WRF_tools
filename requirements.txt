@@ -1,0 +1,9 @@
+# Runtime stack used by the complete examples and reports.
+# Install the package itself afterwards with: python -m pip install -e . --no-deps
+numpy>=1.26
+xarray>=2024.1
+netCDF4>=1.6
+scipy>=1.11
+matplotlib>=3.8
+pyproj>=3.6
+reportlab>=4.0

@@ -10,3 +10,8 @@ dist/
 *.egg-info/
 .coverage
 source_collections/
+*.nc
+*.bts
+*.wnd
+*.outb
+tmp/

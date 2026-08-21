@@ -4,12 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wrf-tools"
-version = "0.1.0"
-description = "General-purpose WRF, WRF-LES, WPS, and OpenFAST utilities"
+version = "0.2.0"
+description = "Cross-platform WRF, WRF-LES, WPS, TurbSim, and OpenFAST post-processing toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-authors = [{name = "Adi"}]
+keywords = ["WRF", "WRF-LES", "atmospheric-science", "wind-energy", "OpenFAST", "TurbSim"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+]
 dependencies = [
     "numpy>=1.26",
     "xarray>=2024.1",
@@ -18,7 +27,8 @@ dependencies = [
 [project.optional-dependencies]
 netcdf = ["netCDF4>=1.6"]
 science = ["scipy>=1.11"]
-plot = ["matplotlib>=3.8", "cartopy>=0.22"]
+plot = ["matplotlib>=3.8", "cartopy>=0.22", "pyproj>=3.6"]
+report = ["reportlab>=4.0"]
 wrf = ["wrf-python>=1.3.4.1"]
 test = ["pytest>=8"]
 all = [
@@ -26,12 +36,19 @@ all = [
     "scipy>=1.11",
     "matplotlib>=3.8",
     "cartopy>=0.22",
+    "pyproj>=3.6",
     "wrf-python>=1.3.4.1",
     "pytest>=8",
+    "reportlab>=4.0",
 ]
 
 [project.scripts]
 wrf-tools = "wrf_tools.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/adithyavemuri/WRF_tools"
+Documentation = "https://github.com/adithyavemuri/WRF_tools#readme"
+Issues = "https://github.com/adithyavemuri/WRF_tools/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

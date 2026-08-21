@@ -1,0 +1,12 @@
+*.pdf binary
+*.png binary
+*.nc binary
+*.bts binary
+*.wnd binary
+*.outb binary
+*.py text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.txt text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

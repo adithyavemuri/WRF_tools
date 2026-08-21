@@ -32,3 +32,13 @@ def interpolate_to_levels(
             targets, z[valid][order], v[valid][order], left=np.nan, right=np.nan
         )
     return output[0] if np.isscalar(levels) else output
+
+def regrid_regular(field: Any, source_x: Any, source_y: Any, target_x: Any, target_y: Any) -> np.ndarray:
+    """Bilinearly interpolate a regular 2-D grid without optional dependencies."""
+    values=np.asarray(field,float); sx,sy=np.asarray(source_x,float),np.asarray(source_y,float); tx,ty=np.asarray(target_x,float),np.asarray(target_y,float)
+    if values.shape[-2:]!=(sy.size,sx.size): raise ValueError("field shape must match source_y/source_x")
+    if np.any(np.diff(sx)<=0) or np.any(np.diff(sy)<=0): raise ValueError("source coordinates must increase")
+    ix=np.clip(np.searchsorted(sx,tx)-1,0,sx.size-2); iy=np.clip(np.searchsorted(sy,ty)-1,0,sy.size-2)
+    wx=(tx-sx[ix])/(sx[ix+1]-sx[ix]); wy=(ty-sy[iy])/(sy[iy+1]-sy[iy])
+    a=values[...,iy[:,None],ix[None,:]]; b=values[...,iy[:,None],ix[None,:]+1]; c=values[...,iy[:,None]+1,ix[None,:]]; d=values[...,iy[:,None]+1,ix[None,:]+1]
+    return (1-wy[:,None])*((1-wx[None,:])*a+wx[None,:]*b)+wy[:,None]*((1-wx[None,:])*c+wx[None,:]*d)

@@ -1,0 +1,4 @@
+# Optional native WRF and map-projection integrations.
+# On Linux, install a Fortran compiler and NetCDF development libraries first.
+cartopy>=0.22
+wrf-python>=1.3.4.1

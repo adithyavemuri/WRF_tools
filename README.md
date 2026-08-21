@@ -1,129 +1,247 @@
 # WRF Tools
 
-`wrf-tools` is a general-purpose Python package for inspecting and processing
-WRF/WRF-LES output, managing small WPS workflows, and creating TurbSim/OpenFAST
-full-field wind files. Its APIs use configurable variables, dimensions, and
-paths rather than case-specific values.
+WRF Tools is a cross-platform Python toolkit for reproducible post-processing
+of Weather Research and Forecasting (WRF) model output. It brings WRF I/O,
+meteorological diagnostics, WRF-LES turbulence analysis, spectral methods,
+wind-energy workflows, visualization, quality control, and OpenFAST/TurbSim
+coupling into one tested package.
+
+The project is designed for researchers and engineers who want reusable APIs
+instead of one-off scripts. Functions accept general WRF datasets or
+NumPy-compatible arrays wherever practical and avoid hard-coded domains,
+locations, or machine paths.
+
+> Status: beta. Users should independently validate diagnostics against the
+> conventions of their WRF configuration before publication or operational use.
+
+## Why use it?
+
+- Analyze ordinary WRF and turbulence-resolving WRF-LES output.
+- Process one file or a time-ordered sequence from the same WRF domain.
+- Extract sites, profiles, planes, cross-sections, and interpolated levels.
+- Run data-quality checks that report variables, values, and error locations.
+- Calculate boundary-layer, thermodynamic, precipitation, terrain,
+  turbulence, wind-resource, spectral, coherence, and temporal diagnostics.
+- Convert WRF-LES velocity fields to TurbSim/OpenFAST inflow formats.
+- Produce consistent publication-oriented plots and HTML/PDF reports.
+- Use the same Python API and command line on Linux and Windows.
+
+## Example output
+
+The repository includes an anonymized report generated from a real WRF file:
+
+- [Example PDF report](example_results/single_wrf_advanced/case_report.pdf)
+- [Complete example script](examples/single_wrf_all_capabilities.py)
+
+![Example terrain diagnostics](example_results/single_wrf_advanced/terrain_diagnostics.png)
+
+Component spectra use independent scales, fitted slopes, and normalized −5/3
+references:
+
+| U spectrum | V spectrum | W spectrum |
+|---|---|---|
+| ![U spectrum](example_results/single_wrf_advanced/u_wind_spectrum.png) | ![V spectrum](example_results/single_wrf_advanced/v_wind_spectrum.png) | ![W spectrum](example_results/single_wrf_advanced/w_wind_spectrum.png) |
 
 ## Capabilities
 
-- **WRF I/O:** discover, open, inspect, validate, and access NetCDF variables.
-- **Grid operations:** destagger fields, find nearest cells, geographic subsets,
-  and vertical interpolation.
-- **Wind and turbulence:** speed/direction, component conversion, fluctuations,
-  Reynolds stresses, turbulence intensity, and resolved/total TKE.
-- **WRF-LES:** configurable velocity loading, native-grid destaggering, and
-  turbulent flux calculation.
-- **OpenFAST coupling:** map arbitrary WRF-LES wind-plane layouts and read,
-  write, or validate TurbSim/OpenFAST `.bts` files.
-- **Workflow helpers:** read/write WRF `tslist` files, edit WPS namelist dates,
-  use typed configuration objects, and run command-line inspection tools.
+| Area | Included functionality |
+|---|---|
+| WRF I/O | Discovery, inspection, validation, safe same-domain concatenation, variable access, provenance |
+| Extraction | Geographic points/subsets, profiles, planes, cross-sections, requested-height interpolation |
+| Grid and WPS | Destaggering, nearest cells, coordinate operations, eta levels, nested-domain validation |
+| Meteorology | Wind, potential temperature, density, humidity, stability, precipitation, radar-rain conversion |
+| Boundary layer | WRF PBLH analysis, threshold PBL diagnosis, stability classes, inversions, low-level jets |
+| WRF-LES | Resolved fluxes, SGS stresses, resolved/SGS/total TKE, filtering, budget terms |
+| Wind energy | Rotor-equivalent speed, shear, veer, turbulence intensity, Weibull fit, power density |
+| Spectra | Periodogram, Welch PSD, cross-spectrum, coherence, radial spectra, slope fitting |
+| Spatial analysis | Butterworth/top-hat filters, terrain metrics, regridding and conservation checks |
+| Validation | Bias, MAE, RMSE, correlation, circular and normalized errors, Kantorovich distance |
+| Plotting/reporting | Maps, barbs, profiles, sections, time-height plots, wind roses, JSON, HTML, PDF |
+| OpenFAST/TurbSim | BTS/Bladed WND I/O, field operations, WRF-LES mapping, output/input processing |
+| Observations | Generic mast, LiDAR, RADAR and SCADA tables; alignment and collocation |
 
-COAWST functionality and case-specific installation/HPC automation are outside
-the package scope.
+See the [capability matrix](docs/CAPABILITY_MATRIX.md) and
+[package expansion record](docs/PACKAGE_EXPANSION.md) for detailed coverage.
 
 ## Installation
 
-For development from a local clone:
+Python 3.10-3.12 is recommended. Python 3.13 may not yet be supported by every
+optional compiled dependency, particularly `wrf-python`.
+
+### Linux or macOS
+
+```bash
+git clone https://github.com/adithyavemuri/WRF_tools.git
+cd WRF_tools
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[netcdf,science,plot,report]"
+wrf-tools doctor
+```
+
+### Windows PowerShell
 
 ```powershell
-python -m venv .venv
+git clone https://github.com/adithyavemuri/WRF_tools.git
+cd WRF_tools
+py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -e ".[netcdf,test]"
+python -m pip install --upgrade pip
+python -m pip install -e ".[netcdf,science,plot,report]"
+wrf-tools doctor
 ```
 
-## Quick examples
+For dependency-file installation:
 
-### Find and inspect WRF output
+```bash
+python -m pip install -r requirements.txt
+python -m pip install -e . --no-deps
+```
+
+Native WRF diagnostics and Cartopy are separate because they can require
+system libraries:
+
+```bash
+python -m pip install -r requirements-wrf.txt
+```
+
+Compiler and NetCDF prerequisites are in
+[docs/PREREQUISITES.md](docs/PREREQUISITES.md).
+
+## Quick start
+
+### Inspect, validate, and open WRF output
+
+```bash
+wrf-tools inspect /data/wrf/wrfout_d01_2024-01-01_00_00_00
+wrf-tools validate /data/wrf/wrfout_d01_2024-01-01_00_00_00
+```
 
 ```python
-from wrf_tools.io import discover_wrfout, get_variable, open_wrf
+from wrf_tools.io import discover_wrfout, open_wrf_sequence
 
-files = discover_wrfout("path/to/wrf/run", domain="d03", recursive=True)
-
-with open_wrf(files[0]) as ds:
-    temperature = get_variable(ds, "T", time=0)
-    print(ds.sizes)
-    print(temperature.shape)
+files = discover_wrfout("/data/wrf/run", domain="d01")
+with open_wrf_sequence(files) as ds:
+    print(ds.sizes["Time"])
 ```
 
-The same operations are available from the command line:
+The sequence reader checks domain ID, grid dimensions, spacing, projection,
+and time order. Mixed domains raise an error instead of being combined.
 
-```powershell
-wrf-tools discover "path/to/wrf/run" --domain d03 --recursive
-wrf-tools inspect "path/to/wrfout_d03_2024-01-01_00_00_00"
-```
-
-### Calculate wind and turbulence diagnostics
+### Extract a site
 
 ```python
-from wrf_tools.diagnostics import resolved_tke, turbulence_intensity, wind_direction, wind_speed
-
-speed = wind_speed(u, v)
-direction = wind_direction(u, v)
-tke = resolved_tke(u, v, w, axis=0)
-ti = turbulence_intensity(speed, axis=0)
-```
-
-### Load native WRF-LES velocity fields
-
-```python
+from wrf_tools.extract import point
 from wrf_tools.io import open_wrf
-from wrf_tools.les import calculate_fluxes, calculate_total_tke, load_velocity
 
 with open_wrf("wrfout_d01_2024-01-01_00_00_00") as ds:
-    u, v, w = load_velocity(ds)  # U, V, and W are destaggered automatically
-    fluxes = calculate_fluxes(u, v, w, axis=0)
-    total_tke = calculate_total_tke(u, v, w, subgrid_tke=ds.get("TKE"), axis=0)
+    site = point(ds, latitude=52.0, longitude=4.3,
+                 variables=["T2", "U10", "V10"])
+    site.to_netcdf("site_timeseries.nc")
 ```
 
-Variable names can be remapped with
-`load_velocity(ds, names={"u": "my_u", "v": "my_v", "w": "my_w"})`.
-
-### Locate a grid cell
+### Filtering and spectra
 
 ```python
-from wrf_tools.grid import nearest_grid_point
+from wrf_tools.filters import butterworth_spatial
+from wrf_tools.spectra import radial_wavenumber_spectrum, welch_spectrum
 
-point = nearest_grid_point(
-    ds["XLAT"].isel(Time=0),
-    ds["XLONG"].isel(Time=0),
-    target_latitude=52.0,
-    target_longitude=4.3,
+filtered = butterworth_spatial(
+    u_plane, dx=50.0, dy=50.0,
+    cutoff_wavelength=300.0, order=2,
 )
-print(point.x, point.y)
+frequency, psd = welch_spectrum(wind_series, sample_rate=2.0, nperseg=1200)
+wavenumber, energy = radial_wavenumber_spectrum(u_plane, dx=50.0)
 ```
 
-### Create an OpenFAST `.bts` wind file
+### Quality control and boundary-layer diagnostics
 
 ```python
-from wrf_tools.coupling.openfast import wind_field_from_components, write_bts
+from wrf_tools.quality import print_qc_report, quality_control
+from wrf_tools.diagnostics import diagnose_pbl_height, low_level_jet
 
-# Each component is a 3-D array; its axis order is declared explicitly.
+issues = quality_control(ds)
+print_qc_report(issues)
+pbl_height = diagnose_pbl_height(theta_v, height_agl, axis=1)
+jet = low_level_jet(speed_profile, height_profile)
+```
+
+### WRF-LES to TurbSim/OpenFAST
+
+```python
+from wrf_tools.coupling.openfast import (
+    validate_bts, wind_field_from_components, write_bts,
+)
+
 field = wind_field_from_components(
-    u_plane,
-    v_plane,
-    w_plane,
-    time_axis=0,
-    vertical_axis=1,
-    lateral_axis=2,
-    dy=10.0,
-    dz=10.0,
-    dt=0.1,
-    hub_height=120.0,
-    bottom_height=10.0,
+    u_plane, v_plane, w_plane,
+    time_axis=0, vertical_axis=1, lateral_axis=2,
+    dy=10.0, dz=10.0, dt=0.1,
+    hub_height=120.0, bottom_height=10.0,
 )
 write_bts("inflow.bts", field)
+validate_bts("inflow.bts", expected=field)
 ```
 
-Inspect the generated file with:
+## Run the complete example
 
-```powershell
+The example takes its input, site, and output directory as arguments and has no
+machine-specific paths:
+
+```bash
+python examples/single_wrf_all_capabilities.py \
+  /data/wrf/wrfout_d01_2024-01-01_00_00_00 \
+  --latitude 52.0 --longitude 4.3 \
+  --output-dir example_results/my_case
+```
+
+It produces QC output, summaries, reusable arrays, publication-style figures,
+a case report, and format round-trip checks. A short hourly file demonstrates
+the spectral API but cannot resolve a true atmospheric inertial subrange; the
+report states this limitation.
+
+## Command line
+
+```text
+wrf-tools doctor [--core-only] [--json]
+wrf-tools discover DIRECTORY [--domain d01] [--recursive]
+wrf-tools inspect WRFOUT
+wrf-tools validate WRFOUT
+wrf-tools concat OUTPUT INPUT [INPUT ...]
+wrf-tools extract WRFOUT OUTPUT LATITUDE LONGITUDE VARIABLE [VARIABLE ...]
+wrf-tools filter INPUT.npy OUTPUT.npy --dx DX --cutoff WAVELENGTH
+wrf-tools spectra INPUT.npy OUTPUT.npz --spacing DT
+wrf-tools report WRFOUT report.json
 wrf-tools bts-info inflow.bts
+wrf-tools bts-compare first.bts second.bts
+wrf-tools openfast-info simulation.outb
 ```
 
-## Tests
+## Scope and limitations
 
-```powershell
+- This is a post-processing package; it does not compile or configure WRF.
+- COAWST setup/conversion, ROSCO tuning, FAST MATLAB GUI, and NCToolbox are out
+  of scope.
+- Multi-file concatenation handles sequential files from one domain, not
+  mixed-domain mosaics.
+- WRF output files are not distributed with the repository.
+
+## Development
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m pip install -e . --no-deps
 python -m pytest
+python -m build
+python -m twine check dist/*
 ```
+
+Continuous integration tests Linux and Windows with Python 3.10 and 3.12. See
+[CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+
+## License
+
+WRF Tools is available under the [MIT License](LICENSE). WRF, OpenFAST,
+TurbSim, and other named projects retain their respective licenses and
+trademarks.
