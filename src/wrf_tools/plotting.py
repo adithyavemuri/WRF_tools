@@ -100,6 +100,11 @@ def validation_scatter(model, observation, *, ax=None, one_to_one=True, **kwargs
     return ax.figure,ax,artist
 
 def taylor_diagram(standard_deviation, correlation, *, reference_std=1.0, labels=None, ax=None, **kwargs):
+    """Plot standard deviation and correlation on a Taylor diagram.
+
+    Reference: Taylor (2001), *Journal of Geophysical Research*,
+    doi:10.1029/2000JD900719.
+    """
     plt=_plt(); ax=ax or plt.subplots(subplot_kw={"projection":"polar"})[1]
     theta=np.arccos(np.clip(correlation,-1,1)); artist=ax.scatter(theta,standard_deviation,**kwargs)
     ax.scatter([0],[reference_std],marker="*",color="black",label="reference")

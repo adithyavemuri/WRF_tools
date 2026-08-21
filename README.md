@@ -6,6 +6,10 @@ meteorological diagnostics, WRF-LES turbulence analysis, spectral methods,
 wind-energy workflows, visualization, quality control, and OpenFAST/TurbSim
 coupling into one tested package.
 
+> **Flagship workflow:** convert an extracted WRF-LES velocity plane into a
+> TurbSim full-field (`.bts`) inflow file for OpenFAST, then validate the binary
+> round trip before using it in a load simulation.
+
 The project is designed for researchers and engineers who want reusable APIs
 instead of one-off scripts. Functions accept general WRF datasets or
 NumPy-compatible arrays wherever practical and avoid hard-coded domains,
@@ -13,6 +17,35 @@ locations, or machine paths.
 
 > Status: beta. Users should independently validate diagnostics against the
 > conventions of their WRF configuration before publication or operational use.
+
+## Flagship: WRF-LES to TurbSim/OpenFAST
+
+WRF Tools bridges atmospheric LES output and wind-turbine aeroelastic
+simulation. It accepts the three WRF-LES velocity components in any declared
+3-D axis order, maps them to OpenFAST's longitudinal/lateral/vertical
+convention, writes the signed-16-bit TurbSim full-field format, reads the file
+back, and checks its metadata and quantization error.
+
+```bash
+python examples/wrf_les_to_openfast.py \
+  --u u_plane.npy --v v_plane.npy --w w_plane.npy \
+  --output inflow.bts --dt 0.10 --dy 10 --dz 10 \
+  --hub-height 120 --bottom-height 10
+
+wrf-tools bts-info inflow.bts
+```
+
+The arrays in this example are `(time, vertical, lateral)`. Other layouts are
+supported through explicit axis arguments. The workflow deliberately requires
+the user to confirm plane orientation, wind rotation, component signs, spatial
+spacing, time step, and rotor coverage; those choices cannot be inferred safely
+from arbitrary WRF extraction products. See the
+[complete flagship example](examples/wrf_les_to_openfast.py) and the
+[scientific-methods ledger](docs/SCIENTIFIC_METHODS.md).
+
+The binary convention is checked against the official
+[OpenFAST Toolbox implementation](https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/io/turbsim_file.py)
+and the [TurbSim v2 User's Guide](https://openfast.readthedocs.io/en/v4.0.5/_downloads/cb14d3e2d3533d76e405d730fea19846/TurbSim_v2.00.pdf).
 
 ## Why use it?
 
@@ -62,6 +95,8 @@ references:
 
 See the [capability matrix](docs/CAPABILITY_MATRIX.md) and
 [package expansion record](docs/PACKAGE_EXPANSION.md) for detailed coverage.
+Equations, methodological limits, and primary references are catalogued in
+[Scientific methods and references](docs/SCIENTIFIC_METHODS.md).
 
 ## Installation
 
@@ -137,9 +172,25 @@ from wrf_tools.io import open_wrf
 
 with open_wrf("wrfout_d01_2024-01-01_00_00_00") as ds:
     site = point(ds, latitude=52.0, longitude=4.3,
-                 variables=["T2", "U10", "V10"])
+                 variables=["T2", "U10", "V10"],
+                 destagger_native=True)
     site.to_netcdf("site_timeseries.nc")
 ```
+
+Generic extraction preserves the native WRF grid by default. For staggered
+variables such as `U`, `V`, or `W`, request mass-grid values explicitly:
+
+```python
+from wrf_tools.io import get_variable
+
+u_native = get_variable(ds, "U")
+u_mass = get_variable(ds, "U", destagger_native=True)
+```
+
+The same `destagger_native` option is available on `point`,
+`vertical_profile`, and `horizontal_plane`. Returned variables carry a
+`wrf_tools_grid_processing` attribute, and destaggered output also records the
+original dimensions in `wrf_tools_destaggered_dimensions`.
 
 ### Filtering and spectra
 
@@ -167,7 +218,7 @@ pbl_height = diagnose_pbl_height(theta_v, height_agl, axis=1)
 jet = low_level_jet(speed_profile, height_profile)
 ```
 
-### WRF-LES to TurbSim/OpenFAST
+### WRF-LES to TurbSim/OpenFAST API
 
 ```python
 from wrf_tools.coupling.openfast import (
@@ -183,6 +234,11 @@ field = wind_field_from_components(
 write_bts("inflow.bts", field)
 validate_bts("inflow.bts", expected=field)
 ```
+
+`validate_bts` raises a descriptive error if dimensions, spacing, metadata, or
+quantized velocities fail the round-trip tolerance. Successful serialization
+does not establish that the LES inflow is physically suitable; consult the
+coupling checklist in [Scientific methods](docs/SCIENTIFIC_METHODS.md).
 
 ## Run the complete example
 
@@ -209,7 +265,7 @@ wrf-tools discover DIRECTORY [--domain d01] [--recursive]
 wrf-tools inspect WRFOUT
 wrf-tools validate WRFOUT
 wrf-tools concat OUTPUT INPUT [INPUT ...]
-wrf-tools extract WRFOUT OUTPUT LATITUDE LONGITUDE VARIABLE [VARIABLE ...]
+wrf-tools extract WRFOUT OUTPUT LATITUDE LONGITUDE VARIABLE [VARIABLE ...] [--destagger]
 wrf-tools filter INPUT.npy OUTPUT.npy --dx DX --cutoff WAVELENGTH
 wrf-tools spectra INPUT.npy OUTPUT.npz --spacing DT
 wrf-tools report WRFOUT report.json

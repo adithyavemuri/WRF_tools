@@ -19,3 +19,16 @@ def test_bts_round_trip(tmp_path):
     actual = validate_bts(path, expected)
     assert actual.velocity.shape == velocity.shape
     assert read_bts(path).description == "round trip"
+
+
+def test_bts_round_trip_preserves_constant_components(tmp_path):
+    velocity = np.zeros((4, 3, 2, 3))
+    velocity[..., 0] = np.linspace(7.0, 8.0, 4)[:, None, None]
+    velocity[..., 1] = 0.2
+    velocity[..., 2] = -0.05
+    expected = WindField(
+        velocity=velocity, dy=10.0, dz=10.0, dt=0.1,
+        hub_height=100.0, bottom_height=10.0,
+    )
+    actual = validate_bts(write_bts(tmp_path / "constant.bts", expected), expected)
+    np.testing.assert_allclose(actual.velocity[..., 1:], velocity[..., 1:], atol=1e-7)

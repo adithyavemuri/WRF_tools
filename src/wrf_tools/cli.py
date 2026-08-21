@@ -68,7 +68,7 @@ def _bts_compare(args: argparse.Namespace) -> int:
 def _extract(args: argparse.Namespace) -> int:
     from .extract import point
     with open_wrf(args.path) as dataset:
-        result=point(dataset,args.latitude,args.longitude,variables=args.variables,time=args.time)
+        result=point(dataset,args.latitude,args.longitude,variables=args.variables,time=args.time,destagger_native=args.destagger)
         result.to_netcdf(args.output)
     print(Path(args.output).resolve()); return 0
 
@@ -135,6 +135,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     extract = subparsers.add_parser("extract", help="extract variables at the nearest geographic point")
     extract.add_argument("path"); extract.add_argument("output"); extract.add_argument("latitude",type=float); extract.add_argument("longitude",type=float); extract.add_argument("variables",nargs="+"); extract.add_argument("--time",type=int)
+    extract.add_argument("--destagger", action="store_true", help="average WRF staggered variables onto the mass grid before extraction")
     extract.set_defaults(handler=_extract)
 
     filtering = subparsers.add_parser("filter", help="Butterworth-filter a NumPy array")

@@ -35,6 +35,11 @@ def load_velocity(
 
 
 def calculate_fluxes(u: Any, v: Any, w: Any, *, axis: int = 0) -> dict[str, np.ndarray]:
+    """Return resolved Reynolds covariances from temporal fluctuations.
+
+    Reference: Pope (2000), *Turbulent Flows*,
+    doi:10.1017/CBO9780511840531.
+    """
     return {
         "uu": reynolds_flux(u, u, axis=axis),
         "vv": reynolds_flux(v, v, axis=axis),
@@ -53,6 +58,7 @@ def calculate_total_tke(
     subgrid_tke: Any | None = None,
     axis: int = 0,
 ) -> np.ndarray:
+    """Return resolved TKE plus an optional model-provided SGS TKE."""
     total = resolved_tke(u, v, w, axis=axis)
     if subgrid_tke is not None:
         total = total + np.asarray(subgrid_tke)
@@ -71,7 +77,12 @@ def load_sgs_stress(dataset: xr.Dataset, *, names: Mapping[str, str] | None = No
 
 
 def sgs_tke(stress: Mapping[str, Any]) -> np.ndarray:
-    """Return SGS TKE from normal stress components."""
+    """Return ``0.5*(tau11 + tau22 + tau33)`` from SGS normal stresses.
+
+    This assumes the supplied WRF variables are SGS velocity covariances, not
+    dimensional stresses carrying an additional density or sign convention.
+    Check the producing WRF configuration before use.
+    """
     return 0.5 * (np.asarray(stress["m11"]) + np.asarray(stress["m22"]) + np.asarray(stress["m33"]))
 
 

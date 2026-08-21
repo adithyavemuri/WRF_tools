@@ -7,7 +7,12 @@ import numpy as np
 
 
 def power_spectrum(data: Any, *, spacing: float = 1.0, axis: int = -1, detrend: bool = True) -> tuple[np.ndarray, np.ndarray]:
-    """Return a one-sided periodogram with density units per frequency."""
+    """Return a one-sided periodogram with density units per frequency.
+
+    Uses the standard discrete-Fourier periodogram normalization. See
+    Percival and Walden (1993), *Spectral Analysis for Physical
+    Applications*, Cambridge University Press, doi:10.1017/CBO9780511622762.
+    """
     values = np.asarray(data, dtype=float)
     if spacing <= 0:
         raise ValueError("spacing must be positive")
@@ -24,7 +29,11 @@ def power_spectrum(data: Any, *, spacing: float = 1.0, axis: int = -1, detrend: 
 
 
 def welch_spectrum(data: Any, *, sample_rate: float, nperseg: int, overlap: int = 0, axis: int = -1) -> tuple[np.ndarray, np.ndarray]:
-    """Welch PSD using Hann-windowed overlapping segments."""
+    """Welch PSD using Hann-windowed overlapping segments.
+
+    Reference: Welch (1967), IEEE Transactions on Audio and
+    Electroacoustics, doi:10.1109/TAU.1967.1161901.
+    """
     values = np.asarray(data, dtype=float)
     if not 0 <= overlap < nperseg <= values.shape[axis]:
         raise ValueError("require 0 <= overlap < nperseg <= axis length")
@@ -49,7 +58,11 @@ def welch_spectrum(data: Any, *, sample_rate: float, nperseg: int, overlap: int 
 
 
 def radial_wavenumber_spectrum(data: Any, *, dx: float, dy: float | None = None, bins: int | None = None) -> tuple[np.ndarray, np.ndarray]:
-    """Azimuthally average a 2-D field's power over radial wavenumber bins."""
+    """Azimuthally average a 2-D field's FFT power in radial bins.
+
+    This is a shell-mean spectrum, not a shell-integrated energy spectrum.
+    The returned wavenumber is in cycles per unit distance.
+    """
     field = np.asarray(data, dtype=float)
     if field.ndim != 2:
         raise ValueError("data must be two-dimensional")
@@ -68,7 +81,12 @@ def radial_wavenumber_spectrum(data: Any, *, dx: float, dy: float | None = None,
 
 
 def coherence(first: Any, second: Any, *, sample_rate: float, nperseg: int, overlap: int = 0) -> tuple[np.ndarray, np.ndarray]:
-    """Magnitude-squared coherence for one-dimensional signals."""
+    """Return Welch-estimated magnitude-squared coherence.
+
+    The estimator is ``|Pxy|^2 / (Pxx Pyy)`` using common Hann-windowed
+    segments; see Bendat and Piersol (2010), *Random Data*, 4th ed.,
+    doi:10.1002/9781118032428.
+    """
     x, y = np.asarray(first, float), np.asarray(second, float)
     if x.shape != y.shape or x.ndim != 1:
         raise ValueError("signals must be equally shaped one-dimensional arrays")
@@ -89,6 +107,10 @@ def coherence(first: Any, second: Any, *, sample_rate: float, nperseg: int, over
     return np.fft.rfftfreq(nperseg, 1.0 / sample_rate), np.clip(coh.real, 0.0, 1.0)
 
 def cross_spectrum(first, second, *, spacing=1.0, detrend=True):
+    """Return the one-sided cross-periodogram ``X(f) conj(Y(f))``.
+
+    Reference: Bendat and Piersol (2010), doi:10.1002/9781118032428.
+    """
     x,y=np.asarray(first,float),np.asarray(second,float)
     if x.shape!=y.shape or x.ndim!=1: raise ValueError("signals must be equally shaped one-dimensional arrays")
     if detrend: x=x-x.mean(); y=y-y.mean()
@@ -96,6 +118,7 @@ def cross_spectrum(first, second, *, spacing=1.0, detrend=True):
     return np.fft.rfftfreq(x.size,spacing),cross
 
 def log_bin(frequency, spectrum, *, bins=30):
+    """Average spectral values in geometrically spaced frequency bins."""
     f,s=np.asarray(frequency,float),np.asarray(spectrum); mask=f>0
     edges=np.geomspace(f[mask].min(),f[mask].max(),bins+1); index=np.digitize(f[mask],edges)-1
     count=np.bincount(index,minlength=bins+1)[:bins]; centers=np.sqrt(edges[:-1]*edges[1:]); summed=np.bincount(index,weights=np.real(s[mask]),minlength=bins+1)[:bins]

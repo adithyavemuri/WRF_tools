@@ -43,3 +43,27 @@ def destagger(
         return left
     array = np.asarray(data)
     return (array[tuple(first)] + array[tuple(second)]) / 2.0
+
+
+def destagger_wrf(data: Any) -> Any:
+    """Destagger every WRF dimension ending in ``_stag`` onto the mass grid.
+
+    Xarray variables retain their name and metadata. The output receives
+    ``wrf_tools_grid_processing`` and ``wrf_tools_destaggered_dimensions``
+    attributes so exported NetCDF data records exactly what was done. Variables
+    without staggered dimensions are returned unchanged except for the
+    processing attribute.
+    """
+    if not hasattr(data, "dims"):
+        raise TypeError("destagger_wrf requires an xarray DataArray")
+    result = data
+    staggered = [dimension for dimension in result.dims if dimension.endswith("_stag")]
+    for dimension in staggered:
+        result = destagger(result, dimension)
+    result.attrs = dict(result.attrs)
+    if staggered:
+        result.attrs["wrf_tools_grid_processing"] = "destaggered to WRF mass grid"
+        result.attrs["wrf_tools_destaggered_dimensions"] = ",".join(staggered)
+    else:
+        result.attrs["wrf_tools_grid_processing"] = "already on WRF mass grid"
+    return result

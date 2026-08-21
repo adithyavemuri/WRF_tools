@@ -57,12 +57,26 @@ def get_variable(
     name: str,
     *,
     time: int | slice | None = None,
+    destagger_native: bool = False,
 ) -> xr.DataArray:
-    """Read a native WRF variable using metadata-aware dimension selection."""
+    """Read a WRF variable with optional conversion to the mass grid.
+
+    By default the native WRF grid is preserved. Set ``destagger_native=True``
+    to average every dimension ending in ``_stag`` onto its corresponding mass
+    dimension. The result records the operation in
+    ``wrf_tools_grid_processing``.
+    """
     if name not in dataset:
         available = ", ".join(sorted(dataset.data_vars)[:20])
         raise KeyError(f"{name!r} is not present; available variables include: {available}")
     data = dataset[name]
     if time is not None and "Time" in data.dims:
         data = data.isel(Time=time)
+    if destagger_native:
+        from ..grid import destagger_wrf
+        data = destagger_wrf(data)
+    else:
+        data = data.copy(deep=False)
+        data.attrs = dict(data.attrs)
+        data.attrs["wrf_tools_grid_processing"] = "native WRF grid preserved"
     return data

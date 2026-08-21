@@ -8,6 +8,11 @@ Run from the repository root:
 
 You can either edit USER SETTINGS below or provide command-line arguments.
 Command-line values take precedence over the settings in the file.
+
+Methodology and primary citations are catalogued in
+``docs/SCIENTIFIC_METHODS.md``. Spectral -5/3 lines are Kolmogorov inertial-
+subrange slope guides (Kolmogorov 1941, doi:10.1098/rspa.1991.0075), not claims
+that a short example record resolves an inertial subrange.
 """
 from __future__ import annotations
 
@@ -294,7 +299,7 @@ def main() -> int:
         fig, ax = plt.subplots()
         ax.loglog(positive_frequency, positive_power, "o-", color="#276FBF", label="U10 periodogram")
         ax.loglog(positive_frequency, minus_five_thirds, "--", color="#303030", linewidth=1.5,
-                  label=r"$f^{-5/3}$ reference slope")
+                  label=r"Kolmogorov $f^{-5/3}$ slope guide (1941)")
         ax.set(title=f"Temporal spectrum of U10 at {target_lat:.3f} N, {target_lon:.3f} E",
                xlabel="Frequency (cycles h$^{-1}$)",
                ylabel="Power spectral density ((m s$^{-1}$)$^2$ h)")
@@ -353,7 +358,8 @@ def main() -> int:
             slope, _ = fit_spectral_slope(frequencies,powers)
             fig, ax = plt.subplots()
             ax.loglog(frequencies,powers,"o-",color=component_colors[name],label=f"{component_labels[name]} periodogram")
-            ax.loglog(frequencies,reference,"--",color="#303030",linewidth=1.5,label=r"$f^{-5/3}$ reference")
+            ax.loglog(frequencies,reference,"--",color="#303030",linewidth=1.5,
+                      label=r"Kolmogorov $f^{-5/3}$ slope guide (1941)")
             ax.set(title=f"{component_labels[name]} spectrum - first model level",
                    xlabel="Frequency (cycles h$^{-1}$)",ylabel="Power spectral density")
             ax.text(.03,.05,fr"Fitted slope: {slope:.2f}",transform=ax.transAxes,ha="left",va="bottom",

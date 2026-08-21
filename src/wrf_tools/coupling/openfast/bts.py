@@ -9,7 +9,7 @@ from ...exceptions import DataValidationError
 from ...types import WindField
 
 _IDENTIFIER = 7
-_INT16_MIN = -32767
+_INT16_MIN = -32768
 _INT16_MAX = 32767
 
 
@@ -17,8 +17,13 @@ def _scaling(velocity: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     minimum = np.min(velocity, axis=(0, 1, 2))
     maximum = np.max(velocity, axis=(0, 1, 2))
     span = maximum - minimum
-    slope = np.where(span > 0, (_INT16_MAX - _INT16_MIN) / span, 1.0)
+    slope = np.ones(3, dtype=float)
+    np.divide(_INT16_MAX - _INT16_MIN, span, out=slope, where=span > 0)
     offset = _INT16_MIN - minimum * slope
+    # Encode a spatially/temporally constant component as zero. This avoids
+    # losing small decimal values when a large int16-endpoint offset is stored
+    # as float32 in the BTS header.
+    offset = np.where(span > 0, offset, -minimum)
     return slope.astype(np.float32), offset.astype(np.float32)
 
 
@@ -28,6 +33,10 @@ def write_bts(path: str | Path, field: WindField) -> Path:
     The input velocity order is ``(time, vertical, lateral, component)``.
     Scaling is derived independently for each component to retain int16
     precision. The function never assumes a fixed grid or record length.
+
+    Layout and scale/offset encoding follow the official OpenFAST Toolbox
+    ``TurbSimFile`` implementation:
+    https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/io/turbsim_file.py
     """
     destination = Path(path)
     destination.parent.mkdir(parents=True, exist_ok=True)

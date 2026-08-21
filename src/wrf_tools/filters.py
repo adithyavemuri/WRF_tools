@@ -29,6 +29,9 @@ def butterworth_spatial(
 
     ``cutoff_wavelength`` is the half-power wavelength in the same units as
     ``dx`` and ``dy``. Leading dimensions are processed independently.
+
+    Transfer function: ``|H(k)| = [1 + (k/kc)^(2n)]^(-1/2)``. Reference:
+    Butterworth (1930), doi:10.1049/jiee-1.1930.0018.
     """
     array = np.asarray(data, dtype=float)
     if dx <= 0 or (dy is not None and dy <= 0) or cutoff_wavelength <= 0 or order < 1:
@@ -62,7 +65,11 @@ def top_hat_coarsen(
     axes: tuple[int, int] = (-2, -1),
     trim: bool = False,
 ) -> Any:
-    """Block-average a horizontal field (the Honnert-style top-hat filter)."""
+    """Block-average a horizontal field with a discrete top-hat filter.
+
+    Filtering interpretation follows Leonard (1975), *Advances in
+    Geophysics*, doi:10.1016/S0065-2687(08)60464-1.
+    """
     array = np.asarray(data)
     factor_x = factor_y if factor_x is None else factor_x
     if factor_y < 1 or factor_x < 1:

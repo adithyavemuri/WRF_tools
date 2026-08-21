@@ -31,6 +31,13 @@ def wind_field_from_components(
     Axes are explicit because WRF extraction products do not share one fixed
     storage convention. ``component_order`` maps OpenFAST's longitudinal,
     lateral, and vertical components to the supplied WRF components.
+
+    The result follows the TurbSim full-field convention consumed by
+    OpenFAST/InflowWind. Verify that the extracted WRF plane is normal to the
+    turbine inflow direction and that grid-relative WRF winds have been rotated
+    when required. Format references: Jonkman (2009), *TurbSim User's Guide*,
+    NREL/TP-500-46198; OpenFAST ``TurbSimFile`` reference implementation,
+    https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/io/turbsim_file.py.
     """
     components = {"u": np.asarray(u), "v": np.asarray(v), "w": np.asarray(w)}
     if set(component_order) != {"u", "v", "w"} or len(component_order) != 3:
