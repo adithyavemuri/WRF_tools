@@ -84,11 +84,3 @@ concatenating different domains into one dataset is not. See
 - Build COAWST (excluded from this package).
 
 These are inventoried but are not part of the current post-processing migration.
-
-## Bundled third-party material
-
-The collection also contains upstream NCToolbox, FAST MATLAB Toolbox, FAST v8
-GUI, format-conversion utilities, and demonstration files. NCToolbox and GUI
-code are excluded. Useful post-processing file formats and analysis behavior
-will be exposed through Python APIs where relevant; vendored source, GUI code,
-and historical conversion internals will not be copied wholesale.
