@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use WRF Tools in research, please cite this software."
+type: software
+title: "WRF Tools"
+abstract: >-
+  A cross-platform Python toolkit for reproducible WRF and WRF-LES
+  post-processing, atmospheric and wind-energy diagnostics, and WRF-LES to
+  TurbSim/OpenFAST inflow coupling.
+authors:
+  - family-names: Vemuri
+    given-names: Adithya
+version: 0.3.0
+date-released: 2026-08-21
+license: MIT
+repository-code: "https://github.com/adithyavemuri/WRF_tools"
+url: "https://github.com/adithyavemuri/WRF_tools"
+keywords:
+  - WRF
+  - WRF-LES
+  - atmospheric science
+  - wind energy
+  - OpenFAST
+  - TurbSim

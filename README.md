@@ -1,5 +1,14 @@
 # WRF Tools
 
+[![Tests](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml/badge.svg)](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml)
+[![Python 3.10 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.12-blue)](https://www.python.org/)
+[![MIT License](https://img.shields.io/github/license/adithyavemuri/WRF_tools)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/adithyavemuri/WRF_tools)](https://github.com/adithyavemuri/WRF_tools/releases/latest)
+
+> **Scientific basis:** equations, assumptions, applicability limits, and
+> primary references are documented in
+> [Scientific methods and references](docs/SCIENTIFIC_METHODS.md).
+
 WRF Tools is a cross-platform Python toolkit for reproducible post-processing
 of Weather Research and Forecasting (WRF) model output. It brings WRF I/O,
 meteorological diagnostics, WRF-LES turbulence analysis, spectral methods,
@@ -197,6 +206,7 @@ original dimensions in `wrf_tools_destaggered_dimensions`.
 ```python
 from wrf_tools.filters import butterworth_spatial
 from wrf_tools.spectra import radial_wavenumber_spectrum, welch_spectrum
+from wrf_tools.wind_models import cheynet_spectrum
 
 filtered = butterworth_spatial(
     u_plane, dx=50.0, dy=50.0,
@@ -204,7 +214,15 @@ filtered = butterworth_spatial(
 )
 frequency, psd = welch_spectrum(wind_series, sample_rate=2.0, nperseg=1200)
 wavenumber, energy = radial_wavenumber_spectrum(u_plane, dx=50.0)
+marine_psd = cheynet_spectrum(
+    frequency, mean_speed=12.0, height=81.5,
+    friction_velocity=0.45, stability=-0.2, component="u",
+)
 ```
+
+`cheynet_spectrum` implements the stability-dependent pointed-blunt marine
+boundary-layer model of [Cheynet, Jakobsen and Reuder (2018)](https://doi.org/10.1007/s10546-018-0382-2),
+using the author-supplied coefficient table at 81.5 m.
 
 ### Quality control and boundary-layer diagnostics
 

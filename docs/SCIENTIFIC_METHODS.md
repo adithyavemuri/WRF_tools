@@ -27,6 +27,7 @@ the original method, not merely this software.
 | Magnitude-squared coherence and cross-spectrum | `|Pxy|2/(Pxx Pyy)` and `X conj(Y)` | [Bendat and Piersol (2010)](https://doi.org/10.1002/9781118032428) |
 | `-5/3` reference slope | Inertial-subrange similarity law; plotted only as a slope guide, never as proof of an inertial range | [Kolmogorov (1941), English translation](https://doi.org/10.1098/rspa.1991.0075) |
 | Kaimal component spectra | Neutral atmospheric surface-layer spectra | [Kaimal et al. (1972)](https://doi.org/10.1002/qj.49709841707) |
+| Cheynet marine spectra | Pointed-blunt composite model (Eq. 26) and stable approximation (Eq. 28), using the author-supplied 81.5 m coefficient table for `-2 <= zeta < 2` | [Cheynet, Jakobsen and Reuder (2018)](https://doi.org/10.1007/s10546-018-0382-2) |
 | IEC Kaimal/von Karman models | Engineering turbulence models | IEC 61400-1:2019, Annex C |
 | Weibull fit | Method-of-moments approximation using the sample coefficient of variation | [Justus et al. (1978)](https://doi.org/10.1175/1520-0450(1978)017%3C0350:MFEWSF%3E2.0.CO;2) |
 | Rotor-equivalent wind speed | Cubic mean across sampled rotor heights; currently a uniform-height approximation | [Clifton et al. (2014)](https://doi.org/10.1088/1742-6596/524/1/012108) |
@@ -56,8 +57,6 @@ whether the LES domain and forcing represent the intended inflow.
 
 PBL threshold detection, low-level-jet thresholds, ramp-event thresholds, and
 stability classes are configurable screening diagnostics rather than universal
-physical laws. Their thresholds must be reported with results. The historical
-`cheynet_spectrum` function is explicitly a legacy heuristic—not a published
-Cheynet model—and should not be used as a literature-backed spectrum. The
+physical laws. Their thresholds must be reported with results. The
 `synthetic_wind_field` helper creates test data only; it is not an IEC or
 TurbSim turbulence generator.
