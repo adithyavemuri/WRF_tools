@@ -78,11 +78,20 @@ def quality_control(dataset: xr.Dataset, *, limits=None, jump_sigma=12.0) -> lis
             values=np.asarray(dataset[name]); mask=np.isfinite(values)&(values < -1e-12)
             if np.any(mask):
                 index,value=_first(values,mask); issues.append(QCIssue("ERROR",name,"negative-water",f"{mask.sum()} negative hydrometeor values; first {value:g} at {index}",int(mask.sum()),index,value))
-    if "Time" in dataset.dims and "XTIME" in dataset:
-        time=np.asarray(dataset.XTIME); delta=np.diff(time)
+    if "Time" in dataset.dims and ("Times" in dataset or "XTIME" in dataset):
+        if "Times" in dataset:
+            raw = np.asarray(dataset.Times)
+            text = ([bytes(value).decode().replace("_", "T", 1) for value in raw]
+                    if raw.ndim == 1 else
+                    [b"".join(row).decode().replace("_", "T", 1) for row in raw])
+            time = np.asarray(text, dtype="datetime64[s]")
+        else:
+            time=np.asarray(dataset.XTIME)
+        delta=np.diff(time)
         numeric=delta/np.timedelta64(1,"s") if np.issubdtype(time.dtype,np.datetime64) else delta.astype(float)
         if numeric.size and (np.any(numeric <= 0) or not np.allclose(numeric,numeric[0])):
-            issues.append(QCIssue("ERROR","XTIME","time-coordinate","timestamps are duplicated, reversed, or irregular"))
+            variable = "Times" if "Times" in dataset else "XTIME"
+            issues.append(QCIssue("ERROR",variable,"time-coordinate","timestamps are duplicated, reversed, or irregular"))
     return issues
 
 

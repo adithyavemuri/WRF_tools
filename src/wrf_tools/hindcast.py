@@ -47,7 +47,10 @@ def summarize_hindcast(dataset: Any, *, files: Iterable[Path], cell: Any) -> dic
             "mean": float(np.nanmean(values)),
             "maximum": float(np.nanmax(values)),
         }
-    issues = quality_control(dataset[[name for name in SURFACE_VARIABLES if name in dataset]])
+    qc_names = [name for name in SURFACE_VARIABLES if name in dataset]
+    if "Times" in dataset:
+        qc_names.append("Times")
+    issues = quality_control(dataset[qc_names])
     result: dict[str, Any] = {
         "files": [str(Path(item).resolve()) for item in files],
         "file_count": len(times),
