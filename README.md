@@ -166,8 +166,16 @@ wrf-tools validate /data/wrf/wrfout_d01_2024-01-01_00_00_00
 from wrf_tools.io import discover_wrfout, open_wrf_sequence
 
 files = discover_wrfout("/data/wrf/run", domain="d01")
-with open_wrf_sequence(files) as ds:
-    print(ds.sizes["Time"])
+    with open_wrf_sequence(files) as ds:
+        print(ds.sizes["Time"])
+
+Create a focused multi-file mesoscale hindcast report without running the
+LES/OpenFAST example workflow:
+
+    wrf-tools hindcast-report /data/wrf/run reports/my_case \
+      --domain d01 --latitude 52.0 --longitude 5.0
+
+This produces JSON and HTML summaries, diagnostic figures, and a PDF report.
 ```
 
 The sequence reader checks domain ID, grid dimensions, spacing, projection,

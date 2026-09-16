@@ -89,6 +89,33 @@ def _report(args: argparse.Namespace) -> int:
     with open_wrf(args.path) as dataset: report=dataset_summary(dataset)
     print(write_json_report(report,args.output).resolve()); return 0
 
+
+def _hindcast_report(args: argparse.Namespace) -> int:
+    import hashlib
+    from .hindcast import create_hindcast_report
+    configuration = {}
+    for label, value in (
+        ("case_configuration", args.configuration),
+        ("case_manifest", args.case_manifest),
+        ("build_manifest", args.build_manifest),
+    ):
+        if value:
+            path = Path(value).expanduser().resolve()
+            configuration[label] = {
+                "path": str(path),
+                "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            }
+    paths = create_hindcast_report(
+        args.run_directory,
+        args.output_directory,
+        domain=args.domain,
+        latitude=args.latitude,
+        longitude=args.longitude,
+        configuration=configuration,
+    )
+    print(json.dumps({name: str(path) for name, path in paths.items()}, indent=2))
+    return 0
+
 def _openfast_info(args: argparse.Namespace) -> int:
     from .openfast import read_ascii_output,read_binary_output
     dataset=read_binary_output(args.path) if Path(args.path).suffix.lower() in {".outb",".bin"} else read_ascii_output(args.path)
@@ -148,6 +175,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     report = subparsers.add_parser("report", help="write a JSON WRF dataset report")
     report.add_argument("path"); report.add_argument("output"); report.set_defaults(handler=_report)
+
+    hindcast = subparsers.add_parser("hindcast-report", help="create a focused PDF report from a WRF output sequence")
+    hindcast.add_argument("run_directory")
+    hindcast.add_argument("output_directory")
+    hindcast.add_argument("--domain", default="d01")
+    hindcast.add_argument("--latitude", type=float)
+    hindcast.add_argument("--longitude", type=float)
+    hindcast.add_argument("--configuration")
+    hindcast.add_argument("--case-manifest")
+    hindcast.add_argument("--build-manifest")
+    hindcast.set_defaults(handler=_hindcast_report)
 
     openfast = subparsers.add_parser("openfast-info", help="inspect OpenFAST ASCII or binary output")
     openfast.add_argument("path"); openfast.set_defaults(handler=_openfast_info)
