@@ -1,5 +1,7 @@
 # WRF Tools
 
+Current release: **v0.4.0**
+
 [![Tests](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml/badge.svg)](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml)
 [![Python 3.10 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.12-blue)](https://www.python.org/)
 [![MIT License](https://img.shields.io/github/license/adithyavemuri/WRF_tools)](LICENSE)

@@ -3,4 +3,4 @@
 from .types import GeoBounds, GridPoint, Station, WindField
 
 __all__ = ["GeoBounds", "GridPoint", "Station", "WindField"]
-__version__ = "0.3.0"
+__version__ = "0.4.0"

@@ -9,8 +9,8 @@ abstract: >-
 authors:
   - family-names: Vemuri
     given-names: Adithya
-version: 0.3.0
-date-released: 2026-08-21
+version: 0.4.0
+date-released: 2026-09-22
 license: MIT
 repository-code: "https://github.com/adithyavemuri/WRF_tools"
 url: "https://github.com/adithyavemuri/WRF_tools"
