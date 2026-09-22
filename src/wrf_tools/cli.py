@@ -92,19 +92,39 @@ def _report(args: argparse.Namespace) -> int:
 
 def _hindcast_report(args: argparse.Namespace) -> int:
     import hashlib
+    try:
+        import tomllib
+    except ModuleNotFoundError:
+        import tomli as tomllib
     from .hindcast import create_hindcast_report
     configuration = {}
     for label, value in (
         ("case_configuration", args.configuration),
         ("case_manifest", args.case_manifest),
         ("build_manifest", args.build_manifest),
+        ("workflow_state", args.workflow_state),
     ):
         if value:
             path = Path(value).expanduser().resolve()
             configuration[label] = {
-                "path": str(path),
+                "path": path.name,
                 "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
             }
+            if label == "case_configuration":
+                with path.open("rb") as handle:
+                    parsed = tomllib.load(handle)
+                configuration[label]["data"] = {
+                    key: parsed.get(key, {}) for key in ("case", "analysis", "namelist")
+                }
+            elif label == "case_manifest":
+                parsed = json.loads(path.read_text())
+                configuration[label]["data"] = {
+                    "profiles": parsed.get("profiles", {}),
+                    "domain": parsed.get("domain", {}),
+                    "effective_namelist": parsed.get("effective_namelist", {}),
+                }
+            elif label == "workflow_state":
+                configuration[label]["data"] = json.loads(path.read_text())
     paths = create_hindcast_report(
         args.run_directory,
         args.output_directory,
@@ -128,6 +148,13 @@ def _doctor(args: argparse.Namespace) -> int:
         print(json.dumps(environment_report(), indent=2))
         return 0
     return 0 if print_environment_report(include_optional=not args.core_only) else 1
+
+
+def _setup_maps(args: argparse.Namespace) -> int:
+    from .maps import setup_map_data
+    paths = setup_map_data(resolution=args.resolution)
+    print(json.dumps({"resolution": args.resolution, "files": [str(path) for path in paths]}, indent=2))
+    return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -185,6 +212,7 @@ def build_parser() -> argparse.ArgumentParser:
     hindcast.add_argument("--configuration")
     hindcast.add_argument("--case-manifest")
     hindcast.add_argument("--build-manifest")
+    hindcast.add_argument("--workflow-state")
     hindcast.set_defaults(handler=_hindcast_report)
 
     openfast = subparsers.add_parser("openfast-info", help="inspect OpenFAST ASCII or binary output")
@@ -194,6 +222,9 @@ def build_parser() -> argparse.ArgumentParser:
     doctor.add_argument("--core-only", action="store_true", help="show only required dependencies")
     doctor.add_argument("--json", action="store_true", help="emit a machine-readable report")
     doctor.set_defaults(handler=_doctor)
+    maps = subparsers.add_parser("setup-maps", help="explicitly download and cache Natural Earth map features")
+    maps.add_argument("--resolution", choices=("110m", "50m", "10m"), default="50m")
+    maps.set_defaults(handler=_setup_maps)
     return parser
 
 

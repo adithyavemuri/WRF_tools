@@ -122,7 +122,24 @@ source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -e ".[netcdf,science,plot,report]"
 wrf-tools doctor
+wrf-tools setup-maps --resolution 50m
 ```
+
+Reports automatically download Natural Earth coastlines, borders, land, ocean
+and lakes into Cartopy's local cache the first time they are needed. Later runs
+are offline. `setup-maps` remains available for an explicit pre-download; if
+the network is unavailable before the cache exists, reporting falls back to
+Cartopy's bundled raster rather than failing the complete analysis.
+
+### Hindcast report
+
+`wrf-tools hindcast-report` discovers every `wrfout_d??_*` sequence in a run,
+validates its timeline and grid consistency, and produces JSON, HTML and PDF.
+For each domain it includes mapped surface fields, wind-resource diagnostics,
+accumulated precipitation, model-level wind and temperature profiles, a wind
+time-height section, and a diagnostic shear exponent. TKE is included only when
+`TKE_PBL` or `QKE` is present in the files. This is a model-output report, not
+observational validation or a turbine-energy assessment.
 
 ### Windows PowerShell
 
@@ -169,13 +186,18 @@ files = discover_wrfout("/data/wrf/run", domain="d01")
     with open_wrf_sequence(files) as ds:
         print(ds.sizes["Time"])
 
-Create a focused multi-file mesoscale hindcast report without running the
+Create a scientific multi-domain mesoscale hindcast report without running the
 LES/OpenFAST example workflow:
 
     wrf-tools hindcast-report /data/wrf/run reports/my_case \
       --domain d01 --latitude 52.0 --longitude 5.0
 
-This produces JSON and HTML summaries, diagnostic figures, and a PDF report.
+This discovers every WRF domain in the run, analyses each separately, and uses
+`--domain` to identify the primary analysis domain. It produces JSON and HTML
+summaries plus a paginated PDF with a nested-domain map, separate domain
+sections, physics and grid metadata, meteorological statistics, QC findings,
+10 m wind-resource screening, wind roses, maps and point time series. The wind
+screening is explicitly not a hub-height or bankable resource assessment.
 ```
 
 The sequence reader checks domain ID, grid dimensions, spacing, projection,

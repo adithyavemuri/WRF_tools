@@ -29,6 +29,9 @@ def test_hindcast_summary_covers_sequence_and_surface_fields(tmp_path):
     assert report["quality_control"]["status"] == "PASS"
     assert report["precipitation"]["selected_point_accumulation_mm"] == 1.0
     assert report["surface_statistics"]["T2"]["mean"] == 280.0
+    assert report["wind_resource"]["height_metres"] == 10
+    assert report["wind_resource"]["mean_speed_m_s"] == 1.0
+    assert report["wind_resource"]["mean_power_density_w_m2"] > 0
 
 
 def test_wrf_times_are_authoritative_over_auxiliary_xtime(tmp_path):
