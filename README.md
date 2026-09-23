@@ -76,6 +76,8 @@ The repository includes an anonymized report generated from a real WRF file:
 
 - [Example PDF report](example_results/single_wrf_advanced/case_report.pdf)
 - [Complete example script](examples/single_wrf_all_capabilities.py)
+- [Readable multi-domain hindcast report example](examples/create_hindcast_report.py)
+- [Validated nested-hindcast PDF](docs/demo/netherlands-nested-hindcast-report.pdf)
 
 ![Example terrain diagnostics](example_results/single_wrf_advanced/terrain_diagnostics.png)
 
