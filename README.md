@@ -185,14 +185,17 @@ wrf-tools validate /data/wrf/wrfout_d01_2024-01-01_00_00_00
 from wrf_tools.io import discover_wrfout, open_wrf_sequence
 
 files = discover_wrfout("/data/wrf/run", domain="d01")
-    with open_wrf_sequence(files) as ds:
-        print(ds.sizes["Time"])
+with open_wrf_sequence(files) as ds:
+    print(ds.sizes["Time"])
+```
 
 Create a scientific multi-domain mesoscale hindcast report without running the
 LES/OpenFAST example workflow:
 
-    wrf-tools hindcast-report /data/wrf/run reports/my_case \
-      --domain d01 --latitude 52.0 --longitude 5.0
+```bash
+wrf-tools hindcast-report /data/wrf/run reports/my_case \
+  --domain d01 --latitude 52.0 --longitude 5.0
+```
 
 This discovers every WRF domain in the run, analyses each separately, and uses
 `--domain` to identify the primary analysis domain. It produces JSON and HTML
@@ -200,7 +203,22 @@ summaries plus a paginated PDF with a nested-domain map, separate domain
 sections, physics and grid metadata, meteorological statistics, QC findings,
 10 m wind-resource screening, wind roses, maps and point time series. The wind
 screening is explicitly not a hub-height or bankable resource assessment.
+
+Add optional reproducibility metadata when it is available:
+
+```bash
+wrf-tools hindcast-report /data/wrf/run reports/my_case \
+  --domain d02 \
+  --configuration case.toml \
+  --case-manifest case-manifest.json \
+  --build-manifest build-manifest.txt \
+  --workflow-state workflow-state.json
 ```
+
+The compact PDF compares all discovered domains, normally placing two figures
+per row. It includes accumulated precipitation, model-level wind and
+temperature profiles, TKE when `TKE_PBL` or `QKE` exists, time-height wind and
+a configurable shear-exponent diagnostic.
 
 The sequence reader checks domain ID, grid dimensions, spacing, projection,
 and time order. Mixed domains raise an error instead of being combined.
@@ -319,6 +337,8 @@ wrf-tools extract WRFOUT OUTPUT LATITUDE LONGITUDE VARIABLE [VARIABLE ...] [--de
 wrf-tools filter INPUT.npy OUTPUT.npy --dx DX --cutoff WAVELENGTH
 wrf-tools spectra INPUT.npy OUTPUT.npz --spacing DT
 wrf-tools report WRFOUT report.json
+wrf-tools hindcast-report RUN_DIRECTORY OUTPUT_DIRECTORY [--domain d01]
+wrf-tools setup-maps [--resolution 10m|50m|110m]
 wrf-tools bts-info inflow.bts
 wrf-tools bts-compare first.bts second.bts
 wrf-tools openfast-info simulation.outb
