@@ -1,5 +1,13 @@
 # Release notes
 
+## Unreleased
+
+- Fix Windows test failures by explicitly reading UTF-8 source and API
+  documentation. The discovery test now also simulates the Windows legacy
+  CP1252 default on Linux to catch this regression before publication.
+- No package calculations, report artifacts or released tags are changed by
+  this test-only correction.
+
 ## 0.5.0 — 2026-10-15
 
 Beta update focused on connected workflows, explicit scientific conventions,

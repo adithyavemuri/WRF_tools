@@ -16,14 +16,22 @@ from wrf_tools.diagnostic_groups import run_diagnostic_groups
 ROOT=Path(__file__).resolve().parents[1]
 
 
-def test_every_public_function_is_discoverable_and_resolvable(tmp_path):
+@pytest.mark.parametrize("default_encoding", ["utf-8", "cp1252"])
+def test_every_public_function_is_discoverable_and_resolvable(tmp_path, monkeypatch, default_encoding):
+    # Exercise the Windows legacy default even when this test runs on Linux.
+    read_text = Path.read_text
+
+    def read_with_default(path, encoding=None, errors=None):
+        return read_text(path, encoding=encoding or default_encoding, errors=errors)
+
+    monkeypatch.setattr(Path, "read_text", read_with_default)
     root=ROOT/"src/wrf_tools"
     expected=set()
     for file in root.rglob("*.py"):
         module=".".join(file.relative_to(root).with_suffix("").parts)
         if file.name=="__init__.py" or module in {"cli","recipes","capabilities"}:
             continue
-        expected.update(f"{module}.{node.name}" for node in ast.parse(file.read_text()).body
+        expected.update(f"{module}.{node.name}" for node in ast.parse(file.read_text(encoding="utf-8")).body
                         if isinstance(node,ast.FunctionDef) and not node.name.startswith("_"))
     catalog=capability_catalog()
     assert set(catalog)==expected
@@ -33,7 +41,7 @@ def test_every_public_function_is_discoverable_and_resolvable(tmp_path):
     assert "diagnostics.advanced.tke_budget" in catalog
     assert "timeseries.station.read_station_surface" in catalog
     assert "wps.namelist.read_namelist" in catalog
-    guide=write_capability_guide(tmp_path/"API.md").read_text()
+    guide=write_capability_guide(tmp_path/"API.md").read_text(encoding="utf-8")
     assert all(identity in guide for identity in expected)
     with pytest.raises(ValueError,match="Unknown capability"):
         get_capability("os.system")

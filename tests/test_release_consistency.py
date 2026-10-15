@@ -28,7 +28,7 @@ def test_local_package_imports_in_source_scripts_examples_and_tests_exist():
 
 def test_published_api_catalog_matches_source(tmp_path):
     generated=write_capability_guide(tmp_path/"API.md")
-    assert generated.read_text()==(ROOT/"docs/API_CATALOG.md").read_text(), "Regenerate with wrf-tools capabilities --markdown docs/API_CATALOG.md"
+    assert generated.read_text(encoding="utf-8") == (ROOT/"docs/API_CATALOG.md").read_text(encoding="utf-8"), "Regenerate with wrf-tools capabilities --markdown docs/API_CATALOG.md"
 
 
 def test_repository_markdown_local_file_links_exist():
@@ -43,7 +43,7 @@ def test_repository_markdown_local_file_links_exist():
 def test_checked_capability_ledger_accounts_for_current_public_surface():
     import hashlib
     import json
-    ledger=json.loads((ROOT/"docs/validation/capability-coverage.json").read_text())
+    ledger=json.loads((ROOT/"docs/validation/capability-coverage.json").read_text(encoding="utf-8"))
     catalog=capability_catalog()
     assert {row["id"] for row in ledger["capabilities"]}==set(catalog)
     assert not ledger["failures"] and "UNACCOUNTED" not in ledger["counts"]
