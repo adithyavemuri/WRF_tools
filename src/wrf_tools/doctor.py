@@ -27,6 +27,8 @@ DEPENDENCIES = (
     ("Map projections", "cartopy", "Cartopy", False),
     ("Coordinate transforms", "pyproj", "pyproj", False),
     ("PDF reports", "reportlab", "reportlab", False),
+    ("GIF/PNG encoding", "PIL", "Pillow", False),
+    ("Optional 3-D scene renderer", "manim", "manim", False),
     ("Native WRF diagnostics", "wrf", "wrf-python", False),
 )
 

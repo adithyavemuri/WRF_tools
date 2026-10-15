@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterable
 
-import numpy as np
 import xarray as xr
 
 
@@ -26,11 +25,13 @@ def open_wrf_sequence(
     files = [str(Path(path)) for path in paths]
     if not files:
         raise ValueError("At least one WRF file is required")
-    datasets = [xr.open_dataset(path, chunks=chunks, **kwargs) for path in files]
+    datasets = []
     try:
+        for path in files:
+            datasets.append(xr.open_dataset(path,chunks=chunks,**kwargs))
         reference = datasets[0]
         grid_attrs = ("GRID_ID", "DX", "DY", "MAP_PROJ", "CEN_LAT", "CEN_LON")
-        horizontal = ("west_east", "south_north", "west_east_stag", "south_north_stag")
+        horizontal = ("west_east", "south_north", "west_east_stag", "south_north_stag", "bottom_top", "bottom_top_stag", "soil_layers_stag")
         for dataset, path in zip(datasets[1:], files[1:]):
             differing = [name for name in grid_attrs if reference.attrs.get(name) != dataset.attrs.get(name)]
             differing += [name for name in horizontal if reference.sizes.get(name) != dataset.sizes.get(name)]
@@ -38,12 +39,8 @@ def open_wrf_sequence(
                 raise ValueError(f"Incompatible WRF domain/grid in {path}: {', '.join(sorted(set(differing)))}")
         combined = xr.concat(datasets, dim=concat_dim, data_vars="minimal", coords="minimal", compat="override")
         if "Times" in combined:
-            raw = combined["Times"].values
-            if raw.ndim == 2:
-                text = [b"".join(row).decode().strip().replace("_", "T", 1) for row in raw]
-                stamps = np.array(text, dtype="datetime64[s]")
-                if np.any(np.diff(stamps.astype("int64")) <= 0):
-                    raise ValueError("WRF file sequence contains overlapping or non-monotonic times")
+            from ..visualization import history_times
+            history_times(combined)
         combined.set_close(lambda: [dataset.close() for dataset in datasets])
         return combined
     except Exception:

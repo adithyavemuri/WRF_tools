@@ -1,0 +1,25 @@
+# Optional settings for the connected diagnostic groups.
+# Run from the WRF_tools folder (after installing the package):
+# wrf-tools hindcast-report /path/to/wrf/run example_results/my-report \
+#   --diagnostics all --diagnostics-config examples/diagnostics.toml
+# All groups are attempted; the PDF explains any unavailable group.
+
+[diagnostics]
+profile_top_metres = 2000
+rotor_bottom_metres = 40
+rotor_top_metres = 200
+# These heights must be increasing, equally spaced and in metres MSL, not AGL.
+# Q is an approximate Cartesian diagnostic; see the report's methods note.
+flow_heights_metres = [200, 400, 600, 800, 1000]
+# Optional: filter_cutoff_metres = 18000  # Default: six nominal grid cells.
+
+# Stull partial TKE budget / resolved covariances need a meaningful averaging
+# window. Never enable just to obtain extra figures from hourly weather output.
+# With suitable high-frequency LES records, select the period in your input
+# folder, justify stationarity, then set turbulence_average = "time" below.
+turbulence_average = "none"
+minimum_turbulence_samples = 32
+max_turbulence_interval_seconds = 60
+
+# The package does not supply closure terms that were not saved by WRF.
+# For SGS terms, use the LES API/recipe with your explicit stress convention.

@@ -1,11 +1,14 @@
 # WRF Tools
 
-Current release: **v0.4.0**
+Current release: **v0.5.0** (beta)
+
+See the [release notes](CHANGELOG.md) for new workflows, calculation corrections,
+compatibility notes and verification limits.
 
 [![Tests](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml/badge.svg)](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml)
 [![Python 3.10 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.12-blue)](https://www.python.org/)
 [![MIT License](https://img.shields.io/github/license/adithyavemuri/WRF_tools)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/adithyavemuri/WRF_tools)](https://github.com/adithyavemuri/WRF_tools/releases/latest)
+[![Latest release](https://img.shields.io/github/v/release/adithyavemuri/WRF_tools?include_prereleases)](https://github.com/adithyavemuri/WRF_tools/releases)
 
 > **Scientific basis:** equations, assumptions, applicability limits, and
 > primary references are documented in
@@ -72,24 +75,35 @@ and the [TurbSim v2 User's Guide](https://openfast.readthedocs.io/en/v4.0.5/_dow
 
 ## Example output
 
-The repository includes an anonymized report generated from a real WRF file:
+The repository includes a report generated from a real two-domain WRF run:
 
-- [Example PDF report](example_results/single_wrf_advanced/case_report.pdf)
-- [Complete example script](examples/single_wrf_all_capabilities.py)
+- [Final real-data hindcast PDF](example_results/final-report/hindcast-report.pdf)
+- [Complete capability showcase](examples/showcase_all_capabilities.py) — labelled synthetic inputs and a coverage ledger
 - [Beginner tutorial: inspect variables, make a custom map, and create a report](examples/README.md)
 - [Complete readable example script](examples/create_hindcast_report.py)
-- [Validated nested-hindcast PDF](docs/demo/netherlands-nested-hindcast-report.pdf)
+- [Audit findings and verification boundary](docs/AUDIT.md)
+- [Per-capability execution ledger](docs/validation/capability-coverage.md)
 
-![Example terrain diagnostics](example_results/single_wrf_advanced/terrain_diagnostics.png)
+The old one-file demonstration and its short-record spectrum images were removed:
+they overstated completeness and mixed sampling interpretations. The new showcase
+separates synthetic numerical examples from real WRF analysis.
 
-Component spectra use independent scales, fitted slopes, and normalized −5/3
-references:
-
-| U spectrum | V spectrum | W spectrum |
-|---|---|---|
-| ![U spectrum](example_results/single_wrf_advanced/u_wind_spectrum.png) | ![V spectrum](example_results/single_wrf_advanced/v_wind_spectrum.png) | ![W spectrum](example_results/single_wrf_advanced/w_wind_spectrum.png) |
+![Real d02 wind overview: map, section, height-time evolution and profiles](docs/demo/d02-wind-overview.png)
 
 ## Capabilities
+
+**Use the whole package:** [connected workflows](docs/CONNECTED_WORKFLOWS.md)
+explains selectable report groups and editable TOML recipes.
+`wrf-tools capabilities` lists every public top-level algorithm; the
+[complete API index](docs/API_CATALOG.md) includes its inputs and source.
+Q criterion, Stull stability diagnostics and the conditional partial TKE budget
+are connected to the report. Missing prerequisites are reported, not hidden.
+
+```bash
+wrf-tools hindcast-report /data/wrf/run reports/my-case --diagnostics all
+wrf-tools capabilities diagnostics.advanced.q_criterion
+wrf-tools run-recipe examples/recipes/coupling-demo.toml --output reports/inflow-demo
+```
 
 | Area | Included functionality |
 |---|---|
@@ -108,9 +122,54 @@ references:
 | Observations | Generic mast, LiDAR, RADAR and SCADA tables; alignment and collocation |
 
 See the [capability matrix](docs/CAPABILITY_MATRIX.md) and
-[package expansion record](docs/PACKAGE_EXPANSION.md) for detailed coverage.
+[complete API catalog](docs/API_CATALOG.md) for detailed coverage.
 Equations, methodological limits, and primary references are catalogued in
 [Scientific methods and references](docs/SCIENTIFIC_METHODS.md).
+
+### Reference-documented figures and animation
+
+Hindcast reports include a four-panel wind overview per supported domain: a
+geographic wind map, matching grid-row section, physical-height time evolution
+and site profiles. PNG/SVG figures and JSON methods sidecars accompany the
+report; the PDF contains a scientific-methods appendix with primary references.
+
+```bash
+wrf-tools animate-wind /data/wrf/run reports/wind_movie \
+  --domain d02 --fps 1 --maximum-frames 7
+```
+
+This creates a fixed-scale GIF using actual WRF times, plus reusable PNG frames.
+An optional Manim Community example renders actual physical-height contours in
+3-D instead of composing presentation slides. See the [visualization guide](docs/VISUALIZATION.md) and
+[beginner animation example](examples/animate_wrf_wind.py).
+
+### Simple simulation comparisons
+
+Overlay named time series or common-height profiles, optionally subtracting a
+baseline. Select variables and averaging yourself; no comparison PDF or automatic
+regridding. Uniform, cell-area and layer-thickness weighting are explicit options.
+Try the synthetic plot example without running a simulation:
+
+```bash
+.venv/bin/python examples/compare_simulations.py --demo
+```
+
+See the [comparison and averaging guide](docs/COMPARISON.md) for real-run commands
+and editable Python examples.
+
+Model TKE plots are included when supported fields are present; missing TKE is
+reported explicitly, not inferred from hourly wind variability. See
+[TKE diagnostics](docs/TURBULENCE.md) and the
+[capability exposure audit](docs/CAPABILITY_EXPOSURE.md) for what the report does
+and does not use from the wider library.
+
+For horizontal, selected-area, vertical-layer and time means, use the separate
+[averaging example](examples/average_wrf_fields.py). It writes PNG/SVG plots and
+reduced NetCDF with explicit coordinate/weight settings:
+
+```bash
+.venv/bin/python examples/average_wrf_fields.py --demo
+```
 
 ## Installation
 
@@ -143,7 +202,7 @@ validates its timeline and grid consistency, and produces JSON, HTML and PDF.
 For each domain it includes mapped surface fields, wind-resource diagnostics,
 accumulated precipitation, model-level wind and temperature profiles, a wind
 time-height section, and a diagnostic shear exponent. TKE is included only when
-`TKE_PBL` or `QKE` is present in the files. This is a model-output report, not
+`TKE_PBL`, `QKE` or dynamics `TKE` is present in the files. This is a model-output report, not
 observational validation or a turbine-energy assessment.
 
 ### Windows PowerShell
@@ -165,14 +224,15 @@ python -m pip install -r requirements.txt
 python -m pip install -e . --no-deps
 ```
 
-Native WRF diagnostics and Cartopy are separate because they can require
-system libraries:
+Normal reports, contours and the full showcase do not require `wrf-python`,
+WRF compilation or administrator access. The separate compatibility dependency
+file is only for users who also want external `wrf-python` integration:
 
 ```bash
 python -m pip install -r requirements-wrf.txt
 ```
 
-Compiler and NetCDF prerequisites are in
+Installation and optional native-dependency notes are in
 [docs/PREREQUISITES.md](docs/PREREQUISITES.md).
 
 ## Quick start
@@ -220,7 +280,7 @@ wrf-tools hindcast-report /data/wrf/run reports/my_case \
 
 The compact PDF compares all discovered domains, normally placing two figures
 per row. It includes accumulated precipitation, model-level wind and
-temperature profiles, TKE when `TKE_PBL` or `QKE` exists, time-height wind and
+temperature profiles, conditional model TKE maps/profiles/evolution, time-height wind and
 a configurable shear-exponent diagnostic.
 
 The sequence reader checks domain ID, grid dimensions, spacing, projection,
@@ -311,27 +371,32 @@ quantized velocities fail the round-trip tolerance. Successful serialization
 does not establish that the LES inflow is physically suitable; consult the
 coupling checklist in [Scientific methods](docs/SCIENTIFIC_METHODS.md).
 
-## Run the complete example
+## Run the complete capability showcase
 
-The example takes its input, site, and output directory as arguments and has no
-machine-specific paths:
+No WRF download or real observations are required for this explicitly synthetic
+demonstration. Read/edit the four chapters under `examples/showcase/`:
 
 ```bash
-python examples/single_wrf_all_capabilities.py \
-  /data/wrf/wrfout_d01_2024-01-01_00_00_00 \
-  --latitude 52.0 --longitude 4.3 \
-  --output-dir example_results/my_case
+python examples/showcase_all_capabilities.py --output example_results/my_showcase
 ```
 
-It produces QC output, summaries, reusable arrays, publication-style figures,
-a case report, and format round-trip checks. A short hourly file demonstrates
-the spectral API but cannot resolve a true atmospheric inertial subrange; the
-report states this limitation.
+It exercises equations, data selection, statistics, filters/spectra, file formats,
+plots, animations and reports. `capability-coverage.json`/`.md` accounts for every
+public function. The verified baseline exercised 204 of 207 and explicitly
+documented three external prerequisites: map download, `wgrib2`, and OpenFAST.
+New unaccounted functions or execution failures make the showcase fail. This is
+entry-point coverage, NOT exhaustive branch coverage or atmospheric validation.
+
+For real WRF output use `examples/create_hindcast_report.py`; for actual station
+data use [compare_observations.py](examples/compare_observations.py). See the
+[showcase guide](examples/showcase/README.md) for inputs, outputs and limitations.
 
 ## Command line
 
 ```text
 wrf-tools doctor [--core-only] [--json]
+wrf-tools capabilities [FUNCTION_ID] [--markdown PATH]
+wrf-tools run-recipe RECIPE.toml --output DIRECTORY [--force]
 wrf-tools discover DIRECTORY [--domain d01] [--recursive]
 wrf-tools inspect WRFOUT
 wrf-tools validate WRFOUT

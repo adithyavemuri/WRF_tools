@@ -14,7 +14,7 @@ def power_spectrum(data: Any, *, spacing: float = 1.0, axis: int = -1, detrend: 
     Applications*, Cambridge University Press, doi:10.1017/CBO9780511622762.
     """
     values = np.asarray(data, dtype=float)
-    if spacing <= 0:
+    if not np.isfinite(spacing) or spacing <= 0 or not values.shape[axis]:
         raise ValueError("spacing must be positive")
     if detrend:
         values = values - np.mean(values, axis=axis, keepdims=True)
@@ -35,8 +35,8 @@ def welch_spectrum(data: Any, *, sample_rate: float, nperseg: int, overlap: int 
     Electroacoustics, doi:10.1109/TAU.1967.1161901.
     """
     values = np.asarray(data, dtype=float)
-    if not 0 <= overlap < nperseg <= values.shape[axis]:
-        raise ValueError("require 0 <= overlap < nperseg <= axis length")
+    if not np.isfinite(sample_rate) or sample_rate<=0 or not 0 <= overlap < nperseg <= values.shape[axis] or nperseg<3:
+        raise ValueError("require positive sample_rate and 0 <= overlap < 3 <= nperseg <= axis length")
     step = nperseg - overlap
     starts = range(0, values.shape[axis] - nperseg + 1, step)
     window = np.hanning(nperseg)
@@ -67,14 +67,17 @@ def radial_wavenumber_spectrum(data: Any, *, dx: float, dy: float | None = None,
     if field.ndim != 2:
         raise ValueError("data must be two-dimensional")
     dy = dx if dy is None else dy
+    if not np.isfinite([dx,dy]).all() or min(dx,dy)<=0 or min(field.shape)<2:
+        raise ValueError("Require a grid >=2x2 and positive finite spacing")
     field = field - np.mean(field)
     power = np.abs(np.fft.fft2(field)) ** 2 / field.size
     ky = np.fft.fftfreq(field.shape[0], dy)
     kx = np.fft.fftfreq(field.shape[1], dx)
     radial = np.sqrt(ky[:, None] ** 2 + kx[None, :] ** 2)
     bins = min(field.shape) // 2 if bins is None else bins
+    if not isinstance(bins,(int,np.integer)) or bins<1: raise ValueError("bins must be a positive integer")
     edges = np.linspace(0.0, radial.max(), bins + 1)
-    index = np.digitize(radial.ravel(), edges) - 1
+    index = np.minimum(np.digitize(radial.ravel(), edges) - 1,bins-1)
     summed = np.bincount(index, weights=power.ravel(), minlength=bins + 1)[:bins]
     count = np.bincount(index, minlength=bins + 1)[:bins]
     return 0.5 * (edges[:-1] + edges[1:]), np.divide(summed, count, out=np.zeros_like(summed), where=count > 0)
@@ -90,6 +93,8 @@ def coherence(first: Any, second: Any, *, sample_rate: float, nperseg: int, over
     x, y = np.asarray(first, float), np.asarray(second, float)
     if x.shape != y.shape or x.ndim != 1:
         raise ValueError("signals must be equally shaped one-dimensional arrays")
+    if not np.isfinite(sample_rate) or sample_rate<=0 or not 0<=overlap<nperseg<=x.size or nperseg<3:
+        raise ValueError("Require positive sample rate and valid segments of at least three samples")
     step = nperseg - overlap
     window = np.hanning(nperseg)
     pxx = pyy = pxy = None
@@ -103,7 +108,8 @@ def coherence(first: Any, second: Any, *, sample_rate: float, nperseg: int, over
         count += 1
     if count == 0:
         raise ValueError("nperseg exceeds signal length")
-    coh = np.abs(pxy / count) ** 2 / ((pxx / count) * (pyy / count))
+    denominator=(pxx/count)*(pyy/count)
+    coh = np.divide(np.abs(pxy/count)**2,denominator,out=np.full_like(denominator,np.nan),where=denominator>0)
     return np.fft.rfftfreq(nperseg, 1.0 / sample_rate), np.clip(coh.real, 0.0, 1.0)
 
 def cross_spectrum(first, second, *, spacing=1.0, detrend=True):
@@ -113,13 +119,17 @@ def cross_spectrum(first, second, *, spacing=1.0, detrend=True):
     """
     x,y=np.asarray(first,float),np.asarray(second,float)
     if x.shape!=y.shape or x.ndim!=1: raise ValueError("signals must be equally shaped one-dimensional arrays")
+    if not x.size or not np.isfinite(spacing) or spacing<=0: raise ValueError("Require nonempty signals and positive finite spacing")
     if detrend: x=x-x.mean(); y=y-y.mean()
-    cross=spacing/x.size*np.fft.rfft(x)*np.conj(np.fft.rfft(y)); cross[1:-1]*=2
+    cross=spacing/x.size*np.fft.rfft(x)*np.conj(np.fft.rfft(y))
+    cross[1:-1 if x.size%2==0 else None]*=2
     return np.fft.rfftfreq(x.size,spacing),cross
 
 def log_bin(frequency, spectrum, *, bins=30):
     """Average spectral values in geometrically spaced frequency bins."""
     f,s=np.asarray(frequency,float),np.asarray(spectrum); mask=f>0
-    edges=np.geomspace(f[mask].min(),f[mask].max(),bins+1); index=np.digitize(f[mask],edges)-1
-    count=np.bincount(index,minlength=bins+1)[:bins]; centers=np.sqrt(edges[:-1]*edges[1:]); summed=np.bincount(index,weights=np.real(s[mask]),minlength=bins+1)[:bins]
+    if bins<1 or not mask.any(): raise ValueError("Require positive frequencies and at least one bin")
+    edges=np.geomspace(f[mask].min(),f[mask].max(),bins+1)
+    index=np.minimum(np.digitize(f[mask],edges)-1,bins-1)
+    count=np.bincount(index,minlength=bins); centers=np.sqrt(edges[:-1]*edges[1:]); summed=np.bincount(index,weights=np.real(s[mask]),minlength=bins)
     return centers,np.divide(summed,count,out=np.full(bins,np.nan),where=count>0)

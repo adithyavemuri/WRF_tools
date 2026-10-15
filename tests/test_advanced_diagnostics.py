@@ -5,7 +5,7 @@ from wrf_tools.diagnostics import (
     component_spectra, diagnose_pbl_height, fit_spectral_slope, height_agl,
     horizontal_kinematics, integral_time_scale, interpolate_height,
     low_level_jet, precipitation_diagnostics, rotor_equivalent_wind_speed,
-    rotor_shear_veer, weibull_fit, wind_power_density,
+    rotor_shear_veer, weibull_fit, wind_power_density, q_criterion,
 )
 from wrf_tools.quality import quality_control
 from wrf_tools.spatial import integral_conservation, landuse_statistics, rotate_vectors, temporal_diagnostics, terrain_metrics
@@ -40,3 +40,10 @@ def test_qc_spatial_and_temporal(capsys):
     assert np.isclose(integral_conservation([1,1],[1,1],2,2)["relative_error"],0)
     ru,rv=rotate_vectors(1,0,90); assert np.allclose([ru,rv],[0,1],atol=1e-12)
     assert "ramp_events" in temporal_diagnostics([1,2,8])
+
+
+def test_q_criterion_distinguishes_solid_rotation_and_strain():
+    z,y,x=np.meshgrid(np.arange(3.)*3,np.arange(4.)*2,np.arange(5.)*4,indexing="ij")
+    zeros=np.zeros_like(x)
+    np.testing.assert_allclose(q_criterion(-2*y,2*x,zeros,4,2,3),4.)
+    np.testing.assert_allclose(q_criterion(2*x,-2*y,zeros,4,2,3),-4.)

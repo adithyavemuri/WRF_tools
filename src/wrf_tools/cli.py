@@ -132,6 +132,9 @@ def _hindcast_report(args: argparse.Namespace) -> int:
         latitude=args.latitude,
         longitude=args.longitude,
         configuration=configuration,
+        tke_variable=args.tke_variable,
+        diagnostic_groups=args.diagnostics,
+        diagnostic_options=_read_diagnostic_options(args.diagnostics_config),
     )
     print(json.dumps({name: str(path) for name, path in paths.items()}, indent=2))
     return 0
@@ -157,9 +160,58 @@ def _setup_maps(args: argparse.Namespace) -> int:
     return 0
 
 
+def _animate_wind(args: argparse.Namespace) -> int:
+    from .animations import create_wind_animation
+    paths = create_wind_animation(args.run_directory, args.output_directory,
+        domain=args.domain, fps=args.fps, stride=args.stride,
+        maximum_frames=args.maximum_frames, limits=args.limits, movie_format=args.format)
+    print(json.dumps({key: str(path) for key, path in paths.items()}, indent=2))
+    return 0
+
+
+def _read_diagnostic_options(path):
+    if not path:
+        return {}
+    try:
+        import tomllib
+    except ModuleNotFoundError:
+        import tomli as tomllib
+    with Path(path).open("rb") as handle:
+        return tomllib.load(handle).get("diagnostics", {})
+
+
+def _capabilities(args):
+    from .capabilities import capability_catalog, write_capability_guide
+    catalog=capability_catalog()
+    if args.markdown:
+        print(write_capability_guide(args.markdown)); return 0
+    if args.identity:
+        if args.identity not in catalog:
+            raise ValueError("Unknown capability; omit the name to list all")
+        print(json.dumps(catalog[args.identity],indent=2))
+    else:
+        for item in catalog.values():
+            print(f"{item['id']} — {item['documentation'].splitlines()[0]}")
+    return 0
+
+
+def _run_recipe(args):
+    from .recipes import run_recipe
+    print(run_recipe(args.recipe,args.output,force=args.force)); return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="wrf-tools", description="General WRF workflow utilities")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    catalog = subparsers.add_parser("capabilities", help="list every public callable and inspect its inputs")
+    catalog.add_argument("identity",nargs="?")
+    catalog.add_argument("--markdown",help="write the complete API guide")
+    catalog.set_defaults(handler=_capabilities)
+    recipe = subparsers.add_parser("run-recipe",help="execute an editable TOML chain of package functions")
+    recipe.add_argument("recipe")
+    recipe.add_argument("--output",required=True)
+    recipe.add_argument("--force",action="store_true",help="allow reuse of an existing recipe output folder")
+    recipe.set_defaults(handler=_run_recipe)
 
     discover = subparsers.add_parser("discover", help="discover wrfout files")
     discover.add_argument("directory")
@@ -209,11 +261,25 @@ def build_parser() -> argparse.ArgumentParser:
     hindcast.add_argument("--domain", default="d01")
     hindcast.add_argument("--latitude", type=float)
     hindcast.add_argument("--longitude", type=float)
+    hindcast.add_argument("--tke-variable", help="explicit model TKE source: QKE, TKE_PBL or TKE; default auto")
+    hindcast.add_argument("--diagnostics",default="all",help="all (default), none, or comma-separated thermodynamics,wind_resource,flow_structure,spatial,spectral,turbulence")
+    hindcast.add_argument("--diagnostics-config",help="editable TOML containing a [diagnostics] options table")
     hindcast.add_argument("--configuration")
     hindcast.add_argument("--case-manifest")
     hindcast.add_argument("--build-manifest")
     hindcast.add_argument("--workflow-state")
     hindcast.set_defaults(handler=_hindcast_report)
+
+    animate = subparsers.add_parser("animate-wind", help="export a fixed-scale wind animation, PNG frames and methods manifest")
+    animate.add_argument("run_directory")
+    animate.add_argument("output_directory")
+    animate.add_argument("--domain", default="d01")
+    animate.add_argument("--fps", type=float, default=1.0, help="playback frames per second, not model output frequency")
+    animate.add_argument("--stride", type=int, default=1, help="select every Nth actual history time")
+    animate.add_argument("--maximum-frames", type=int)
+    animate.add_argument("--limits", type=float, nargs=2, metavar=("MIN", "MAX"))
+    animate.add_argument("--format", choices=("gif", "mp4"), default="gif")
+    animate.set_defaults(handler=_animate_wind)
 
     openfast = subparsers.add_parser("openfast-info", help="inspect OpenFAST ASCII or binary output")
     openfast.add_argument("path"); openfast.set_defaults(handler=_openfast_info)

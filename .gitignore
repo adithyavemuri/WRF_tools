@@ -1,4 +1,8 @@
 .venv/
+.venv-manim/
+.manim-env/
+.manim-packages/
+.manim-cache/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -9,9 +13,14 @@ build/
 dist/
 *.egg-info/
 .coverage
-source_collections/
 *.nc
 *.bts
 *.wnd
 *.outb
 tmp/
+media/
+# Generated examples stay local; publish one explicitly selected report only.
+example_results/*
+!example_results/final-report/
+example_results/final-report/*
+!example_results/final-report/hindcast-report.pdf

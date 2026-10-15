@@ -2,46 +2,75 @@
 from __future__ import annotations
 import numpy as np
 
+def _check_parameters(frequency, *parameters):
+    """Require finite nonnegative frequency and declared scalar/array domains."""
+    f=np.asarray(frequency,float)
+    if not np.isfinite(f).all() or np.any(f<0):
+        raise ValueError("Frequencies must be finite and nonnegative")
+    for name,value,allow_zero in parameters:
+        value=np.asarray(value,float)
+        if not np.isfinite(value).all() or np.any(value<0 if allow_zero else value<=0):
+            raise ValueError(f"{name} must be finite and {'nonnegative' if allow_zero else 'positive'}")
+    return f
+
 def kaimal_spectrum(frequency, *, mean_speed, height, friction_velocity, component="u"):
     """Return the neutral surface-layer Kaimal component spectrum.
 
-    Constants follow Kaimal et al. (1972), *QJRMS*,
-    doi:10.1002/qj.49709841707. Frequency is in Hz and the result is a
-    one-sided velocity PSD in m2 s-2 Hz-1 when SI inputs are used.
+    Near-neutral component variant documented in Risø-R-1506(EN), Eq. (4.5),
+    https://backend.orbit.dtu.dk/ws/files/7702984/ris_r_1506.pdf (p.35).
+    It uses u:102/(1+33n)^(5/3), v:17/(1+9.5n)^(5/3), and
+    w:2.1/(1+5.3n^(5/3)), all multiplied by u*² z/U; n=fz/U.
+    Kaimal et al. (1972), doi:10.1002/qj.49709841707, is the underlying
+    family, not a claim that every published coefficient variant is identical.
+    Frequency is Hz, result is one-sided m2 s-2 Hz-1. This is not IEC Kaimal.
     """
-    f = np.asarray(frequency, float)
+    f = _check_parameters(frequency,("mean_speed",mean_speed,False),("height",height,False),
+        ("friction_velocity",friction_velocity,True))
     n = f*height/mean_speed
-    constants = {"u": (102.0, 33.0), "v": (17.0, 9.5), "w": (2.0, 5.3)}
+    constants = {"u": (102.0, 33.0), "v": (17.0, 9.5), "w": (2.1, 5.3)}
     if component not in constants:
         raise ValueError("component must be u, v, or w")
     a, b = constants[component]
-    return friction_velocity**2 * a*height/mean_speed / np.maximum((1+b*n)**(5/3), np.finfo(float).eps)
+    denominator=1+b*n**(5/3) if component=="w" else (1+b*n)**(5/3)
+    return friction_velocity**2 * a*height/mean_speed / denominator
 
 def von_karman_spectrum(frequency, *, mean_speed, sigma, length_scale, component="u"):
     """Return a one-dimensional von Karman velocity spectrum.
 
-    The engineering form and component constants follow IEC 61400-1:2019,
-    Annex C (IEC webstore publication 61400-1:2019).
+    Common longitudinal scale L for all components; sigma is the selected
+    component's standard deviation. Coefficients 71/189 are transcribed directly
+    from the TurbSim v2 guide Eqs. 27-28, printed p.41. The transverse prefactor
+    is 2, not the longitudinal 4. Infinite-frequency integrals are approximately
+    sigma squared (small coefficient-rounding error). This is the legacy
+    IECVKM family described against IEC 61400-1 edition 2, NOT a claim that
+    von Karman is specified by IEC 61400-1:2019. SI input; PSD per Hz.
     """
-    f = np.asarray(frequency, float)
+    f = _check_parameters(frequency,("mean_speed",mean_speed,False),("sigma",sigma,True),
+        ("length_scale",length_scale,False))
     x = f*length_scale/mean_speed
     if component == "u":
-        return 4*sigma**2*length_scale/mean_speed/(1+70.8*x*x)**(5/6)
+        return 4*sigma**2*length_scale/mean_speed/(1+71*x*x)**(5/6)
     if component in {"v", "w"}:
-        return 4*sigma**2*length_scale/mean_speed*(1+188.4*x*x)/(1+70.8*x*x)**(11/6)
+        return 2*sigma**2*length_scale/mean_speed*(1+189*x*x)/(1+71*x*x)**(11/6)
     raise ValueError("component must be u, v, or w")
 
 def exponential_coherence(frequency, separation, *, mean_speed, decay=12.0):
-    """Return Davenport's exponential coherence model.
+    """Return Davenport-style exponential ROOT coherence, not squared coherence.
+
+    Square this amplitude before comparing with spectra.coherence, which returns
+    magnitude-squared coherence. This simple model has no IEC length-scale term.
 
     Reference: Davenport (1961), *Quarterly Journal of the Royal
     Meteorological Society*, doi:10.1002/qj.49708737208.
     """
-    return np.exp(-decay*np.asarray(frequency)*np.asarray(separation)/mean_speed)
+    f=_check_parameters(frequency,("separation",separation,True),("mean_speed",mean_speed,False),
+        ("decay",decay,False))
+    return np.exp(-decay*f*np.asarray(separation)/mean_speed)
 
 def iec_kaimal_spectrum(frequency, *, mean_speed, sigma, length_scale):
     """Return the IEC Kaimal longitudinal spectrum (IEC 61400-1:2019)."""
-    f = np.asarray(frequency, float)
+    f = _check_parameters(frequency,("mean_speed",mean_speed,False),("sigma",sigma,True),
+        ("length_scale",length_scale,False))
     return 4*sigma**2*length_scale/mean_speed/(1+6*f*length_scale/mean_speed)**(5/3)
 
 _CHEYNET_COEFFICIENTS = (
@@ -79,7 +108,8 @@ def cheynet_spectrum(frequency, *, mean_speed, height, friction_velocity, stabil
     f = np.asarray(frequency, dtype=float)
     speed = np.asarray(mean_speed, dtype=float)
     z = np.asarray(height, dtype=float)
-    if np.any(f <= 0) or np.any(speed <= 0) or np.any(z <= 0):
+    _check_parameters(f,("mean_speed",speed,False),("height",z,False),("friction_velocity",friction_velocity,True))
+    if np.any(f <= 0):
         raise ValueError("frequency, mean_speed, and height must be positive")
     coefficients = next(values[component] for lower, upper, values in _CHEYNET_COEFFICIENTS if lower <= stability < upper)
     reduced = np.expand_dims(z / speed, -1) * f

@@ -1,0 +1,61 @@
+# Edit these paths, then run:
+# wrf-tools run-recipe examples/recipes/external-files.toml --output example_results/recipe-external
+# Missing optional inputs produce visible SKIPs, not a claim of validation.
+# Remove optional=true to require that input. No OpenFAST simulation is run.
+
+[[steps]]
+id = "wps_configuration"
+call = "wps.namelist.read_namelist"
+args = [{file = "/path/to/namelist.wps"}]
+optional = true
+save = "wps-configuration.json"
+
+[[steps]]
+id = "nested_domains"
+call = "wps.domains.domain_geometries"
+args = [{ref = "wps_configuration"}]
+
+[[steps]]
+id = "stations"
+call = "timeseries.tslist.read_tslist"
+args = [{file = "/path/to/tslist"}]
+optional = true
+
+[[steps]]
+id = "station_output"
+call = "timeseries.station.read_station_family"
+args = [{file = "/path/to/station.d01.TS"}]
+optional = true
+
+[[steps]]
+id = "turbine_output"
+call = "openfast.read_ascii_output"
+args = [{file = "/path/to/turbine.out"}]
+optional = true
+save = "turbine-output.nc"
+
+[[steps]]
+id = "turbine_statistics"
+call = "openfast.channel_statistics"
+args = [{ref = "turbine_output"}]
+save = "turbine-statistics.json"
+
+# SGS inputs MUST be velocity covariances with known sign/units, not arbitrary
+# density-weighted stresses. Confirm your WRF output convention first.
+[[steps]]
+id = "les_output"
+call = "io.datasets.open_wrf"
+args = [{file = "/path/to/high-frequency-LES-wrfout"}]
+optional = true
+
+[[steps]]
+id = "stresses"
+call = "les.diagnostics.load_sgs_stress"
+args = [{ref = "les_output"}]
+optional = true
+
+[[steps]]
+id = "sgs_energy"
+call = "les.diagnostics.sgs_tke"
+args = [{ref = "stresses"}]
+save = "sgs-energy.npy"

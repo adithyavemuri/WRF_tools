@@ -6,11 +6,14 @@ import re
 from typing import Any
 
 _GROUP = re.compile(r"^\s*&(?P<name>\w+)", re.MULTILINE)
-_ASSIGNMENT = re.compile(r"(?P<name>\w+)\s*=\s*(?P<value>.*?)(?=\n\s*\w+\s*=|\n\s*/)", re.DOTALL)
+_QUOTED = re.compile(r"'(?:''|[^'])*'|\"(?:\"\"|[^\"])*\"")
+_ASSIGNMENT = re.compile(r"\b(?P<name>[A-Za-z]\w*)\s*=")
 
 
 def _parse_value(value: str) -> Any:
-    parts = [part.strip() for part in value.replace("\n", " ").split(",") if part.strip()]
+    masked=_QUOTED.sub(lambda m:" "*len(m.group()),value)
+    boundaries=[-1]+[m.start() for m in re.finditer(",",masked)]+[len(value)]
+    parts=[value[a+1:b].strip() for a,b in zip(boundaries,boundaries[1:]) if value[a+1:b].strip()]
     parsed: list[Any] = []
     for part in parts:
         if (part.startswith("'") and part.endswith("'")) or (part.startswith('"') and part.endswith('"')):
@@ -19,27 +22,36 @@ def _parse_value(value: str) -> Any:
             parsed.append(part.lower() == ".true.")
         else:
             try:
-                parsed.append(float(part) if any(char in part.lower() for char in (".", "e", "d")) else int(part))
+                parsed.append(float(part.lower().replace("d","e")) if any(char in part.lower() for char in (".", "e", "d")) else int(part))
             except ValueError:
                 parsed.append(part)
     return parsed[0] if len(parsed) == 1 else parsed
 
 
 def read_namelist(path: str | Path) -> dict[str, dict[str, Any]]:
-    """Parse common WPS/WRF namelist values without requiring f90nml."""
+    """Parse simple scalar/list WPS namelists (quoted paths/comments supported).
+
+    Not a complete Fortran grammar: indexed assignments, derived types and
+    repetition syntax are rejected; use f90nml for those constructs.
+    """
     text = Path(path).read_text(encoding="utf-8", errors="replace")
+    text=re.sub(r"'(?:''|[^'])*'|\"(?:\"\"|[^\"])*\"|![^\n]*",lambda m:"" if m.group().startswith("!") else m.group(),text)
     result: dict[str, dict[str, Any]] = {}
     groups = list(_GROUP.finditer(text))
     for index, match in enumerate(groups):
         end = groups[index + 1].start() if index + 1 < len(groups) else len(text)
         block = text[match.end():end]
-        slash = block.find("/")
+        masked=_QUOTED.sub(lambda m:" "*len(m.group()),block)
+        slash = masked.find("/")
         if slash >= 0:
-            block = block[:slash + 1]
-        result[match.group("name")] = {
-            item.group("name"): _parse_value(item.group("value"))
-            for item in _ASSIGNMENT.finditer(block)
-        }
+            block = block[:slash]; masked=masked[:slash]
+        if re.search(r"\w+\s*\([^)]*\)\s*=|\b\d+\s*\*",masked):
+            raise ValueError("Indexed/repetition namelist syntax requires f90nml")
+        assignments=list(_ASSIGNMENT.finditer(masked)); values={}
+        for i,item in enumerate(assignments):
+            stop=assignments[i+1].start() if i+1<len(assignments) else len(block)
+            values[item.group("name").lower()]=_parse_value(block[item.end():stop].strip().rstrip(","))
+        result[match.group("name").lower()] = values
     return result
 
 
@@ -51,6 +63,11 @@ def update_namelist_dates(
     domains: int,
     output: str | Path | None = None,
 ) -> Path:
+    """Replace simple start_date/end_date assignment lines for all selected domains.
+
+    output=None updates the source. Intended for conventional WPS files with
+    one date assignment per line, not a general lossless Fortran namelist editor.
+    """
     source = Path(path)
     text = source.read_text(encoding="utf-8")
     replacements = {

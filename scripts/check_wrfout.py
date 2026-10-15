@@ -1,4 +1,9 @@
-"""Run independent wrf-tools integration checks against a real WRF output."""
+"""Run single-file API smoke checks, NOT atmospheric or inflow validation.
+
+For all callable paths use examples/showcase_all_capabilities.py. For an actual
+sequence/report use examples/create_hindcast_report.py. This small checker does
+not establish resolved turbulence from a single timestamp.
+"""
 
 from __future__ import annotations
 
@@ -11,13 +16,12 @@ import traceback
 import numpy as np
 
 from wrf_tools.coupling.openfast import validate_bts, wind_field_from_components, write_bts
-from wrf_tools.diagnostics import resolved_tke, wind_direction, wind_speed
+from wrf_tools.diagnostics import circular_mean, resolved_tke, wind_direction, wind_speed
 from wrf_tools.grid import destagger, interpolate_to_levels, nearest_grid_point, subset_by_bounds
 from wrf_tools.io import (
     discover_wrfout,
     get_variable,
     open_wrf,
-    open_wrf_sequence,
     validate_wrf_dataset,
 )
 from wrf_tools.les import calculate_fluxes, calculate_total_tke, load_velocity
@@ -109,7 +113,8 @@ def main() -> int:
         v = np.asarray(velocity_box["v"].isel(Time=0, bottom_top=0))[center_y - 1:center_y + 2, center_x - 1:center_x + 2]
         return {
             "speed_mean": float(np.mean(wind_speed(u, v))),
-            "direction_mean": float(np.mean(wind_direction(u, v))),
+            "direction_mean": float(circular_mean(wind_direction(u, v))),
+            "direction_reference": "grid-relative; this smoke test does not rotate winds",
         }
 
     check("wind_diagnostics", wind_diagnostics)
@@ -136,7 +141,11 @@ def main() -> int:
             "fluxes": {name: float(value) for name, value in calculate_fluxes(u, v, w).items()},
         }
 
-    check("les_diagnostics", les_diagnostics)
+    if dataset.sizes.get("Time",0)<2:
+        results.append({"name":"les_diagnostics","status":"SKIP",
+            "detail":"One timestamp cannot estimate temporal turbulent variance; no zero-TKE result is presented as evidence"})
+    else:
+        check("temporal_covariance_arithmetic_only_not_LES_validation", les_diagnostics)
 
     results.append(
         {
@@ -169,7 +178,8 @@ def main() -> int:
         with tempfile.TemporaryDirectory() as directory:
             target = write_bts(Path(directory) / "sample.bts", field)
             actual = validate_bts(target, field)
-        return {"shape": list(actual.velocity.shape), "max_speed": float(np.max(actual.velocity))}
+        return {"shape": list(actual.velocity.shape), "max_speed": float(np.max(actual.velocity)),
+            "scope":"Serialization check only: placeholder dz/dt/hub metadata, not a physically reconstructed WRF inflow. Use the reviewed coupling example for a real extraction."}
 
     check("openfast_bts_round_trip", bts_round_trip)
     dataset.close()

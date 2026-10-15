@@ -6,6 +6,7 @@ import re
 _LINE = re.compile(r'^(?P<prefix>\s*)(?P<value>"[^"]*"|\S+)(?P<space>\s+)(?P<label>[A-Za-z][A-Za-z0-9_]*)(?P<rest>.*)$')
 
 def read_parameters(path):
+    """Read labelled scalar text lines; not a complete OpenFAST grammar."""
     result={}
     for line in Path(path).read_text(encoding="utf-8",errors="replace").splitlines():
         match=_LINE.match(line)
@@ -13,6 +14,7 @@ def read_parameters(path):
     return result
 
 def update_parameters(path, values, *, output=None):
+    """Edit existing labelled parameters; output=None replaces the input file."""
     source=Path(path); lines=source.read_text(encoding="utf-8",errors="replace").splitlines(); found=set(); updated=[]
     for line in lines:
         match=_LINE.match(line)

@@ -13,6 +13,7 @@ _STATION = re.compile(
 
 
 def read_tslist(path: str | Path) -> list[Station]:
+    """Read supported named station/ID/latitude/longitude tslist lines."""
     stations: list[Station] = []
     for line in Path(path).read_text(encoding="utf-8", errors="replace").splitlines():
         if not line.strip() or line.lstrip().startswith(("#", "!")):
@@ -31,6 +32,7 @@ def read_tslist(path: str | Path) -> list[Station]:
 
 
 def write_tslist(stations: Iterable[Station], path: str | Path) -> Path:
+    """Write a standard name/ID/latitude/longitude station-definition file."""
     destination = Path(path)
     lines = ["#-----------------------------------------------#", "#  Name                     ID      LAT      LON  #"]
     for station in stations:

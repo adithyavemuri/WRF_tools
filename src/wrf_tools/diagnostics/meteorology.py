@@ -26,6 +26,8 @@ def temperature_from_potential(theta: Any, pressure: Any) -> np.ndarray:
 
     ``T = theta (p/p0)^(Rd/cp)``. See Wallace and Hobbs (2006),
     *Atmospheric Science*, 2nd ed., doi:10.1016/C2009-0-00034-8.
+    Generic atmospheric Rd/cp=287.05/1004 is used here. For exact standard WRF
+    dry-state reconstruction use visualization.temperature_celsius (2/7).
     """
     return np.asarray(theta) * (np.asarray(pressure) / P0) ** (RD / CP)
 
@@ -47,9 +49,10 @@ def air_density(pressure: Any, temperature: Any, water_vapor: Any = 0.0) -> np.n
 def geopotential_height(perturbation: Any, base: Any = 0.0) -> np.ndarray:
     """Convert WRF total geopotential ``PH + PHB`` to height using ``z=Phi/g``.
 
+    Uses WRF's g=9.81 m s-2 (not the generic standard-gravity constant).
     See Skamarock et al. (2019), doi:10.5065/1dfh-6p97.
     """
-    return (np.asarray(perturbation) + np.asarray(base)) / G
+    return (np.asarray(perturbation) + np.asarray(base)) / 9.81
 
 
 def bulk_richardson_number(theta_v_low: Any, theta_v_high: Any, z_low: Any, z_high: Any, u_low: Any, u_high: Any, v_low: Any, v_high: Any) -> np.ndarray:
@@ -70,7 +73,11 @@ def power_law_exponent(speed_low: Any, speed_high: Any, z_low: Any, z_high: Any)
 
 
 def interval_precipitation(accumulated: Any, *, axis: int = 0, prepend_zero: bool = False) -> np.ndarray:
-    values = np.asarray(accumulated)
+    """Difference accumulation counters; retain negative resets, no reconstruction.
+
+    First increment is zero unless prepend_zero=True (then first counter value).
+    """
+    values = np.asarray(accumulated,float)
     prepend = 0.0 if prepend_zero else np.take(values, [0], axis=axis)
     return np.diff(values, axis=axis, prepend=prepend)
 
@@ -99,16 +106,28 @@ def monin_obukhov_length(theta_v: Any, friction_velocity_value: Any, heat_flux: 
     doi:10.1007/s10546-006-9048-6.
     """
     denominator = kappa * G * np.asarray(heat_flux)
-    return -np.asarray(theta_v) * np.asarray(friction_velocity_value) ** 3 / np.where(denominator == 0, np.nan, denominator)
+    numerator=-np.asarray(theta_v)*np.asarray(friction_velocity_value)**3
+    numerator,denominator=np.broadcast_arrays(numerator,denominator)
+    result=np.divide(numerator,denominator,out=np.full(numerator.shape,np.nan),where=denominator!=0)
+    return np.where((denominator==0)&(numerator<0),np.inf,result)
 
 
 def circular_mean(direction: Any, *, weights: Any | None = None, axis: int | None = None) -> np.ndarray:
-    """Return the vector mean of circular directions (Fisher, 1993)."""
+    """Weighted circular vector mean in degrees (Fisher, 1993).
+
+    Nonnegative finite weights only. A zero/near-zero resultant (opposed
+    directions, empty or zero-weight selections) has undefined mean: NaN.
+    Missing directions propagate; this does not invent a prevailing direction.
+    """
     angle = np.deg2rad(direction)
-    weight = 1.0 if weights is None else np.asarray(weights)
+    weight = np.ones_like(angle) if weights is None else np.broadcast_to(np.asarray(weights,float),angle.shape)
+    if not np.isfinite(weight).all() or np.any(weight<0):
+        raise ValueError("Circular-mean weights must be finite and nonnegative")
     sine = np.sum(weight*np.sin(angle), axis=axis)
     cosine = np.sum(weight*np.cos(angle), axis=axis)
-    return np.rad2deg(np.arctan2(sine, cosine)) % 360.0
+    total = np.sum(weight,axis=axis)
+    result = np.rad2deg(np.arctan2(sine, cosine)) % 360.0
+    return np.where((total>0)&(np.hypot(sine,cosine)>1e-12*total),result,np.nan)
 
 def roughness_length(speed: Any, height: Any, friction_velocity_value: Any, *, kappa: float = 0.4) -> np.ndarray:
     """Invert the neutral logarithmic wind law for roughness length."""
@@ -119,4 +138,5 @@ def log_wind_profile(height: Any, *, friction_velocity_value: Any, roughness: An
     return np.asarray(friction_velocity_value)/kappa*np.log((np.asarray(height)-displacement)/np.asarray(roughness))
 
 def mixing_ratio_to_specific_humidity(mixing_ratio: Any) -> np.ndarray:
+    """Convert mixing ratio r to specific humidity q=r/(1+r), both kg/kg."""
     value=np.asarray(mixing_ratio); return value/(1+value)

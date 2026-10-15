@@ -1,0 +1,58 @@
+# Synthetic, no WRF files/OpenFAST executable needed. This checks how functions
+# connect and formats round-trip; it is NOT realistic turbine inflow.
+# wrf-tools run-recipe examples/recipes/coupling-demo.toml --output example_results/recipe-coupling
+
+[[steps]]
+id = "inflow"
+call = "coupling.openfast.operations.step_field"
+kwargs = {speeds = [8, 10, 12], step_duration = 5, dt = 1, ny = 3, nz = 3, dy = 10, dz = 10, hub_height = 100, bottom_height = 90}
+
+[[steps]]
+id = "rotated"
+call = "coupling.openfast.operations.rotate_velocity"
+args = [{ref = "inflow", path = ["velocity"]}]
+kwargs = {horizontal_degrees = 10}
+save = "rotated-velocity.npy"
+
+[[steps]]
+id = "written"
+call = "coupling.openfast.bts.write_bts"
+args = [{output = "inflow.bts"}, {ref = "inflow"}]
+
+[[steps]]
+id = "read_back"
+call = "coupling.openfast.bts.read_bts"
+args = [{ref = "written"}]
+
+[[steps]]
+id = "hub"
+call = "coupling.openfast.operations.velocity_at"
+args = [{ref = "read_back"}]
+save = "hub-velocity.npy"
+
+[[steps]]
+id = "format_error"
+call = "validation.rmse"
+args = [{ref = "inflow", path = ["velocity"]}, {ref = "read_back", path = ["velocity"]}]
+save = "round-trip-error.json"
+
+[[steps]]
+id = "kaimal"
+call = "wind_models.kaimal_spectrum"
+args = [[0.01, 0.02, 0.05, 0.1, 0.2]]
+kwargs = {mean_speed = 10, height = 100, friction_velocity = 0.4}
+save = "kaimal.npy"
+
+[[steps]]
+id = "von_karman"
+call = "wind_models.von_karman_spectrum"
+args = [[0.01, 0.02, 0.05, 0.1, 0.2]]
+kwargs = {mean_speed = 10, sigma = 1.5, length_scale = 100}
+save = "von-karman.npy"
+
+[[steps]]
+id = "cheynet"
+call = "wind_models.cheynet_spectrum"
+args = [[0.01, 0.02, 0.05, 0.1, 0.2]]
+kwargs = {mean_speed = 10, height = 81.5, friction_velocity = 0.4, stability = 0}
+save = "cheynet.npy"

@@ -1,0 +1,4758 @@
+{
+  "data_origin": "SYNTHETIC \u2014 NOT A WRF SIMULATION OR REAL OBSERVATIONS",
+  "interpretation": "Runtime entry-point coverage, not branch coverage or scientific validation. Failures invalidate the run.",
+  "capability_count": 207,
+  "counts": {
+    "EXERCISED_SYNTHETIC": 204,
+    "REQUIRES_EXTERNAL_INPUT": 3
+  },
+  "failures": [],
+  "capabilities": [
+    {
+      "id": "animations.read_animation_manifest",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Actual history states with fixed scales; playback rate is not model time or extra resolved information.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "animations.create_wind_animation",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Actual history states with fixed scales; playback rate is not model time or extra resolved information.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "averaging.mean",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "numerical reduction",
+        "caveat": "Explicit weights and validity masks; model-index and physical-height means differ.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "averaging.wrf_cell_area",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical reduction",
+        "caveat": "Explicit weights and validity masks; model-index and physical-height means differ.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "averaging.layer_thickness",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "numerical reduction",
+        "caveat": "Explicit weights and validity masks; model-index and physical-height means differ.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "averaging.to_height",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 6,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical reduction",
+        "caveat": "Explicit weights and validity masks; model-index and physical-height means differ.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "comparison.align_cases",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "numerical comparison",
+        "caveat": "Aligned coordinates/units do not establish experimental comparability.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "comparison.plot_timeseries",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "numerical comparison",
+        "caveat": "Aligned coordinates/units do not establish experimental comparability.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "comparison.plot_profiles",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "numerical comparison",
+        "caveat": "Aligned coordinates/units do not establish experimental comparability.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contours3d.horizontal_contours",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "contour geometry",
+        "caveat": "Stacked horizontal isolines, not volumetric isosurfaces; vertical exaggeration is recorded.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "contours3d.export_contour_sequence",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "contour geometry",
+        "caveat": "Stacked horizontal isolines, not volumetric isosurfaces; vertical exaggeration is recorded.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.bts.write_bts",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.bts.read_bts",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.bts.validate_bts",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.formats.read_hub_height_binary",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.formats.read_full_field_text",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.formats.read_coherent_points",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.formats.read_bladed_wnd",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.formats.write_bladed_wnd",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.concatenate_fields",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.velocity_at",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.horizontal_plane",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.vertical_profile",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.rotate_velocity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.constant_field",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.step_field",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.operations.write_uniform_wind",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow file contract",
+        "caveat": "Eight-column WindType=2 file; direction is clockwise from the OpenFAST reference, not WRF meteorological wind-FROM. Configure reference height/length separately.",
+        "references": [
+          {
+            "id": "inflow_uniform",
+            "title": "OpenFAST InflowWind User's Guide, Table 1: eight-column uniform wind",
+            "url": "https://openfast.readthedocs.io/en/main/_downloads/a231262e7763b4d61759ebe4e0fc30b2/InflowWind_Manual.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "coupling.openfast.wrf_les.wind_field_from_components",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "inflow format/array operation",
+        "caveat": "Format round trips alone do not prove external interoperability or physically suitable turbine inflow; legacy layouts are limited.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostic_groups.run_diagnostic_groups",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "diagnostic orchestration",
+        "caveat": "See each group method note and explicit unavailable status; no automatic scientific inference.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "hunt",
+            "title": "Hunt, Wray and Moin (1988), Q criterion",
+            "url": "https://ntrs.nasa.gov/citations/19890015184"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.height_agl",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.interpolate_height",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 7,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.stability_class",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "legacy heuristic",
+        "caveat": "50/200 m thresholds are package heuristics, NOT standard/Pasquill classes or a method claimed by Stull.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.diagnose_pbl_height",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "threshold heuristic",
+        "caveat": "User-selected theta-v excess threshold; NOT the producing WRF scheme's PBL diagnosis.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.convective_velocity_scale",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Kinematic virtual heat flux in K m/s; negative buoyancy clipped to zero.",
+        "references": [
+          {
+            "id": "deardorff",
+            "title": "Deardorff (1970), convective velocity scale",
+            "url": "https://doi.org/10.1175/1520-0469(1970)027%3C1211:CVATSF%3E2.0.CO;2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.rotor_equivalent_wind_speed",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "approximate screening diagnostic",
+        "caveat": "Uniform-height cube mean, NOT the paper's rotor-area-weighted REWS; no extrapolation.",
+        "references": [
+          {
+            "id": "rotor",
+            "title": "Wagner et al. (2014), rotor-equivalent speed",
+            "url": "https://doi.org/10.1088/1742-6596/524/1/012108"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.rotor_shear_veer",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.weibull_fit",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "empirical estimator",
+        "caveat": "Positive samples only; constant series gives the limiting infinite shape. Not a long-term resource estimate.",
+        "references": [
+          {
+            "id": "justus",
+            "title": "Justus et al. (1978), wind-speed distributions",
+            "url": "https://doi.org/10.1175/1520-0450(1978)017%3C0350:MFEWSF%3E2.0.CO;2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.wind_power_density",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.component_spectra",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.premultiplied_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.fit_spectral_slope",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.integral_time_scale",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.dew_point",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "empirical approximation",
+        "caveat": "Inverse liquid-water fit using 17.67/243.5 coefficients; Kelvin input/output and RH in percent. Not an ice-saturation formula.",
+        "references": [
+          {
+            "id": "bolton",
+            "title": "Bolton (1980), thermodynamic approximations",
+            "url": "https://doi.org/10.1175/1520-0493(1980)108%3C1046:TCOEPT%3E2.0.CO;2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.relative_humidity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "empirical approximation",
+        "caveat": "Liquid-water saturation fit; RH clipped to 0-100 percent, not an ice or supersaturation diagnostic.",
+        "references": [
+          {
+            "id": "bolton",
+            "title": "Bolton (1980), thermodynamic approximations",
+            "url": "https://doi.org/10.1175/1520-0493(1980)108%3C1046:TCOEPT%3E2.0.CO;2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.equivalent_potential_temperature",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "screening approximation",
+        "caveat": "Simplified exponential formula, NOT Bolton's full parcel/pseudoadiabatic equation.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.brunt_vaisala_frequency",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Dry N; negative N-squared clipped. Nonuniform column differences with first-order edges; no condensate/moist correction.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "gradient",
+            "title": "NumPy nonuniform finite-difference weights and boundary conventions",
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.gradient.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.inversion_layers",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "threshold screening",
+        "caveat": "Nonuniform temperature gradients; threshold is user-selected. Missing derivatives are unclassified (False), not proof of no inversion.",
+        "references": [
+          {
+            "id": "gradient",
+            "title": "NumPy nonuniform finite-difference weights and boundary conventions",
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.gradient.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.tke_budget",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "partial physical budget",
+        "caveat": "Nonuniform vertical gradients of time-mean columns; shear/buoyancy only. No transport, pressure, dissipation, SGS or moving-height budget terms.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "gradient",
+            "title": "NumPy nonuniform finite-difference weights and boundary conventions",
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.gradient.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.horizontal_kinematics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.q_criterion",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Uniform Cartesian derivatives only; nominal-metric report approximation is labelled.",
+        "references": [
+          {
+            "id": "hunt",
+            "title": "Hunt, Wray and Moin (1988), Q criterion",
+            "url": "https://ntrs.nasa.gov/citations/19890015184"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.low_level_jet",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "threshold heuristic",
+        "caveat": "Package-specific speed/drop rule, not a universal jet definition.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.advanced.precipitation_diagnostics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 6,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.potential_temperature",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.temperature_from_potential",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.virtual_temperature",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 6,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.air_density",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.geopotential_height",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.bulk_richardson_number",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.power_law_exponent",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.interval_precipitation",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.reflectivity_to_rain_rate",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.friction_velocity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.monin_obukhov_length",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.circular_mean",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "circular statistic",
+        "caveat": "Nonnegative weights; this package returns NaN for a near-zero resultant rather than an arbitrary direction.",
+        "references": [
+          {
+            "id": "circular",
+            "title": "SciPy circular vector-mean definition and zero-resultant caveat",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.circmean.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.roughness_length",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.log_wind_profile",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.meteorology.mixing_ratio_to_specific_humidity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.turbulence.fluctuations",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 39,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.turbulence.resolved_tke",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 4,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.turbulence.reynolds_flux",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 13,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.turbulence.turbulence_intensity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.wind.wind_speed",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.wind.wind_direction",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.wind.wind_speed_direction_to_uv",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "diagnostics.wind.angle_between",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "physical diagnostic",
+        "caveat": "Check units, coordinates and averaging assumptions in the function docstring.",
+        "references": [
+          {
+            "id": "stull",
+            "title": "Stull (1988), Boundary Layer Meteorology",
+            "url": "https://doi.org/10.1007/978-94-009-3027-8"
+          },
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          }
+        ]
+      }
+    },
+    {
+      "id": "doctor.dependency_status",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "environment infrastructure",
+        "caveat": "Dependency availability is not a numerical or scientific validation result.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "doctor.environment_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "environment infrastructure",
+        "caveat": "Dependency availability is not a numerical or scientific validation result.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "doctor.print_environment_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "environment infrastructure",
+        "caveat": "Dependency availability is not a numerical or scientific validation result.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.point",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.vertical_profile",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.to_levels",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.variables",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.horizontal_plane",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "extract.transect",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "data selection/interpolation",
+        "caveat": "Native staggered variables must be collocated explicitly; generic vertical coordinates are user-supplied.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "filters.butterworth_spatial",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 6,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical filter",
+        "caveat": "FFT methods assume periodicity; block filters are discrete averages, not a full Honnert scale-adaptivity model.",
+        "references": [
+          {
+            "id": "butterworth",
+            "title": "Butterworth (1930), filter response",
+            "url": "https://doi.org/10.1049/jiee-1.1930.0018"
+          },
+          {
+            "id": "resample",
+            "title": "SciPy Fourier resampling: periodicity/Nyquist conventions",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "filters.top_hat_coarsen",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 5,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical filter",
+        "caveat": "FFT methods assume periodicity; block filters are discrete averages, not a full Honnert scale-adaptivity model.",
+        "references": [
+          {
+            "id": "butterworth",
+            "title": "Butterworth (1930), filter response",
+            "url": "https://doi.org/10.1049/jiee-1.1930.0018"
+          },
+          {
+            "id": "resample",
+            "title": "SciPy Fourier resampling: periodicity/Nyquist conventions",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "filters.resolved_subfilter",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical filter",
+        "caveat": "FFT methods assume periodicity; block filters are discrete averages, not a full Honnert scale-adaptivity model.",
+        "references": [
+          {
+            "id": "butterworth",
+            "title": "Butterworth (1930), filter response",
+            "url": "https://doi.org/10.1049/jiee-1.1930.0018"
+          },
+          {
+            "id": "resample",
+            "title": "SciPy Fourier resampling: periodicity/Nyquist conventions",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "filters.butterworth_band",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical filter",
+        "caveat": "FFT methods assume periodicity; block filters are discrete averages, not a full Honnert scale-adaptivity model.",
+        "references": [
+          {
+            "id": "butterworth",
+            "title": "Butterworth (1930), filter response",
+            "url": "https://doi.org/10.1049/jiee-1.1930.0018"
+          },
+          {
+            "id": "resample",
+            "title": "SciPy Fourier resampling: periodicity/Nyquist conventions",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "filters.spectral_downsample",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "periodic numerical resampling",
+        "caveat": "Antialias Fourier truncation with Nyquist merging, not conservative area remapping.",
+        "references": [
+          {
+            "id": "resample",
+            "title": "SciPy Fourier resampling: periodicity/Nyquist conventions",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.resample.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.coordinates.nearest_grid_point",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 4,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.coordinates.subset_by_bounds",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.destagger.destagger",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 40,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.destagger.destagger_wrf",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 5,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.interpolation.interpolate_to_levels",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid.interpolation.regrid_regular",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "grid/interpolation operation",
+        "caveat": "Co-locate first. Linear interpolation is not conservative remapping or terrain-metric differentiation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hindcast.summarize_hindcast",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "report orchestration",
+        "caveat": "Technical hindcast screening, not observation validation, climatology or bankable resource assessment.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hindcast.create_hindcast_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "report orchestration",
+        "caveat": "Technical hindcast screening, not observation validation, climatology or bankable resource assessment.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "io.datasets.open_wrf",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 12,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "file/data contract",
+        "caveat": "Minimum schema/grid/time checks, not full WRF physics/units validation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "io.datasets.open_wrf_sequence",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 4,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "file/data contract",
+        "caveat": "Minimum schema/grid/time checks, not full WRF physics/units validation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "io.datasets.get_variable",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "file/data contract",
+        "caveat": "Minimum schema/grid/time checks, not full WRF physics/units validation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "io.discovery.discover_wrfout",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 5,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "file/data contract",
+        "caveat": "Minimum schema/grid/time checks, not full WRF physics/units validation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "io.validation.validate_wrf_dataset",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "file/data contract",
+        "caveat": "Minimum schema/grid/time checks, not full WRF physics/units validation.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.load_velocity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.calculate_fluxes",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.calculate_total_tke",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.load_sgs_stress",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.sgs_tke",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "les.diagnostics.filtered_tke",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "turbulence diagnostic",
+        "caveat": "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions.",
+        "references": [
+          {
+            "id": "pope",
+            "title": "Pope (2000), Turbulent Flows",
+            "url": "https://doi.org/10.1017/CBO9780511840531"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "maps.setup_map_data",
+      "status": "REQUIRES_EXTERNAL_INPUT",
+      "reason": "Explicit network download; showcase is offline/cache-only",
+      "usage": "wrf-tools setup-maps --resolution 50m",
+      "basis": {
+        "category": "cartographic infrastructure",
+        "caveat": "Natural Earth context is not model data; cache/download policy is explicit.",
+        "references": [
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "maps.add_cached_features",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 19,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "cartographic infrastructure",
+        "caveat": "Natural Earth context is not model data; cache/download policy is explicit.",
+        "references": [
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.from_columns",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.collocate_grid",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.align",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.read_csv",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.read_netcdf",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "observations.normalize_time",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "generic observation I/O/alignment",
+        "caveat": "No native radar/SCADA/LiDAR calibration or QC. Set time tolerance and match units/heights yourself.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.read_ascii_output",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.read_binary_output",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.zero_crossing_frequency",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.stress_from_moment",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.rainflow_cycles",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.channel_statistics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.compare_outputs",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast.run_openfast",
+      "status": "REQUIRES_EXTERNAL_INPUT",
+      "reason": "Needs OpenFAST plus a complete user-reviewed turbine model",
+      "usage": "from wrf_tools.openfast import run_openfast; run_openfast('model/turbine.fst')",
+      "basis": {
+        "category": "loads I/O/statistics",
+        "caveat": "Supported binary IDs are 1/2. Rainflow outputs ranges/counts, not fatigue damage or certified life.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          },
+          {
+            "id": "rainflow",
+            "title": "OpenFAST Toolbox fatigue algorithms / ASTM E1049",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/blob/main/openfast_toolbox/tools/fatigue.py"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast_input.read_parameters",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "text configuration operation",
+        "caveat": "Labelled scalar text lines only; not a complete OpenFAST grammar.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "openfast_input.update_parameters",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "text configuration operation",
+        "caveat": "Labelled scalar text lines only; not a complete OpenFAST grammar.",
+        "references": [
+          {
+            "id": "openfast",
+            "title": "OpenFAST Toolbox format reference",
+            "url": "https://github.com/OpenFAST/openfast_toolbox/tree/main/openfast_toolbox/io"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.horizontal",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.profile",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.time_height",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.wind_rose",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.cross_section",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.wind_barbs",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.nested_domains",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.validation_scatter",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.taylor_diagram",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plotting.animate_fields",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "visualization",
+        "caveat": "Plots do not validate physics; coordinates, units and interpretation are caller responsibilities.",
+        "references": [
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          },
+          {
+            "id": "taylor",
+            "title": "Taylor (2001), diagram of model statistics",
+            "url": "https://doi.org/10.1029/2000JD900719"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quality.quality_control",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "configurable screening",
+        "caveat": "Default ranges and jump thresholds are heuristics, not a proof of valid meteorology. No automatic correction.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "quality.print_qc_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "configurable screening",
+        "caveat": "Default ranges and jump thresholds are heuristics, not a proof of valid meteorology. No automatic correction.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.dataset_summary",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "plots"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.write_json_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.comparison_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.provenance",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.write_html_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "reporting.write_pdf_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "report/serialization utility",
+        "caveat": "Serializes supplied evidence, does not establish its scientific accuracy.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          },
+          {
+            "id": "matplotlib",
+            "title": "Matplotlib plotting/animation APIs",
+            "url": "https://matplotlib.org/stable/users/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.terrain_metrics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.speed_up_ratio",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.landuse_statistics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.resolution_metrics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.boundary_discontinuity",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.integral_conservation",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.rotate_vectors",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.temporal_diagnostics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spatial.diurnal_cycle",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "numerical/screening diagnostic",
+        "caveat": "Nominal-grid Cartesian operations; selected reference/thresholds are researcher choices.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.power_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 5,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.welch_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.radial_wavenumber_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.coherence",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.cross_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "spectra.log_bin",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays",
+        "wrf"
+      ],
+      "basis": {
+        "category": "spectral estimator",
+        "caveat": "Regular sampling; one-sided normalization. Radial result is shell mean, not integrated energy density.",
+        "references": [
+          {
+            "id": "welch",
+            "title": "Welch (1967), modified periodograms",
+            "url": "https://doi.org/10.1109/TAU.1967.1161901"
+          },
+          {
+            "id": "coherence",
+            "title": "SciPy Welch coherence definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.coherence.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.station.read_station_header",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.station.read_station_surface",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.station.read_station_profile",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.station.read_station_family",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.tslist.read_tslist",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "timeseries.tslist.write_tslist",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "station file contract",
+        "caveat": "Supported standard text records only; station time offsets require a user-supplied origin.",
+        "references": [
+          {
+            "id": "station",
+            "title": "WRF station-output source and record conventions",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/wrf_timeseries.F"
+          }
+        ]
+      }
+    },
+    {
+      "id": "turbulence.model_tke_sources",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 104,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "model-output diagnostic",
+        "caveat": "QKE/2, TKE_PBL and dynamics TKE are distinct alternatives, not resolved/total energy or budget closure.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "turbulence.model_tke",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 101,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "model-output diagnostic",
+        "caveat": "QKE/2, TKE_PBL and dynamics TKE are distinct alternatives, not resolved/total energy or budget closure.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "turbulence.tke_diagnostics_data",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "model-output diagnostic",
+        "caveat": "QKE/2, TKE_PBL and dynamics TKE are distinct alternatives, not resolved/total energy or budget closure.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "turbulence.save_tke_diagnostics",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "model-output diagnostic",
+        "caveat": "QKE/2, TKE_PBL and dynamics TKE are distinct alternatives, not resolved/total energy or budget closure.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.bias",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 8,
+      "chapters": [
+        "arrays",
+        "files",
+        "wrf"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.mae",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 8,
+      "chapters": [
+        "arrays",
+        "files",
+        "wrf"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.rmse",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 11,
+      "chapters": [
+        "arrays",
+        "files",
+        "wrf"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.circular_error",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.circular_mae",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.normalized_error",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.kantorovich_distance",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "exact empirical statistic",
+        "caveat": "Independent empirical distributions, not paired scores; finite samples only.",
+        "references": [
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.correlation",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 9,
+      "chapters": [
+        "arrays",
+        "files",
+        "wrf"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.standard_error",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "IID approximation",
+        "caveat": "s/sqrt(n), ddof=1; autocorrelation is NOT corrected.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.comparison_summary",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 7,
+      "chapters": [
+        "arrays",
+        "files",
+        "wrf"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.cluster_profiles",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.spatial_scores",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "validation.rank_cases",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "statistical comparison",
+        "caveat": "Paired finite samples for deterministic scores; no instrument QC, sampling independence or uncertainty model inferred.",
+        "references": [
+          {
+            "id": "pearson",
+            "title": "SciPy Pearson correlation definition",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html"
+          },
+          {
+            "id": "wasserstein",
+            "title": "SciPy empirical Wasserstein-1 CDF identity",
+            "url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wasserstein_distance.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.history_times",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 24,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.rotate_wind",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 10,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.surface_wind",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 8,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.mass_heights",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 19,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.temperature_celsius",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.interpolate_columns",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 7,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.wrf_projection",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 16,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.geographic_axis",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 15,
+      "chapters": [
+        "plots",
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.wind_overview_data",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 4,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.plot_wind_overview",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 3,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "visualization.save_wind_overview",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "WRF diagnostic visualization",
+        "caveat": "Physical-height interpolation, stationary grid, no extrapolation; verify dry-theta convention.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "cartopy",
+            "title": "Cartopy map projections and features",
+            "url": "https://cartopy.readthedocs.io/stable/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.kaimal_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "parametric near-neutral spectrum",
+        "caveat": "Explicit Eq.4.5 coefficient variant, not IEC Kaimal. Vertical denominator differs from u/v; see docstring.",
+        "references": [
+          {
+            "id": "kaimal_components",
+            "title": "Ris\u00f8-R-1506(EN), near-neutral component spectra Eq. 4.5",
+            "url": "https://backend.orbit.dtu.dk/ws/files/7702984/ris_r_1506.pdf"
+          },
+          {
+            "id": "kaimal",
+            "title": "Kaimal et al. (1972), surface-layer spectra",
+            "url": "https://doi.org/10.1002/qj.49709841707"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.von_karman_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "parametric engineering spectrum",
+        "caveat": "TurbSim printed p.41, Eqs.27-28: coefficients 71/189 and transverse prefactor 2. Legacy edition-2 family, not a 2019-standard claim or synthetic field generator.",
+        "references": [
+          {
+            "id": "turbsim",
+            "title": "TurbSim User's Guide: engineering spectral conventions",
+            "url": "https://openfast.readthedocs.io/en/main/_downloads/cb14d3e2d3533d76e405d730fea19846/TurbSim_v2.00.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.exponential_coherence",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "parametric root-coherence model",
+        "caveat": "Returns root coherence exp(-decay*f*separation/U), not the magnitude-squared estimator. Decay is user-selected; no IEC length-scale term.",
+        "references": [
+          {
+            "id": "davenport",
+            "title": "Davenport (1961), gust spectra and spatial cross-correlation",
+            "url": "https://doi.org/10.1002/qj.49708737208"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.iec_kaimal_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "parametric engineering spectrum",
+        "caveat": "Longitudinal component only; this formula alone does not generate coherent inflow or establish IEC compliance.",
+        "references": [
+          {
+            "id": "iec",
+            "title": "IEC 61400-1:2019 design requirements (specific edition, not certification)",
+            "url": "https://webstore.iec.ch/en/publication/26423"
+          },
+          {
+            "id": "turbsim",
+            "title": "TurbSim User's Guide: engineering spectral conventions",
+            "url": "https://openfast.readthedocs.io/en/main/_downloads/cb14d3e2d3533d76e405d730fea19846/TurbSim_v2.00.pdf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.cheynet_spectrum",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "parametric wind model",
+        "caveat": "Check model-specific stability/coefficient limits. Synthetic data are not TurbSim-quality inflow.",
+        "references": [
+          {
+            "id": "kaimal",
+            "title": "Kaimal et al. (1972), surface-layer spectra",
+            "url": "https://doi.org/10.1002/qj.49709841707"
+          },
+          {
+            "id": "cheynet",
+            "title": "Cheynet et al. (2018), marine spectra",
+            "url": "https://doi.org/10.1007/s10546-018-0382-2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wind_models.synthetic_wind_field",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "arrays"
+      ],
+      "basis": {
+        "category": "synthetic test-data generator",
+        "caveat": "Filtered Gaussian demonstration; does not enforce IEC/Kaimal coherence or frozen turbulence.",
+        "references": [
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workflow.aggregate_wrf",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "I/O/process infrastructure",
+        "caveat": "External conversion needs a real executable; copies do not run WRF or validate physics.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workflow.archive_outputs",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "I/O/process infrastructure",
+        "caveat": "External conversion needs a real executable; copies do not run WRF or validate physics.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workflow.convert_grib_to_netcdf",
+      "status": "REQUIRES_EXTERNAL_INPUT",
+      "reason": "Needs an installed wgrib2 and real GRIB input",
+      "usage": "from wrf_tools.workflow import convert_grib_to_netcdf; convert_grib_to_netcdf('input.grib2','output.nc')",
+      "basis": {
+        "category": "I/O/process infrastructure",
+        "caveat": "External conversion needs a real executable; copies do not run WRF or validate physics.",
+        "references": [
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wps.domains.domain_geometries",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "configuration/geometry utility",
+        "caveat": "Simple namelist subset. Geographic-corner helper assumes centred Lambert geometry, not every WPS projection/reference option.",
+        "references": [
+          {
+            "id": "wps",
+            "title": "WRF WPS user guide",
+            "url": "https://www2.mmm.ucar.edu/wrf/users/wps/namelist.wps_all_options.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wps.domains.eta_levels",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "configuration/geometry utility",
+        "caveat": "Simple namelist subset. Geographic-corner helper assumes centred Lambert geometry, not every WPS projection/reference option.",
+        "references": [
+          {
+            "id": "wps",
+            "title": "WRF WPS user guide",
+            "url": "https://www2.mmm.ucar.edu/wrf/users/wps/namelist.wps_all_options.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wps.domains.geographic_corners",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "configuration/geometry utility",
+        "caveat": "Simple namelist subset. Geographic-corner helper assumes centred Lambert geometry, not every WPS projection/reference option.",
+        "references": [
+          {
+            "id": "wps",
+            "title": "WRF WPS user guide",
+            "url": "https://www2.mmm.ucar.edu/wrf/users/wps/namelist.wps_all_options.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wps.namelist.read_namelist",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "configuration/geometry utility",
+        "caveat": "Simple namelist subset. Geographic-corner helper assumes centred Lambert geometry, not every WPS projection/reference option.",
+        "references": [
+          {
+            "id": "wps",
+            "title": "WRF WPS user guide",
+            "url": "https://www2.mmm.ucar.edu/wrf/users/wps/namelist.wps_all_options.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wps.namelist.update_namelist_dates",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "files"
+      ],
+      "basis": {
+        "category": "configuration/geometry utility",
+        "caveat": "Simple namelist subset. Geographic-corner helper assumes centred Lambert geometry, not every WPS projection/reference option.",
+        "references": [
+          {
+            "id": "wps",
+            "title": "WRF WPS user guide",
+            "url": "https://www2.mmm.ucar.edu/wrf/users/wps/namelist.wps_all_options.html"
+          }
+        ]
+      }
+    }
+  ],
+  "package_source_sha256": "c9ae10900af17df671a92b60d62e131c3cec972957a94be939bd449aabcf26cd"
+}

@@ -41,3 +41,16 @@ def test_band_downsample_cross_and_log_bin():
     frequency,cross=cross_spectrum(np.arange(16),np.arange(16))
     centers,binned=log_bin(frequency,cross,bins=4)
     assert centers.shape==binned.shape==(4,)
+
+
+def test_odd_record_cross_spectrum_matches_auto_spectrum():
+    signal=np.array([1.,2.,-1.,4.,3.,-2.,5.])
+    f,p=power_spectrum(signal)
+    fc,cross=cross_spectrum(signal,signal)
+    np.testing.assert_allclose(fc,f)
+    np.testing.assert_allclose(cross,p)
+
+
+def test_log_bins_include_highest_frequency():
+    _,power=log_bin([0,1,2,4],[0,10,20,40],bins=2)
+    np.testing.assert_allclose(power,[10,30])

@@ -1,0 +1,49 @@
+# A readable chain: discover -> open -> select -> filter -> save/plot.
+# Edit ONLY the directory first, then run from the WRF_tools folder:
+# wrf-tools run-recipe examples/recipes/wrf-fields.toml --output example_results/recipe-wrf
+# File references are relative to THIS TOML (absolute paths also work).
+# This example uses the last T2 map. Change name/time for a different field.
+
+[[steps]]
+id = "files"
+call = "io.discovery.discover_wrfout"
+args = [{file = "../../../wrf-era5-case/cases/netherlands_nested/runs/full-test-001/wrf"}]
+kwargs = {domain = "d02"}
+
+[[steps]]
+id = "wrf"
+call = "io.datasets.open_wrf_sequence"
+args = [{ref = "files"}]
+
+[[steps]]
+id = "temperature"
+call = "io.datasets.get_variable"
+args = [{ref = "wrf"}, "T2"]
+kwargs = {time = -1}
+save = "temperature.nc"
+
+[[steps]]
+id = "filtered"
+call = "filters.butterworth_spatial"
+args = [{ref = "temperature", array = true}]
+# Use the actual nominal DX and DY of your chosen domain. This demo is 3 km.
+kwargs = {dx = 3000, dy = 3000, cutoff_wavelength = 18000}
+save = "filtered-temperature.npy"
+
+[[steps]]
+id = "spatial_spectrum"
+call = "spectra.radial_wavenumber_spectrum"
+args = [{ref = "temperature", array = true}]
+kwargs = {dx = 3000, dy = 3000}
+# Tuple results remain available through path=[0] and path=[1].
+
+[[steps]]
+id = "spectrum_plot"
+call = "plotting.profile"
+args = [{ref = "spatial_spectrum", path = [1]}, {ref = "spatial_spectrum", path = [0]}]
+kwargs = {xlabel = "Shell-mean spectral power (K²)", ylabel = "Wavenumber (cycles/m)", title = "Final T2 spatial spectrum; not a turbulence energy spectrum"}
+save = "temperature-spectrum.png"
+
+# Reuse the SAME opened dataset for further steps, e.g. nearest_grid_point,
+# extraction, physical-height interpolation, averaging, or validation against
+# an observation dataset. See `wrf-tools capabilities` for exact call IDs.

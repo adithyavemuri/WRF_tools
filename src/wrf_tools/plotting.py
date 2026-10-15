@@ -12,6 +12,7 @@ def _plt():
 def horizontal(field, *, x=None, y=None, ax=None, levels=20, colorbar=True,
                title=None, xlabel="West-east grid index", ylabel="South-north grid index",
                colorbar_label=None, **kwargs):
+    """Filled contours on supplied x/y or index coordinates; return editable artists."""
     plt = _plt(); ax = ax or plt.subplots()[1]
     artist = ax.contourf(np.arange(field.shape[-1]) if x is None else x, np.arange(field.shape[-2]) if y is None else y, field, levels=levels, **kwargs)
     if colorbar:
@@ -21,6 +22,7 @@ def horizontal(field, *, x=None, y=None, ax=None, levels=20, colorbar=True,
 
 def profile(values, height, *, ax=None, label=None, title=None,
             xlabel="Value", ylabel="Height (m)", **kwargs):
+    """Plot supplied values against physical height; no interpolation is inferred."""
     plt = _plt(); ax = ax or plt.subplots()[1]
     line = ax.plot(values, height, label=label, **kwargs)
     if label: ax.legend()
@@ -29,6 +31,7 @@ def profile(values, height, *, ax=None, label=None, title=None,
 
 def time_height(values, time, height, *, ax=None, levels=20, colorbar=True,
                 title=None, xlabel="Time", ylabel="Height (m)", colorbar_label=None, **kwargs):
+    """Plot a supplied (time,height) array with caller-defined coordinates/units."""
     plt = _plt(); ax = ax or plt.subplots()[1]
     artist = ax.contourf(time, height, np.asarray(values).T, levels=levels, **kwargs)
     if colorbar:
@@ -38,6 +41,7 @@ def time_height(values, time, height, *, ax=None, levels=20, colorbar=True,
 
 def wind_rose(direction, speed, *, direction_bins=16, speed_bins=5, ax=None,
               title="Wind speed and direction", speed_units="m s$^{-1}$"):
+    """Stack speed-bin sample counts by meteorological direction, not frequencies."""
     plt = _plt()
     ax = ax or plt.subplots(subplot_kw={"projection": "polar"})[1]
     theta_edges = np.linspace(0, 360, direction_bins+1)
@@ -59,6 +63,7 @@ def wind_rose(direction, speed, *, direction_bins=16, speed_bins=5, ax=None,
 def cross_section(values, distance=None, height=None, *, terrain=None, ax=None, levels=20,
                   colorbar=True, title=None, xlabel="Distance", ylabel="Height (m)",
                   colorbar_label=None, **kwargs):
+    """Plot a supplied section and optional terrain; not automatic WRF extraction."""
     plt = _plt(); ax = ax or plt.subplots()[1]; values = np.asarray(values)
     distance = np.arange(values.shape[-1]) if distance is None else distance
     height = np.arange(values.shape[-2]) if height is None else height
@@ -71,6 +76,7 @@ def cross_section(values, distance=None, height=None, *, terrain=None, ax=None, 
 
 def wind_barbs(u, v, *, x=None, y=None, ax=None, stride=1, title=None,
                xlabel="West-east grid index", ylabel="South-north grid index", **kwargs):
+    """Plot supplied co-located wind vectors; caller must establish vector basis."""
     plt = _plt(); ax = ax or plt.subplots()[1]; u, v = np.asarray(u), np.asarray(v)
     x = np.arange(u.shape[-1]) if x is None else np.asarray(x); y = np.arange(u.shape[-2]) if y is None else np.asarray(y)
     x_plot = x[::stride, ::stride] if x.ndim == 2 else x[::stride]
@@ -80,6 +86,7 @@ def wind_barbs(u, v, *, x=None, y=None, ax=None, stride=1, title=None,
     return ax.figure, ax, artist
 
 def nested_domains(domains, *, ax=None, labels=True, **kwargs):
+    """Plot projected DomainGeometry rectangles, not geographic coastlines."""
     plt = _plt(); ax = ax or plt.subplots()[1]
     from matplotlib.patches import Rectangle
     artists=[]
@@ -91,6 +98,7 @@ def nested_domains(domains, *, ax=None, labels=True, **kwargs):
     return ax.figure, ax, artists
 
 def validation_scatter(model, observation, *, ax=None, one_to_one=True, **kwargs):
+    """Scatter matched observations against model values with optional 1:1 line."""
     plt = _plt(); ax = ax or plt.subplots()[1]
     artist=ax.scatter(observation,model,**kwargs)
     if one_to_one:
@@ -115,8 +123,16 @@ def taylor_diagram(standard_deviation, correlation, *, reference_std=1.0, labels
 
 def animate_fields(fields, *, interval=100, levels=20, cmap=None, repeat=False,
                    title="Field", xlabel="West-east grid index", ylabel="South-north grid index"):
+    """Animate supplied (time,y,x) arrays at fixed levels; no time interpolation."""
     plt=_plt(); from matplotlib.animation import FuncAnimation
     values=np.asarray(fields); fig,ax=plt.subplots()
+    finite=values[np.isfinite(values)]
+    if values.ndim != 3 or not len(values) or not finite.size:
+        raise ValueError("Expected finite fields with shape (time, y, x)")
+    if np.isscalar(levels):
+        lo,hi=float(finite.min()),float(finite.max())
+        if hi == lo: hi=lo+1
+        levels=np.linspace(lo,hi,int(levels)+1)
     def draw(index):
         ax.clear()
         contour = ax.contourf(values[index], levels=levels, cmap=cmap)
@@ -125,5 +141,5 @@ def animate_fields(fields, *, interval=100, levels=20, cmap=None, repeat=False,
         # the set itself is supported by FuncAnimation and works across both
         # the old and new Matplotlib artist APIs.
         return (contour,)
-    animation=FuncAnimation(fig,draw,frames=values.shape[0],interval=interval,repeat=repeat)
+    animation=FuncAnimation(fig,draw,frames=values.shape[0],interval=interval,repeat=repeat,cache_frame_data=False)
     return fig,ax,animation

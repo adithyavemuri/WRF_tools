@@ -16,7 +16,6 @@ def wind_direction(u: Any, v: Any) -> np.ndarray:
     Uses ``(270 - atan2(v, u) deg) mod 360`` for eastward ``u`` and northward
     ``v`` components, consistent with WMO meteorological convention.
     """
-    """Meteorological direction in degrees from which the wind blows."""
     return (270.0 - np.degrees(np.arctan2(v, u))) % 360.0
 
 
@@ -27,7 +26,11 @@ def wind_speed_direction_to_uv(speed: Any, direction: Any) -> tuple[np.ndarray, 
 
 
 def angle_between(first: Any, second: Any, *, degrees: bool = True) -> np.ndarray:
-    """Return the smallest signed circular displacement from first to second."""
+    """Unsigned angle between vectors on the last axis, in [0,180] degrees.
+
+    Zero-length vectors return NaN. This is not a signed bearing difference;
+    use validation.circular_error for wrapped directional errors.
+    """
     a = np.asarray(first, dtype=float)
     b = np.asarray(second, dtype=float)
     dot = np.sum(a * b, axis=-1)

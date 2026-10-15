@@ -6,4 +6,7 @@ netCDF4>=1.6
 scipy>=1.11
 matplotlib>=3.8
 pyproj>=3.6
+cartopy>=0.22
+Pillow>=10
 reportlab>=4.0
+tomli>=2.0; python_version < '3.11'

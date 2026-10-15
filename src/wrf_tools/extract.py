@@ -43,9 +43,11 @@ def vertical_profile(dataset: xr.Dataset, variable: str, *, x: int, y: int, time
     return data.isel(indexers)
 
 def to_levels(data, coordinate, levels, *, axis=-1):
+    """Interpolate on a caller-supplied vertical coordinate; no extrapolation."""
     return interpolate_to_levels(data, coordinate, levels, axis=axis)
 
 def variables(dataset: xr.Dataset, mapping: Mapping[str, str]) -> xr.Dataset:
+    """Select/rename supplied variables as {output_name: native_name}."""
     missing = [source for source in mapping.values() if source not in dataset]
     if missing:
         raise KeyError(f"Missing WRF variables: {', '.join(missing)}")
@@ -62,6 +64,10 @@ def horizontal_plane(dataset: xr.Dataset, variable: str, *, level=None, time=0, 
 def transect(data, start, end, *, points=100):
     """Sample a 2-D array along an index-space transect using bilinear interpolation."""
     values=np.asarray(data,float); y=np.linspace(start[0],end[0],points); x=np.linspace(start[1],end[1],points)
+    if values.ndim!=2 or not isinstance(points,int) or points<2 or not np.isfinite([*start,*end]).all():
+        raise ValueError("Require a 2-D field, >=2 points and finite (y,x) endpoints")
+    if np.any((y<0)|(y>values.shape[0]-1)) or np.any((x<0)|(x>values.shape[1]-1)):
+        raise ValueError("Transect endpoints must stay inside the grid; no silent clipping")
     y0=np.floor(y).astype(int); x0=np.floor(x).astype(int); y1=np.clip(y0+1,0,values.shape[-2]-1); x1=np.clip(x0+1,0,values.shape[-1]-1); y0=np.clip(y0,0,values.shape[-2]-1); x0=np.clip(x0,0,values.shape[-1]-1)
     wy=y-y0; wx=x-x0
     sampled=(1-wy)*(1-wx)*values[...,y0,x0]+(1-wy)*wx*values[...,y0,x1]+wy*(1-wx)*values[...,y1,x0]+wy*wx*values[...,y1,x1]

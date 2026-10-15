@@ -58,10 +58,18 @@ def calculate_total_tke(
     subgrid_tke: Any | None = None,
     axis: int = 0,
 ) -> np.ndarray:
-    """Return resolved TKE plus an optional model-provided SGS TKE."""
+    """Return averaged resolved TKE plus optional already-averaged SGS TKE.
+
+    SGS TKE must have exactly the reduced resolved field's shape (no silent
+    broadcasting). Average it over the SAME axes/window first; do not supply
+    instantaneous SGS output alongside averaged resolved energy. Units m2 s-2.
+    """
     total = resolved_tke(u, v, w, axis=axis)
     if subgrid_tke is not None:
-        total = total + np.asarray(subgrid_tke)
+        subgrid = np.asarray(subgrid_tke)
+        if subgrid.shape != total.shape:
+            raise ValueError("SGS TKE must match the averaged resolved field shape; average over the same axes first")
+        total = total + subgrid
     return total
 
 

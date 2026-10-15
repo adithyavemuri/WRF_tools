@@ -4,29 +4,52 @@ from pathlib import Path
 import json
 import html
 
+def _json_safe(value):
+    import numpy as np
+    if isinstance(value,dict): return {str(k):_json_safe(v) for k,v in value.items()}
+    if isinstance(value,(list,tuple)): return [_json_safe(v) for v in value]
+    if isinstance(value,np.ndarray): return _json_safe(value.tolist())
+    if isinstance(value,np.datetime64): return str(value)
+    if isinstance(value,np.generic): return _json_safe(value.item())
+    if isinstance(value,float): return value if np.isfinite(value) else None
+    if isinstance(value,complex): return dict(real=_json_safe(value.real),imag=_json_safe(value.imag))
+    if isinstance(value,(str,bool,int,type(None))): return value
+    return str(value)
+
 def dataset_summary(dataset):
+    """List native dimensions, fields and metadata without physical interpretation."""
     return {"dimensions": dict(dataset.sizes), "variables": sorted(dataset.data_vars), "coordinates": sorted(dataset.coords), "attributes": dict(dataset.attrs)}
 
 def write_json_report(report, path):
+    """Write standard JSON; preserve numeric arrays/scalars and map nonfinite to null."""
     target = Path(path)
-    target.write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
+    target.write_text(json.dumps(_json_safe(report), indent=2, allow_nan=False), encoding="utf-8")
     return target
 
 def comparison_report(model, observation, *, labels=None):
+    """Summarize paired deterministic scores; count is input length, not valid pairs."""
     from .validation import comparison_summary
     report={"statistics":comparison_summary(model,observation),"count":int(len(model))}
     if labels is not None: report["labels"]=list(labels)
     return report
 
 def provenance(*, inputs, configuration=None, software_version=None):
+    """Record source filenames/configuration/version; does not invent checksums."""
     return {"inputs":[Path(item).name for item in inputs],"configuration":configuration or {},"software_version":software_version}
 
 def write_html_report(report, path, *, title="WRF Tools case report", figures=()):
+    """Render supplied summaries and relative figure links into an HTML report."""
     target=Path(path); sections=[]
     for heading,value in report.items():
         content=html.escape(json.dumps(value,indent=2,default=str))
         sections.append(f"<section><h2>{html.escape(str(heading).replace('_',' ').title())}</h2><pre>{content}</pre></section>")
-    images="".join(f'<figure><img src="{html.escape(Path(item).name)}"><figcaption>{html.escape(Path(item).stem.replace("_"," ").title())}</figcaption></figure>' for item in figures)
+    methods = report.get("scientific_methods", {})
+    if methods:
+        sections = [section for section in sections if "<h2>Scientific Methods</h2>" not in section]
+        definitions = "".join(f"<dt>{html.escape(key.replace('_',' ').title())}</dt><dd>{html.escape(value)}</dd>" for key,value in methods.get("definitions",{}).items())
+        references = "".join(f'<li>[{html.escape(key)}] <a href="{html.escape(value["url"],quote=True)}">{html.escape(value["title"])}</a></li>' for key,value in methods.get("references",{}).items())
+        sections.append(f'<section><h2>Scientific methods and references</h2><p>{html.escape(methods.get("scope",""))}</p><dl>{definitions}</dl><ul>{references}</ul></section>')
+    images="".join(f'<figure><img src="{html.escape(Path(item).name)}"><figcaption>{html.escape(Path(item).stem.replace("_"," ").title())}'+(' — map, marked section, physical-height site evolution and profiles. Methods and source filenames: matching JSON sidecar.' if Path(item).stem.endswith('_wind_overview') else '')+'</figcaption></figure>' for item in figures)
     document=f'''<!doctype html><html><head><meta charset="utf-8"><title>{html.escape(title)}</title><style>body{{font:15px Arial,sans-serif;max-width:1100px;margin:2rem auto;color:#17202a}}h1{{color:#154360}}h2{{border-bottom:2px solid #5dade2;padding-bottom:.3rem}}pre{{background:#f4f6f7;padding:1rem;white-space:pre-wrap}}figure{{margin:2rem 0}}img{{max-width:100%;height:auto}}figcaption{{font-weight:bold;text-align:center}}</style></head><body><h1>{html.escape(title)}</h1>{''.join(sections)}<h2>Figures</h2>{images}</body></html>'''
     target.write_text(document,encoding="utf-8"); return target
 
@@ -85,7 +108,7 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
             ("Simulation period",f"{overview.get('start_time')} to {overview.get('end_time')} UTC"),
             ("Domains",overview.get("domain_count")),
             ("Primary analysis domain",overview.get("analysis_domain")),
-            ("Outputs per domain",overview.get("file_count_per_domain")),
+            ("History files per domain",overview.get("file_count_per_domain")),
             ("Report scope","Meteorology, surface fluxes, precipitation, PBL and 10 m wind-resource screening"),
         ]))
         story.extend([Spacer(1,.5*cm),Paragraph("Interpretation boundary",styles["Heading2"]),Paragraph("This technical report verifies model output and summarizes the simulated period. It is not a climatology, validation against observations, bankable wind-resource assessment, or substitute for physics sensitivity testing.",styles["Callout"])])
@@ -95,33 +118,85 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
         story.extend([PageBreak(),Paragraph("Domain configuration comparison",styles["Title"]),Spacer(1,.3*cm)])
         temporal=overview.get("domain_time_steps_seconds",{})
         story.extend([Paragraph("Temporal configuration",styles["Heading1"]),table_for([
-            ("ERA5 forcing interval",f"{overview.get('forcing_interval_seconds')} seconds (hourly)"),
+            ("Forcing interval",f"{overview['forcing_interval_seconds']} seconds" if overview.get("forcing_interval_seconds") is not None else "Not supplied; not inferred from history output"),
             ("WRF output interval",f"{overview.get('history_interval_minutes')} minutes"),
-            ("Integration timestep",", ".join(f"{name.upper()}: {value:g} seconds" for name,value in temporal.items())),
+            ("Integration timestep",", ".join(f"{name.upper()}: {value:g} seconds" if value is not None else f"{name.upper()}: not supplied" for name,value in temporal.items())),
             ("Restart checkpoint interval",f"{overview.get('restart_interval_minutes')} minutes"),
             ("Resumed from",overview.get("resumed_from") or "Fresh initialization"),
         ])])
-        grid_rows=[("Grid ID",lambda s:s["grid"].get("domain_id")),("Horizontal grid",lambda s:f"{s['grid'].get('west_east')} x {s['grid'].get('south_north')}"),("Spacing",lambda s:f"{s['grid'].get('dx_metres'):g} x {s['grid'].get('dy_metres'):g} m"),("Vertical levels",lambda s:s["grid"].get("vertical_levels")),("Output times",lambda s:s["file_count"])]
+        grid_rows=[("Grid ID",lambda s:s["grid"].get("domain_id")),("Horizontal grid",lambda s:f"{s['grid'].get('west_east')} x {s['grid'].get('south_north')}"),("Spacing",lambda s:f"{s['grid'].get('dx_metres'):g} x {s['grid'].get('dy_metres'):g} m"),("Vertical levels",lambda s:s["grid"].get("vertical_levels")),("Output times",lambda s:s.get("sample_count",s["file_count"]))]
         story.extend([Spacer(1,.25*cm),Paragraph("Grid",styles["Heading1"]),comparison_table(domains,grid_rows)])
         physics_keys=list(next(iter(domains.values())).get("physics",{}))
         story.extend([Spacer(1,.35*cm),Paragraph("Physics suite",styles["Heading1"]),comparison_table(domains,[(key.replace("_"," ").upper(),lambda s,key=key:s.get("physics",{}).get(key)) for key in physics_keys])])
-        wind_labels={"height_metres":"Diagnostic height (m)","mean_speed_m_s":"Mean wind speed (m s-1)","maximum_speed_m_s":"Maximum wind speed (m s-1)","p50_speed_m_s":"P50 wind speed (m s-1)","p90_speed_m_s":"P90 wind speed (m s-1)","p95_speed_m_s":"P95 wind speed (m s-1)","mean_direction_degrees":"Mean direction (degrees)","mean_air_density_kg_m3":"Mean air density (kg m-3)","mean_power_density_w_m2":"Mean wind-power density (W m-2)"}
-        story.extend([PageBreak(),Paragraph("Domain results comparison",styles["Title"]),Paragraph("Wind-resource screening",styles["Heading1"]),comparison_table(domains,[(label,lambda s,key=key:f"{s.get('wind_resource',{}).get(key,float('nan')):.2f}") for key,label in wind_labels.items()])])
-        vertical_rows=[("Shear fit layer",lambda s:f"{s.get('vertical_diagnostics',{}).get('shear_fit_layer_metres',[None,None])[0]}-{s.get('vertical_diagnostics',{}).get('shear_fit_layer_metres',[None,None])[1]} m"),("Mean shear exponent",lambda s:f"{s.get('vertical_diagnostics',{}).get('mean_shear_exponent'):.3f}" if s.get('vertical_diagnostics',{}).get('mean_shear_exponent') is not None else "unavailable"),("TKE diagnostic",lambda s:f"{s.get('vertical_diagnostics',{}).get('tke_status','unavailable')} ({s.get('vertical_diagnostics',{}).get('tke_variable') or 'no variable'})")]
+        wind_labels={"height_metres":"Diagnostic height (m)","mean_speed_m_s":"Mean wind speed (m s-1)","maximum_speed_m_s":"Maximum wind speed (m s-1)","p50_speed_m_s":"50th-percentile wind speed (m s-1)","p90_speed_m_s":"90th-percentile wind speed (m s-1)","p95_speed_m_s":"95th-percentile wind speed (m s-1)","mean_direction_degrees":"Mean direction FROM (degrees)","mean_air_density_kg_m3":"Mean air density (kg m-3)","mean_power_density_w_m2":"Mean wind-power density (W m-2)"}
+        def wind_value(summary,key):
+            value=summary.get("wind_resource",{}).get(key)
+            return f"{value:.2f}" if value is not None else "unavailable"
+        story.extend([PageBreak(),Paragraph("Domain results comparison",styles["Title"]),Paragraph("Wind-resource screening",styles["Heading1"]),comparison_table(domains,[(label,lambda s,key=key:wind_value(s,key)) for key,label in wind_labels.items()])])
+        story.extend([Spacer(1,.2*cm),comparison_table(domains,[("Wind direction coordinates",lambda s:s.get("wind_resource",{}).get("direction_reference","unavailable"))]),Paragraph("Percentiles summarize sampled wind speed; they are not energy-yield exceedance P50/P90. Spatial means use unweighted grid cells.",styles["FigureCaption"])])
+        vertical_rows=[("Shear fit layer",lambda s:f"{s.get('vertical_diagnostics',{}).get('shear_fit_layer_metres',[None,None])[0]}-{s.get('vertical_diagnostics',{}).get('shear_fit_layer_metres',[None,None])[1]} m"),("Mean shear exponent",lambda s:f"{s.get('vertical_diagnostics',{}).get('mean_shear_exponent'):.3f}" if s.get('vertical_diagnostics',{}).get('mean_shear_exponent') is not None else "unavailable")]
         story.extend([Spacer(1,.3*cm),Paragraph("Vertical-profile diagnostics",styles["Heading1"]),comparison_table(domains,vertical_rows)])
+        story.extend([Spacer(1,.2*cm),comparison_table(domains,[
+            ("Model TKE status",lambda s:s.get("turbulence",{}).get("status","unavailable")),
+            ("Model TKE source",lambda s:s.get("turbulence",{}).get("source_variable") or "not in output"),
+            ("Negative model TKE samples",lambda s:s.get("turbulence",{}).get("negative_count","not evaluated")),
+        ])])
+        for name,summary in domains.items():
+            energy=summary.get("turbulence",{})
+            if energy.get("status")=="unavailable":
+                story.append(Paragraph(f"{name.upper()} TKE unavailable: {html.escape(energy.get('reason',''))}",styles["BodyText"]))
         variables=list(next(iter(domains.values())).get("surface_statistics",{}))
         metric_rows=[]
         for variable in variables:
             metric_rows.append((variable,lambda s,variable=variable:f"{s['surface_statistics'][variable]['mean']:.3g} {s['surface_statistics'][variable].get('units','')} (min {s['surface_statistics'][variable]['minimum']:.3g}; max {s['surface_statistics'][variable]['maximum']:.3g})"))
         story.extend([Spacer(1,.35*cm),Paragraph("Meteorological means and ranges",styles["Heading1"]),comparison_table(domains,metric_rows)])
+        if any("precipitation" in summary for summary in domains.values()):
+            story.extend([Spacer(1,.25*cm),Paragraph("Precipitation coverage",styles["Heading2"]),comparison_table(domains,[
+                ("Period accumulation status",lambda s:s.get("precipitation",{}).get("status","unavailable")),
+                ("Valid grid-cell fraction",lambda s:s.get("precipitation",{}).get("valid_cell_fraction","unavailable")),
+                ("Cells with counter resets",lambda s:s.get("precipitation",{}).get("reset_cell_count","unavailable")),
+                ("Cells with missing samples",lambda s:s.get("precipitation",{}).get("missing_cell_count","unavailable")),
+            ]),Paragraph("Precipitation period totals exclude cells with any counter reset or missing sample. Bucket/restart resets are not reconstructed; partial coverage is not a whole-domain estimate.",styles["FigureCaption"])])
         qc_rows=[("QC status",lambda s:s["quality_control"].get("status")),("Errors",lambda s:s["quality_control"].get("error_count")),("Warnings",lambda s:s["quality_control"].get("warning_count"))]
         story.extend([Spacer(1,.35*cm),Paragraph("Quality-control overview",styles["Heading1"]),comparison_table(domains,qc_rows)])
         for domain,summary in domains.items():
             issues=summary.get("quality_control",{}).get("issues",[])
             if issues: story.extend([Paragraph(f"{domain.upper()} QC details",styles["Heading2"]),table_for([(f"{item.get('severity')} - {item.get('variable')}",item.get("message")) for item in issues])])
+        connected_names=list(dict.fromkeys(name for summary in domains.values() for name in summary.get("connected_diagnostics",{})))
+        if connected_names:
+            rows=[(name.replace("_"," ").title(),lambda summary,name=name:summary.get("connected_diagnostics",{}).get(name,{}).get("status","unavailable")) for name in connected_names]
+            story.extend([Spacer(1,.35*cm),Paragraph("Connected diagnostic groups",styles["Heading1"]),comparison_table(domains,rows)])
+            for domain,summary in domains.items():
+                for name,record in summary.get("connected_diagnostics",{}).items():
+                    if record["status"]=="UNAVAILABLE":
+                        story.append(Paragraph(html.escape(f"{domain.upper()} {name.replace('_',' ')}: {record.get('reason','')}"),styles["BodyText"]))
         for domain,summary in domains.items():
             domain_figures=[Path(item) for item in figures if Path(item).name.startswith(f"{domain}_")]
+            connected_figures=[item for item in domain_figures if item.name.startswith(f"{domain}_analysis_")]
+            domain_figures=[item for item in domain_figures if item not in connected_figures]
             story.extend([PageBreak(),Paragraph(f"Domain {domain} figures",styles["Title"]),Paragraph(f"Grid ID {summary['grid'].get('domain_id')} | {summary['grid'].get('dx_metres'):g} m horizontal spacing",styles["Subtitle"])])
+            tke_figure=next((item for item in domain_figures if item.stem.endswith("_tke_diagnostics")),None)
+            if tke_figure:
+                domain_figures.remove(tke_figure)
+            overview=next((item for item in domain_figures if item.stem.endswith("_wind_overview")),None)
+            if overview:
+                image=Image(str(overview)); image._restrictSize(17.0*cm,12.0*cm)
+                story.append(KeepTogether([image,Paragraph(
+                    f"{domain.upper()} wind overview. A: final 10 m wind; orange line marks the section and white marker the analysis site. "
+                    "B: horizontal wind speed on that native grid-row section, with model PBL height where available. "
+                    "C: site evolution on physical AGL heights. D: selected profiles. Colours share one scale. "
+                    "White regions have no supported data. Definitions and references appear in the methods appendix; "
+                    "PNG/SVG and a JSON processing sidecar accompany this report.",styles["FigureCaption"])]))
+                domain_figures.remove(overview)
+                profiles=next((item for item in domain_figures if item.stem.endswith("_vertical_profiles")),None)
+                if profiles:
+                    image=Image(str(profiles)); image._restrictSize(16.5*cm,6.3*cm)
+                    story.append(KeepTogether([image,Paragraph(
+                        f"{domain.upper()} additional temperature and turbulence profiles. See axis labels for the available diagnostics.",
+                        styles["FigureCaption"])]))
+                    domain_figures.remove(profiles)
+                if domain_figures:
+                    story.extend([PageBreak(),Paragraph(f"Domain {domain} additional diagnostics",styles["Heading1"])])
             for row_start in range(0,len(domain_figures),2):
                 cells=[]
                 for index,figure in enumerate(domain_figures[row_start:row_start+2],row_start+1):
@@ -133,6 +208,29 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
                 panel.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),("LEFTPADDING",(0,0),(-1,-1),2),("RIGHTPADDING",(0,0),(-1,-1),2),("TOPPADDING",(0,0),(-1,-1),2),("BOTTOMPADDING",(0,0),(-1,-1),2)]))
                 story.append(KeepTogether(panel))
                 if row_start and (row_start+2)%6==0 and row_start+2<len(domain_figures): story.append(PageBreak())
+            for figure in connected_figures:
+                name=figure.stem.removeprefix(f"{domain}_analysis_")
+                record=summary["connected_diagnostics"][name]
+                image=Image(str(figure)); image._restrictSize(17*cm,16*cm)
+                story.extend([PageBreak(),Paragraph(f"{domain.upper()} | {name.replace('_',' ').title()}",styles["Title"]),image,
+                    Paragraph(html.escape(record.get("methods","")),styles["BodyText"]),Spacer(1,.25*cm),
+                    Paragraph(html.escape(f"Numerical arrays: {record['data']}. Companion PNG and SVG are saved separately."),styles["FigureCaption"])])
+            if tke_figure:
+                energy=summary.get("turbulence",{})
+                image=Image(str(tke_figure)); image._restrictSize(17.0*cm,16.5*cm)
+                story.extend([PageBreak(),Paragraph(f"{domain.upper()} model TKE",styles["Title"]),image,
+                    Paragraph(f"Source: {html.escape(str(energy.get('source_variable')))}; {html.escape(str(energy.get('kind')))}. "
+                    "Map, site profiles, physical-height evolution and native-level domain maxima. "
+                    "Negative samples are retained. High TKE alone does not establish numerical energy injection; "
+                    "production, dissipation and transport are not diagnosed from these plots.",styles["FigureCaption"])])
+        methods=report.get("scientific_methods",{})
+        if methods:
+            story.extend([PageBreak(),Paragraph("Scientific methods and references",styles["Title"]),Paragraph(html.escape(methods.get("scope","")),styles["BodyText"]),Spacer(1,.25*cm)])
+            for name,definition in methods.get("definitions",{}).items():
+                story.extend([Paragraph(name.replace("_"," ").title(),styles["Heading2"]),Paragraph(html.escape(definition),styles["BodyText"])])
+            story.append(Paragraph("References",styles["Heading1"]))
+            for key,reference in methods.get("references",{}).items():
+                story.extend([Paragraph(f'[{html.escape(key)}] {html.escape(reference["title"])}. <link href="{html.escape(reference["url"],quote=True)}" color="#1976A3">{html.escape(reference["url"])}</link>',styles["BodyText"]),Spacer(1,.18*cm)])
         provenance_rows=[]
         for key,value in report.get("provenance",{}).items():
             if key == "configuration" and isinstance(value,dict):

@@ -80,11 +80,12 @@ def quality_control(dataset: xr.Dataset, *, limits=None, jump_sigma=12.0) -> lis
                 index,value=_first(values,mask); issues.append(QCIssue("ERROR",name,"negative-water",f"{mask.sum()} negative hydrometeor values; first {value:g} at {index}",int(mask.sum()),index,value))
     if "Time" in dataset.dims and ("Times" in dataset or "XTIME" in dataset):
         if "Times" in dataset:
-            raw = np.asarray(dataset.Times)
-            text = ([bytes(value).decode().replace("_", "T", 1) for value in raw]
-                    if raw.ndim == 1 else
-                    [b"".join(row).decode().replace("_", "T", 1) for row in raw])
-            time = np.asarray(text, dtype="datetime64[s]")
+            from .visualization import history_times
+            try:
+                time=np.asarray(history_times(dataset),dtype="datetime64[s]")
+            except ValueError as exc:
+                issues.append(QCIssue("ERROR","Times","time-coordinate",str(exc)))
+                return issues
         else:
             time=np.asarray(dataset.XTIME)
         delta=np.diff(time)
@@ -96,6 +97,7 @@ def quality_control(dataset: xr.Dataset, *, limits=None, jump_sigma=12.0) -> lis
 
 
 def print_qc_report(issues: Iterable[QCIssue]) -> None:
+    """Print configured screening issues; an empty list is not atmospheric proof."""
     issues=list(issues)
     if not issues:
         print("WRF QC: PASS - no configured quality-control errors or warnings found.")

@@ -78,12 +78,14 @@ def read_bts(path: str | Path) -> WindField:
         values = struct.unpack("<ffffff", stream.read(24))
         slope = np.asarray(values[0::2], dtype=float)
         offset = np.asarray(values[1::2], dtype=float)
+        if min(nt,nz,ny)<=0 or tower_points<0 or not np.isfinite(slope).all() or np.any(slope==0) or not np.isfinite(offset).all():
+            raise DataValidationError("Invalid BTS dimensions or scale/offset metadata")
         (description_size,) = struct.unpack("<i", stream.read(4))
         if description_size < 0 or description_size > 1_000_000:
             raise DataValidationError("Invalid BTS description length")
         description = stream.read(description_size).decode("utf-8", errors="replace")
         count = nt * nz * ny * 3
-        encoded = np.frombuffer(stream.read(count * 2), dtype="<i2", count=count)
+        encoded = np.frombuffer(stream.read(count * 2), dtype="<i2")
         if encoded.size != count:
             raise DataValidationError("BTS file ended before the velocity field was complete")
         if tower_points:
@@ -112,6 +114,9 @@ def validate_bts(
     """Read a BTS file and optionally compare it with the source wind field."""
     actual = read_bts(path)
     if expected is not None:
+        for name in ("dy","dz","dt","hub_height","bottom_height","mean_speed"):
+            if not np.isclose(getattr(actual,name),getattr(expected,name),rtol=1e-6,atol=1e-6):
+                raise DataValidationError(f"BTS {name} differs from expected metadata")
         if actual.velocity.shape != expected.velocity.shape:
             raise DataValidationError(
                 f"BTS shape {actual.velocity.shape} differs from expected {expected.velocity.shape}"

@@ -8,10 +8,14 @@ from .io import open_wrf_sequence
 def aggregate_wrf(paths, *, variables=None, output=None, load=False):
     """Combine compatible sequential WRF files and optionally export them."""
     dataset=open_wrf_sequence(paths)
-    if variables is not None: dataset=dataset[list(variables)]
-    if load: dataset.load()
-    if output is not None: dataset.to_netcdf(output)
-    return dataset
+    try:
+        selected=dataset[list(variables)] if variables is not None else dataset
+        if selected is not dataset: selected.set_close(dataset.close)
+        if load: selected.load()
+        if output is not None: selected.to_netcdf(output)
+        return selected
+    except Exception:
+        dataset.close(); raise
 
 def archive_outputs(paths, directory, *, overwrite=False):
     """Copy completed outputs to an archive; source files are never deleted."""

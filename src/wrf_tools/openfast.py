@@ -14,7 +14,7 @@ def read_ascii_output(path):
         raise ValueError("OpenFAST channel header was not found")
     names = lines[header].split()
     units = [unit.strip("()[]") for unit in lines[header+1].split()]
-    data = np.loadtxt(lines[header+2:])
+    data = np.loadtxt(lines[header+2:],ndmin=2)
     return xr.Dataset({name: ("time", data[:, i], {"units": units[i] if i < len(units) else ""}) for i, name in enumerate(names[1:], 1)}, coords={"time": data[:, 0]})
 
 def read_binary_output(path):
@@ -39,16 +39,25 @@ def read_binary_output(path):
     return xr.Dataset({names[i+1] or f"channel_{i+1}": ("time", values[:,i], {"units":units[i+1]}) for i in range(channels)}, coords={"time":time}, attrs={"description":description,"file_id":file_id})
 
 def zero_crossing_frequency(signal, sample_rate):
+    """Detrended sign changes / (2*record duration); screening frequency in Hz."""
     values = np.asarray(signal, float)-np.nanmean(signal)
     crossings = np.count_nonzero(np.diff(np.signbit(values)))
     return crossings*sample_rate/(2*values.size)
 
 def stress_from_moment(moment, distance_to_centroid, moment_of_inertia):
+    """Linear-elastic bending stress M*y/I in consistent units, not fatigue life."""
     return np.asarray(moment)*distance_to_centroid/moment_of_inertia
 
 def rainflow_cycles(signal):
-    """Return cycle ranges/counts using the ASTM four-point stack method."""
+    """Return ranges/counts using a three-point rainflow stack (ASTM E1049).
+
+    Residual ranges count as half cycles. Consecutive plateaus are collapsed;
+    this does not calculate fatigue damage or material S-N response.
+    """
     values = np.asarray(signal, float).ravel()
+    if not np.isfinite(values).all(): raise ValueError("Rainflow needs finite samples")
+    values=values[np.r_[True,np.diff(values)!=0]] if values.size else values
+    if values.size<2: return np.empty((0,2))
     reversals = values[np.r_[True, np.diff(np.sign(np.diff(values))) != 0, True]]
     stack, cycles = [], []
     for value in reversals:

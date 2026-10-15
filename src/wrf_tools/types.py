@@ -17,7 +17,7 @@ class GeoBounds:
     north: float
 
     def __post_init__(self) -> None:
-        if self.west >= self.east or self.south >= self.north:
+        if not np.isfinite([self.west,self.east,self.south,self.north]).all() or self.west >= self.east or self.south >= self.north:
             raise DataValidationError("Bounds must satisfy west < east and south < north")
 
 
@@ -57,13 +57,13 @@ class WindField:
 
     def __post_init__(self) -> None:
         array = np.asarray(self.velocity, dtype=float)
-        if array.ndim != 4 or array.shape[-1] != 3:
+        if array.ndim != 4 or array.shape[-1] != 3 or not all(array.shape):
             raise DataValidationError(
                 "velocity must have shape (time, vertical, lateral, 3)"
             )
         if not np.all(np.isfinite(array)):
             raise DataValidationError("velocity contains NaN or infinite values")
-        if min(self.dy, self.dz, self.dt) <= 0:
+        if not np.isfinite([self.dy,self.dz,self.dt,self.hub_height,self.bottom_height]).all() or min(self.dy, self.dz, self.dt) <= 0:
             raise DataValidationError("dy, dz, and dt must be positive")
         self.velocity = array
         if self.mean_speed is None:

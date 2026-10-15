@@ -18,7 +18,7 @@ Then add a custom map, for example:
     .venv/bin/python examples/create_hindcast_report.py /path/to/wrf/run \
         --domain d02 --plot-variable PBLH
 
-The standard PDF uses a scientifically reviewed default set of plots. The
+The standard PDF uses a reference-documented default set of plots. The
 optional custom map is saved beside it as a separate PNG so experimentation
 does not silently change the standard report.
 """
@@ -42,6 +42,16 @@ RUN_DIRECTORY: Path | None = None
 OUTPUT_DIRECTORY = Path("example_results/hindcast_report")
 PRIMARY_DOMAIN = "d01"
 
+# "all" connects the six diagnostic groups. Use "none" for the compact core,
+# or e.g. "thermodynamics,flow_structure" for stability + Q criterion.
+DIAGNOSTIC_GROUPS = "all"
+DIAGNOSTIC_OPTIONS = {
+    "flow_heights_metres": [200, 400, 600, 800, 1000],  # Equally spaced MSL.
+    "rotor_bottom_metres": 40,
+    "rotor_top_metres": 200,
+    "turbulence_average": "none",  # Read examples/diagnostics.toml before changing.
+}
+
 # Leave both as None to use the geographical centre of each domain.
 TARGET_LATITUDE: float | None = None
 TARGET_LONGITUDE: float | None = None
@@ -62,6 +72,8 @@ def parse_arguments() -> argparse.Namespace:
                         help=f"output folder (default: {OUTPUT_DIRECTORY})")
     parser.add_argument("--domain", default=PRIMARY_DOMAIN,
                         help=f"domain used for the custom map (default: {PRIMARY_DOMAIN})")
+    parser.add_argument("--diagnostics",default=DIAGNOSTIC_GROUPS,
+                        help="all, none, or comma-separated group names; see docs/CONNECTED_WORKFLOWS.md")
     parser.add_argument("--latitude", type=float, default=TARGET_LATITUDE)
     parser.add_argument("--longitude", type=float, default=TARGET_LONGITUDE)
     parser.add_argument("--list-variables", action="store_true",
@@ -131,11 +143,11 @@ def save_custom_map(dataset, variable: str, output: Path, time_index: int, level
 
     projection = ccrs.PlateCarree()
     figure, axis = plt.subplots(figsize=(8, 5.5), subplot_kw={"projection": projection})
-    add_cached_features(axis)
     colours = axis.pcolormesh(longitude, latitude, np.asarray(field),
                               shading="auto", transform=projection)
     axis.set_extent([float(longitude.min()), float(longitude.max()),
                      float(latitude.min()), float(latitude.max())], crs=projection)
+    add_cached_features(axis)
     grid = axis.gridlines(draw_labels=True, linewidth=0.4, alpha=0.5)
     grid.top_labels = False
     grid.right_labels = False
@@ -158,6 +170,8 @@ def main() -> int:
     if not run_directory.is_dir():
         raise SystemExit(f"WRF run directory does not exist: {run_directory}")
     files = discover_wrfout(run_directory, domain=arguments.domain)
+    if not files:
+        raise SystemExit(f"No WRF history files found for {arguments.domain}; check --domain and run_directory")
     output_directory.mkdir(parents=True, exist_ok=True)
 
     print("STEP 2: Inspecting the selected domain")
@@ -181,6 +195,7 @@ def main() -> int:
     products = create_hindcast_report(
         run_directory, output_directory, domain=arguments.domain,
         latitude=arguments.latitude, longitude=arguments.longitude,
+        diagnostic_groups=arguments.diagnostics, diagnostic_options=DIAGNOSTIC_OPTIONS,
     )
 
     print("\nFinished. Open these files:")

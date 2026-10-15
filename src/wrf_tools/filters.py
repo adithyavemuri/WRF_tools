@@ -34,7 +34,7 @@ def butterworth_spatial(
     Butterworth (1930), doi:10.1049/jiee-1.1930.0018.
     """
     array = np.asarray(data, dtype=float)
-    if dx <= 0 or (dy is not None and dy <= 0) or cutoff_wavelength <= 0 or order < 1:
+    if not np.isfinite([dx,dx if dy is None else dy,cutoff_wavelength]).all() or dx <= 0 or (dy is not None and dy <= 0) or cutoff_wavelength <= 0 or not isinstance(order,int) or order < 1:
         raise ValueError("spacing, cutoff wavelength, and order must be positive")
     if kind not in {"lowpass", "highpass"}:
         raise ValueError("kind must be 'lowpass' or 'highpass'")
@@ -72,7 +72,7 @@ def top_hat_coarsen(
     """
     array = np.asarray(data)
     factor_x = factor_y if factor_x is None else factor_x
-    if factor_y < 1 or factor_x < 1:
+    if not all(isinstance(f,(int,np.integer)) and f>=1 for f in (factor_y,factor_x)):
         raise ValueError("coarsening factors must be positive integers")
     ay, ax = (a % array.ndim for a in axes)
     moved = np.moveaxis(array, (ay, ax), (-2, -1))
@@ -103,10 +103,25 @@ def butterworth_band(data: Any, *, dx: float, low_wavelength: float, high_wavele
     return remove_long
 
 def spectral_downsample(data: Any, *, factor_y: int, factor_x: int | None = None, axes=(-2,-1)) -> Any:
-    """Fourier crop a 2-D field to a coarser grid without aliasing."""
-    array=np.asarray(data,float); factor_x=factor_y if factor_x is None else factor_x; ay,ax=(a%array.ndim for a in axes)
-    moved=np.moveaxis(array,(ay,ax),(-2,-1)); ny,nx=moved.shape[-2:]; new_y,new_x=ny//factor_y,nx//factor_x
-    if new_y<1 or new_x<1: raise ValueError("downsampling factor exceeds grid")
-    transformed=np.fft.fftshift(np.fft.fft2(moved,axes=(-2,-1)),axes=(-2,-1)); sy=(ny-new_y)//2; sx=(nx-new_x)//2
-    cropped=transformed[...,sy:sy+new_y,sx:sx+new_x]; result=np.fft.ifft2(np.fft.ifftshift(cropped,axes=(-2,-1)),axes=(-2,-1)).real*(new_y*new_x)/(ny*nx)
-    return _wrap(data,np.moveaxis(result,(-2,-1),(ay,ax)),data.dims if isinstance(data,xr.DataArray) else None)
+    """Periodic Fourier resampling with antialias truncation and Nyquist merge.
+
+    Separably resamples the two axes to floor(n/factor) points while preserving
+    domain length and mean. Even/odd parity is handled explicitly; compare
+    scipy.signal.resample. Periodic boundaries are a scientific assumption.
+    """
+    array=np.asarray(data,float); factor_x=factor_y if factor_x is None else factor_x
+    if not all(isinstance(f,(int,np.integer)) and f>=1 for f in (factor_y,factor_x)):
+        raise ValueError("Downsampling factors must be positive integers")
+    ay,ax=(a%array.ndim for a in axes)
+    if ay==ax: raise ValueError("Filter axes must differ")
+    result=array
+    for axis,factor in ((ay,factor_y),(ax,factor_x)):
+        old=result.shape[axis]; new=old//factor
+        if new<1: raise ValueError("downsampling factor exceeds grid")
+        spectrum=np.fft.rfft(result,axis=axis)
+        slices=[slice(None)]*result.ndim; slices[axis]=slice(0,new//2+1)
+        cropped=spectrum[tuple(slices)].copy()
+        if new<old and new%2==0:
+            slices[axis]=new//2; cropped[tuple(slices)]*=2
+        result=np.fft.irfft(cropped,n=new,axis=axis)*(new/old)
+    return _wrap(data,result,data.dims if isinstance(data,xr.DataArray) else None)

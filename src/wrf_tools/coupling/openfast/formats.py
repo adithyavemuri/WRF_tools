@@ -7,6 +7,7 @@ import xarray as xr
 from ...types import WindField
 
 def read_hub_height_binary(path, *, dtype="<f4"):
+    """Read the migrated raw 14-value hub-height layout, not arbitrary HH files."""
     values = np.fromfile(path, dtype=dtype)
     if values.size % 14:
         raise ValueError("hub-height file does not contain complete 14-value records")
@@ -15,6 +16,7 @@ def read_hub_height_binary(path, *, dtype="<f4"):
     return xr.Dataset({name: ("time", values[:, i+1]) for i, name in enumerate(names)}, coords={"time": values[:, 0]})
 
 def read_full_field_text(path):
+    """Read the supported legacy u-only text-grid layout; see format fixture."""
     lines = Path(path).read_text(encoding="utf-8", errors="replace").splitlines()
     metadata = np.fromstring(lines[4], sep=" ")
     if metadata.size < 7:
@@ -30,6 +32,7 @@ def read_full_field_text(path):
     return xr.Dataset({"u": (("time","z","y"), velocity), "hub_wind": ("time", rows[:,1])}, coords={"time": rows[:,0], "z": z, "y": y}, attrs={"dy":dy,"dz":dz,"dt":dt,"hub_height":hub_height,"mean_speed":mean_speed})
 
 def read_coherent_points(path):
+    """Read the supported -99/3-component coherent-point binary layout."""
     with Path(path).open("rb") as stream:
         identifier, components, nt = struct.unpack("<hii", stream.read(10))
         if identifier != -99 or components != 3: raise ValueError("unsupported coherent-points file")
