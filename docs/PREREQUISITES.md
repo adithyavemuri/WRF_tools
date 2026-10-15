@@ -24,7 +24,15 @@ python -m pip install -e ".[netcdf,science,plot,report,animation]"
 ```
 
 Alternatively install `requirements.txt`, then `pip install -e . --no-deps`.
-That file includes Cartopy, Pillow and the Python-3.10 TOML dependency.
+That file includes Cartopy, Pillow, the isosurface/browser dependencies and the
+Python-3.10 TOML dependency.
+
+The commands above install the report toolkit. To also run the complete
+capability showcase or diagnostic browser example, add:
+
+```bash
+python -m pip install -e ".[isosurface,interactive]"
+```
 
 ## Optional tools are not mandatory toolkit dependencies
 
@@ -34,6 +42,10 @@ That file includes Cartopy, Pillow and the Python-3.10 TOML dependency.
 - Manim: separate optional scene renderer; follow [the visualization
   guide](VISUALIZATION.md). Native graphics/text libraries can be required.
 - FFmpeg: needed for MP4, not the Pillow GIF examples.
+- scikit-image (`.[isosurface]`): optional 3-D mesh extraction; not needed for
+  ordinary reports. Required by the complete capability showcase.
+- Plotly (`.[interactive]`): optional offline HTML orbit/zoom and time controls.
+  A WebGL-capable browser views the resulting file without a server or internet.
 - `wgrib2`: required only when explicitly selecting GRIB conversion.
 - OpenFAST: required only to execute a real, complete turbine model.
 - Natural Earth map features: downloaded into Cartopy's user cache on first

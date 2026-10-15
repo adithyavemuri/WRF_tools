@@ -1,5 +1,14 @@
 # Scientific figures and animations
 
+For actual 3-D wind/TKE surfaces above model terrain and ocean, see the separate
+[isosurface model-cutout example](ISOSURFACES.md). The original horizontal
+contour-stack example below remains available unchanged.
+
+The browser example adds wind speed, W, vertical relative vorticity, Q and
+available model TKE, with a movable native x-z/y-z section and per-field fixed
+thresholds/colour scales. Read the [methods and limits](ISOSURFACES.md) before
+interpreting vortex surfaces or coarse hourly output as turbulent structures.
+
 The hindcast report now includes a wind overview for every domain with the
 required fields: a geographic wind map, a matching native grid-row section,
 site evolution on physical heights and selected profiles. The overview replaces

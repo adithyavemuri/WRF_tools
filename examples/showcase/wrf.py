@@ -64,6 +64,26 @@ def run(c):
     call("contours3d.horizontal_contours",np.ones((2,8,8))*np.arange(8)[None,None,:],np.arange(8),np.arange(8),[100,200],[2,4])
     call("contours3d.export_contour_sequence",root,c.output/"synthetic-contours.json",domain="d01",
         heights=[100,200,300],thresholds=[6,7,8,9],maximum_frames=2)
+    # Same model-shaped fixture, explicitly synthetic. Do not invent coastline
+    # observations: this binary mask only exercises land/water display handling.
+    iso_ds = ds.copy()
+    iso_ds["LANDMASK"] = (ds.HGT.dims, np.broadcast_to(np.arange(8)[None,None,:] >= 3, ds.HGT.shape).astype(float))
+    iso_root = c.output/"isosurface-input"; iso_root.mkdir()
+    iso_ds.isel(Time=slice(0,2)).to_netcdf(iso_root/"wrfout_d01_2025-01-01_00_00_00")
+    k,j,i = np.indices((3,3,3), dtype=float)
+    call("isosurfaces.isosurface_mesh", i+j+k, 50+100*k, [0,1,2], [0,1,2], 2.5)
+    iso_geometry = call("isosurfaces.export_isosurface_sequence", iso_root,c.output/"synthetic-isosurfaces.json",domain="d01",
+        thresholds=[7,8],top_metres=500,horizontal_stride=1,maximum_frames=2)
+    call("interactive.isosurface_figure",iso_geometry)
+    call("interactive.write_isosurface_html",iso_geometry,c.output/"synthetic-interactive.html")
+    # Same public exporter, optional multi-diagnostic mode. These are synthetic
+    # execution checks, not a claim that these coarse fields contain LES eddies.
+    diagnostics = call("isosurfaces.export_isosurface_sequence",iso_root,
+        c.output/"synthetic-diagnostics.json",domain="d01",top_metres=500,horizontal_stride=2,
+        maximum_frames=2,diagnostics={"wind_speed":[7,8],"vertical_velocity":[-.1,.1],
+            "vertical_vorticity":[-1e-4,1e-4],"q_criterion":[1e-8],"model_tke":[.5,1.]})
+    call("interactive.isosurface_figure",diagnostics)
+    call("interactive.write_isosurface_html",diagnostics,c.output/"synthetic-diagnostic-explorer.html")
     # Two frames keep this example quick; not a Manim render or energy diagnosis.
     movie=call("animations.create_wind_animation",root,c.output/"synthetic-animation",maximum_frames=2)
     call("animations.read_animation_manifest",movie["manifest"])

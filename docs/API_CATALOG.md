@@ -1601,6 +1601,48 @@ Method category: report orchestration. Technical hindcast screening, not observa
 
 References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97).
 
+## interactive
+
+### `interactive.isosurface_figure`
+
+```python
+isosurface_figure(geometry, *, vertical_exaggeration=5.0, surface_opacity=0.35)
+```
+
+Return a Plotly 3-D figure with orbit/zoom, actual-time slider and controls.
+
+Terrain is one opaque, ambient-lit static mesh: animation frames update ONLY
+wind/TKE meshes, never terrain or camera. Vertex z remains physical km MSL;
+exaggeration changes the axis aspect ratio, not the data. Camera orientation
+is preserved across time steps. Transparency still has WebGL depth-sorting
+limitations; the terrain-only control separates geometry from occlusion.
+Schema v2 returns the initial diagnostic/section scene; write_isosurface_html
+installs the offline variable, time and movable-section controls.
+
+Source: [src/wrf_tools/interactive.py](../src/wrf_tools/interactive.py).
+
+Method category: interactive visualization. Static terrain, actual-time geometry and shared camera; visual aspect exaggeration does not change physical coordinates. Transparency is not volume rendering.
+
+References/conventions: [Plotly 3-D mesh and offline HTML contracts](https://plotly.com/python/reference/mesh3d/); [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97).
+
+### `interactive.write_isosurface_html`
+
+```python
+write_isosurface_html(geometry, output, *, vertical_exaggeration=5.0, surface_opacity=0.35)
+```
+
+Write a self-contained offline HTML viewer; no server or CDN is needed.
+
+Requires an ordinary WebGL-capable browser. Refuses to overwrite existing
+output. Camera and terrain remain fixed when the time slider is changed;
+manual rotation changes only the shared viewing camera, not coordinates.
+
+Source: [src/wrf_tools/interactive.py](../src/wrf_tools/interactive.py).
+
+Method category: interactive visualization. Static terrain, actual-time geometry and shared camera; visual aspect exaggeration does not change physical coordinates. Transparency is not volume rendering.
+
+References/conventions: [Plotly 3-D mesh and offline HTML contracts](https://plotly.com/python/reference/mesh3d/); [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97).
+
 ## io.datasets
 
 ### `io.datasets.open_wrf`
@@ -1683,6 +1725,64 @@ Source: [src/wrf_tools/io/validation.py](../src/wrf_tools/io/validation.py).
 Method category: file/data contract. Minimum schema/grid/time checks, not full WRF physics/units validation.
 
 References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97); [xarray labelled-array conventions](https://docs.xarray.dev/en/stable/user-guide/index.html).
+
+## isosurfaces
+
+### `isosurfaces.isosurface_mesh`
+
+```python
+isosurface_mesh(values, heights_m, x_km, y_km, level, *, top_metres=None)
+```
+
+Extract one scalar isosurface as vertices_km/faces in (x,y,z MSL) order.
+
+Arrays must be finite with shape (k,y,x), increasing height in every column,
+and increasing one-dimensional horizontal coordinates. Missing cells are
+rejected rather than filled. Out-of-range/constant thresholds yield an
+empty mesh. Optional MSL top clips triangles without inventing a closed cap.
+No smoothing, extrapolation or temporal interpolation is performed.
+
+References: scikit-image marching_cubes (Lewiner et al., 2003), and the
+WRF technical note for terrain-following coordinates. Geometry follows
+linear grid-cell interpolation, not unresolved atmospheric structures.
+
+Source: [src/wrf_tools/isosurfaces.py](../src/wrf_tools/isosurfaces.py).
+
+Method category: terrain-aware isosurface geometry. Native-index isosurfaces mapped to physical MSL height; explicit subsampling, open boundaries and display exaggeration. Not storm detection or enclosed-volume estimation.
+
+References/conventions: [scikit-image Lewiner marching-cubes geometry](https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.marching_cubes); [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97).
+
+### `isosurfaces.export_isosurface_sequence`
+
+```python
+export_isosurface_sequence(run_directory, output, *, domain='d02', variable='wind_speed', thresholds=(12.0, 16.0), top_metres=4000.0, horizontal_stride=3, vertical_exaggeration=25.0, maximum_frames=7, maximum_faces=30000, tke_source=None, diagnostics=None, earth_radius_metres=6370000.0)
+```
+
+Export actual WRF isosurfaces and terrain/ocean for the Manim mesh scene.
+
+Reads one actual timestamp at a time. Wind is horizontal mass-grid speed;
+model_tke requires an existing supported energy field. Heights are MSL from
+mass-averaged (PH+PHB)/9.81. Horizontal stride is explicit point subsampling,
+not filtering; selected endpoints are kept and geometry can lose features.
+Moving grids, missing data and unsupported fields raise clear errors.
+A numeric top clips geometry; top_metres=None retains all saved mass levels.
+Sides and the lowest mass level remain open. The actual model top is
+recorded separately from the selected display height.
+
+Optional diagnostics={name: thresholds} exports schema v2 for the offline
+diagnostic selector and movable native-grid sections. Supported names:
+wind_speed, vertical_velocity, vertical_vorticity, q_criterion, model_tke.
+This mapping replaces variable/thresholds; their nondefault values cannot
+be combined with it. Derivatives use spherical physical-coordinate
+Jacobians and Earth-relative wind, not the uniform-Cartesian Q helper.
+These are finite-difference post-processing diagnostics, not WRF operators.
+Missing source fields disable that selection, never fabricate its values.
+
+Source: [src/wrf_tools/isosurfaces.py](../src/wrf_tools/isosurfaces.py).
+
+Method category: geometry and optional physical diagnostic reconstruction. Schema v1 preserves native scalar isosurfaces. Optional schema v2 Q/vorticity use spherical Cartesian chain-rule gradients on full mass points before display subsampling; not WRF discrete operators, a turbulent flux budget or a cyclone detector.
+
+References/conventions: [scikit-image Lewiner marching-cubes geometry](https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.marching_cubes); [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97); [WRF v4.7.1 constants](https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F); [WRF Earth-relative wind convention](https://forum.mmm.ucar.edu/threads/converting-model-grid-relative-wind-to-earth-relative-wind.179/); [NumPy nonuniform finite-difference weights and boundary conventions](https://numpy.org/doc/stable/reference/generated/numpy.gradient.html); [Hunt, Wray and Moin (1988), Q criterion](https://ntrs.nasa.gov/citations/19890015184); [Jeong and Hussain (1995), vortex definitions and distinctions](https://doi.org/10.1017/S0022112095000462).
 
 ## les.diagnostics
 

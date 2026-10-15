@@ -5,11 +5,15 @@ regression evidence and actual execution are recorded separately by the audit.
 """
 
 REFERENCES = {
+    "plotly": ("Plotly 3-D mesh and offline HTML contracts", "https://plotly.com/python/reference/mesh3d/"),
+    "marching_cubes": ("scikit-image Lewiner marching-cubes geometry", "https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.marching_cubes"),
     "wrf": ("WRF-ARW v4 Technical Note", "https://doi.org/10.5065/1dfh-6p97"),
     "wrf_constants": ("WRF v4.7.1 constants", "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"),
     "stull": ("Stull (1988), Boundary Layer Meteorology", "https://doi.org/10.1007/978-94-009-3027-8"),
     "pope": ("Pope (2000), Turbulent Flows", "https://doi.org/10.1017/CBO9780511840531"),
     "hunt": ("Hunt, Wray and Moin (1988), Q criterion", "https://ntrs.nasa.gov/citations/19890015184"),
+    "jeong": ("Jeong and Hussain (1995), vortex definitions and distinctions", "https://doi.org/10.1017/S0022112095000462"),
+    "wind_rotation": ("WRF Earth-relative wind convention", "https://forum.mmm.ucar.edu/threads/converting-model-grid-relative-wind-to-earth-relative-wind.179/"),
     "deardorff": ("Deardorff (1970), convective velocity scale", "https://doi.org/10.1175/1520-0469(1970)027%3C1211:CVATSF%3E2.0.CO;2"),
     "bolton": ("Bolton (1980), thermodynamic approximations", "https://doi.org/10.1175/1520-0493(1980)108%3C1046:TCOEPT%3E2.0.CO;2"),
     "rotor": ("Wagner et al. (2014), rotor-equivalent speed", "https://doi.org/10.1088/1742-6596/524/1/012108"),
@@ -69,6 +73,8 @@ _MODULES = {
     "reporting": ("report/serialization utility", ["xarray","matplotlib"], "Serializes supplied evidence, does not establish its scientific accuracy."),
     "animations": ("visualization", ["matplotlib","wrf"], "Actual history states with fixed scales; playback rate is not model time or extra resolved information."),
     "contours3d": ("contour geometry", ["matplotlib","wrf"], "Stacked horizontal isolines, not volumetric isosurfaces; vertical exaggeration is recorded."),
+    "isosurfaces": ("terrain-aware isosurface geometry", ["marching_cubes","wrf"], "Native-index isosurfaces mapped to physical MSL height; explicit subsampling, open boundaries and display exaggeration. Not storm detection or enclosed-volume estimation."),
+    "interactive": ("interactive visualization", ["plotly","wrf"], "Static terrain, actual-time geometry and shared camera; visual aspect exaggeration does not change physical coordinates. Transparency is not volume rendering."),
     "maps": ("cartographic infrastructure", ["cartopy"], "Natural Earth context is not model data; cache/download policy is explicit."),
     "workflow": ("I/O/process infrastructure", ["xarray"], "External conversion needs a real executable; copies do not run WRF or validate physics."),
     "doctor": ("environment infrastructure", ["numpy","xarray"], "Dependency availability is not a numerical or scientific validation result."),
@@ -86,6 +92,7 @@ _OVERRIDES = {
     "exponential_coherence": ("parametric root-coherence model", ["davenport"], "Returns root coherence exp(-decay*f*separation/U), not the magnitude-squared estimator. Decay is user-selected; no IEC length-scale term."),
     "kaimal_spectrum": ("parametric near-neutral spectrum", ["kaimal_components","kaimal"], "Explicit Eq.4.5 coefficient variant, not IEC Kaimal. Vertical denominator differs from u/v; see docstring."),
     "q_criterion": ("physical diagnostic", ["hunt"], "Uniform Cartesian derivatives only; nominal-metric report approximation is labelled."),
+    "export_isosurface_sequence": ("geometry and optional physical diagnostic reconstruction", ["marching_cubes","wrf","wrf_constants","wind_rotation","gradient","hunt","jeong"], "Schema v1 preserves native scalar isosurfaces. Optional schema v2 Q/vorticity use spherical Cartesian chain-rule gradients on full mass points before display subsampling; not WRF discrete operators, a turbulent flux budget or a cyclone detector."),
     "convective_velocity_scale": ("physical diagnostic", ["deardorff"], "Kinematic virtual heat flux in K m/s; negative buoyancy clipped to zero."),
     "rotor_equivalent_wind_speed": ("approximate screening diagnostic", ["rotor"], "Uniform-height cube mean, NOT the paper's rotor-area-weighted REWS; no extrapolation."),
     "stability_class": ("legacy heuristic", ["stull"], "50/200 m thresholds are package heuristics, NOT standard/Pasquill classes or a method claimed by Stull."),

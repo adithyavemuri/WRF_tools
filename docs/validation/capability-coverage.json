@@ -1,9 +1,9 @@
 {
   "data_origin": "SYNTHETIC \u2014 NOT A WRF SIMULATION OR REAL OBSERVATIONS",
   "interpretation": "Runtime entry-point coverage, not branch coverage or scientific validation. Failures invalidate the run.",
-  "capability_count": 207,
+  "capability_count": 211,
   "counts": {
-    "EXERCISED_SYNTHETIC": 204,
+    "EXERCISED_SYNTHETIC": 208,
     "REQUIRES_EXTERNAL_INPUT": 3
   },
   "failures": [],
@@ -213,7 +213,7 @@
     {
       "id": "contours3d.horizontal_contours",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 3,
+      "calls": 5,
       "chapters": [
         "wrf"
       ],
@@ -2069,7 +2069,7 @@
     {
       "id": "grid.destagger.destagger",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 40,
+      "calls": 54,
       "chapters": [
         "wrf"
       ],
@@ -2201,6 +2201,54 @@
       }
     },
     {
+      "id": "interactive.isosurface_figure",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 6,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "interactive visualization",
+        "caveat": "Static terrain, actual-time geometry and shared camera; visual aspect exaggeration does not change physical coordinates. Transparency is not volume rendering.",
+        "references": [
+          {
+            "id": "plotly",
+            "title": "Plotly 3-D mesh and offline HTML contracts",
+            "url": "https://plotly.com/python/reference/mesh3d/"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "interactive.write_isosurface_html",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "interactive visualization",
+        "caveat": "Static terrain, actual-time geometry and shared camera; visual aspect exaggeration does not change physical coordinates. Transparency is not volume rendering.",
+        "references": [
+          {
+            "id": "plotly",
+            "title": "Plotly 3-D mesh and offline HTML contracts",
+            "url": "https://plotly.com/python/reference/mesh3d/"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
       "id": "io.datasets.open_wrf",
       "status": "EXERCISED_SYNTHETIC",
       "calls": 12,
@@ -2227,7 +2275,7 @@
     {
       "id": "io.datasets.open_wrf_sequence",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 4,
+      "calls": 6,
       "chapters": [
         "wrf"
       ],
@@ -2275,7 +2323,7 @@
     {
       "id": "io.discovery.discover_wrfout",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 5,
+      "calls": 7,
       "chapters": [
         "wrf"
       ],
@@ -2316,6 +2364,79 @@
             "id": "xarray",
             "title": "xarray labelled-array conventions",
             "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
+      "id": "isosurfaces.isosurface_mesh",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 23,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "terrain-aware isosurface geometry",
+        "caveat": "Native-index isosurfaces mapped to physical MSL height; explicit subsampling, open boundaries and display exaggeration. Not storm detection or enclosed-volume estimation.",
+        "references": [
+          {
+            "id": "marching_cubes",
+            "title": "scikit-image Lewiner marching-cubes geometry",
+            "url": "https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.marching_cubes"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          }
+        ]
+      }
+    },
+    {
+      "id": "isosurfaces.export_isosurface_sequence",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 2,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "geometry and optional physical diagnostic reconstruction",
+        "caveat": "Schema v1 preserves native scalar isosurfaces. Optional schema v2 Q/vorticity use spherical Cartesian chain-rule gradients on full mass points before display subsampling; not WRF discrete operators, a turbulent flux budget or a cyclone detector.",
+        "references": [
+          {
+            "id": "marching_cubes",
+            "title": "scikit-image Lewiner marching-cubes geometry",
+            "url": "https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.marching_cubes"
+          },
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "wrf_constants",
+            "title": "WRF v4.7.1 constants",
+            "url": "https://github.com/wrf-model/WRF/blob/v4.7.1/share/module_model_constants.F"
+          },
+          {
+            "id": "wind_rotation",
+            "title": "WRF Earth-relative wind convention",
+            "url": "https://forum.mmm.ucar.edu/threads/converting-model-grid-relative-wind-to-earth-relative-wind.179/"
+          },
+          {
+            "id": "gradient",
+            "title": "NumPy nonuniform finite-difference weights and boundary conventions",
+            "url": "https://numpy.org/doc/stable/reference/generated/numpy.gradient.html"
+          },
+          {
+            "id": "hunt",
+            "title": "Hunt, Wray and Moin (1988), Q criterion",
+            "url": "https://ntrs.nasa.gov/citations/19890015184"
+          },
+          {
+            "id": "jeong",
+            "title": "Jeong and Hussain (1995), vortex definitions and distinctions",
+            "url": "https://doi.org/10.1017/S0022112095000462"
           }
         ]
       }
@@ -3768,7 +3889,7 @@
     {
       "id": "turbulence.model_tke_sources",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 104,
+      "calls": 107,
       "chapters": [
         "wrf"
       ],
@@ -3787,7 +3908,7 @@
     {
       "id": "turbulence.model_tke",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 101,
+      "calls": 104,
       "chapters": [
         "wrf"
       ],
@@ -4156,7 +4277,7 @@
     {
       "id": "visualization.history_times",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 24,
+      "calls": 28,
       "chapters": [
         "wrf"
       ],
@@ -4243,7 +4364,7 @@
     {
       "id": "visualization.mass_heights",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 19,
+      "calls": 23,
       "chapters": [
         "wrf"
       ],
@@ -4754,5 +4875,5 @@
       }
     }
   ],
-  "package_source_sha256": "c9ae10900af17df671a92b60d62e131c3cec972957a94be939bd449aabcf26cd"
+  "package_source_sha256": "4d455890607b01e04a70af1e5e0e31a3a5d44fba1fc59fd7551f59685af91bf6"
 }

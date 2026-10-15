@@ -18,6 +18,20 @@ It accounts for all public functions, explicitly distinguishes synthetic inputs
 from real data, and documents the three real external prerequisites. For your
 own observations, use [compare_observations.py](compare_observations.py).
 
+For a 3-D model cutout with terrain, ocean and evolving wind/TKE isosurfaces,
+use [the isosurface walkthrough](../docs/ISOSURFACES.md),
+[editable exporter](export_3d_isosurfaces.py) and
+[Manim scene](manim_wrf_isosurfaces.py). Install the optional `.[isosurface]`
+extra for geometry, or `.[isosurface,interactive]` for the browser example and
+complete capability showcase.
+For manual rotation/zoom, a diagnostic dropdown, movable native x-z/y-z sections
+and a time slider instead of a fixed-camera movie,
+use [interactive_isosurfaces.py](interactive_isosurfaces.py) with the optional
+`.[isosurface,interactive]` extras. It creates one offline browser HTML file.
+Open an existing file with `python examples/open_interactive_viewer.py`.
+If Chrome reports unavailable WebGL, follow the graphics-settings and explicit
+isolated software-fallback instructions in [the walkthrough](../docs/ISOSURFACES.md).
+
 ## 1. Create the standard report
 
 Replace `/path/to/wrf/run` with the directory containing files such as

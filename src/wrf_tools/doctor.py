@@ -28,6 +28,8 @@ DEPENDENCIES = (
     ("Coordinate transforms", "pyproj", "pyproj", False),
     ("PDF reports", "reportlab", "reportlab", False),
     ("GIF/PNG encoding", "PIL", "Pillow", False),
+    ("Optional 3-D isosurface extraction", "skimage", "scikit-image", False),
+    ("Optional interactive browser figures", "plotly", "plotly", False),
     ("Optional 3-D scene renderer", "manim", "manim", False),
     ("Native WRF diagnostics", "wrf", "wrf-python", False),
 )

@@ -1,5 +1,111 @@
 # Pre-publication audit — 15 October 2026
 
+## Current development: terrain/ocean isosurfaces and offline interaction
+
+The post-release geometry and browser additions bring the catalog to 211 entries.
+All four new functions have an execution route in the chaptered showcase, with
+analytical mesh-coordinate and viewer-contract tests. See [the model-cutout guide](ISOSURFACES.md)
+for dependencies, methods, terrain/ocean semantics and rendering limitations.
+Initial mesh-only verification covered 201 unique tests: 200 passed in the main run with the
+ledger-consistency case deferred until the new showcase ledger was copied;
+all five release-consistency checks then passed, including that deferred case.
+That initial showcase exercised 206 of 209 callable entries and recorded the three
+external prerequisites separately, with no unaccounted entries. The seven-state
+real-data Manim movie rendered at 1600x900/12 fps; the final exporter reproduced
+its geometry exactly. [Render acceptance record](validation/isosurface-acceptance.json)
+stores portable artifact paths and hashes. New renderer validation was local
+Linux/Cairo only; it is not a claim of a completed Windows rendering test.
+The report PDF and its historical acceptance record are unchanged. The figures
+and counts below describe the v0.5.0 pre-release audit snapshot, not a fresh PDF
+generation or a claim that every new branch has atmospheric validation.
+
+The subsequent browser example is a separate, self-contained offline HTML file.
+It uses all saved mass levels by default and records model-top interfaces and
+pressure separately from a selected display ceiling. Terrain is a static,
+opaque, ambient-lit mesh; only wind/TKE meshes appear in animation frames.
+Real offline Chrome checks passed mouse rotation, wheel zoom, time selection,
+camera and opacity persistence, terrain-only selection and unchanged physical
+coordinates under aspect-ratio changes, with no external HTTP requests or
+JavaScript page errors. The HTML commits the live WebGL camera before control
+updates because wheel zoom can precede Plotly's stored-layout camera update.
+Earlier browser/launcher verification covered 217 unique tests: 216 passed in the main run,
+then the deferred ledger check passed with the five release-consistency tests.
+The refreshed showcase exercised 208 of 211 public functions with the same
+three explicit external prerequisites. [Browser acceptance record](validation/interactive-acceptance.json)
+stores final geometry/HTML hashes, actual vertical extent and interaction checks.
+The updated viewer was also tested with WebGL explicitly disabled: it displayed
+actionable graphics instructions, skipped Plotly initialization, and produced
+no JavaScript page errors. Launcher tests verify a separate temporary profile,
+explicit software opt-in, local-file validation, and no sandbox-disabling flags.
+No real browser preferences or system graphics settings are modified by these
+package changes; software rendering is not automatically enabled.
+
+### Diagnostic selector and native vertical sections
+
+The subsequent diagnostic-viewer update keeps 211 public functions, extending
+the existing exporter with an optional schema-v2 bundle. The original scalar
+schema-v1 exporter and Manim workflow are retained. Wind speed, W, radial
+relative vorticity, Q and supported model TKE have explicit definitions, units,
+fixed per-field thresholds and fixed section colour limits across exported
+times. Missing variables disable individual selections with reasons; bad data
+and resource limits fail visibly. Sections follow actual sampled mass heights.
+
+Q/vorticity reconstruction uses a full native-grid physical-coordinate Jacobian
+on a spherical Earth and rotates the local wind basis before differentiating.
+This is not the existing nominal-Cartesian report helper, not WRF's exact
+discrete operator, and not a turbulent-flux or energy budget. Independent tests
+recover general affine tensors on sloping grids and through the complete
+spherical/wind-rotation chain, and distinguish solid rotation, strain, shear
+and uniform translation. See [methods and limits](ISOSURFACES.md).
+
+Local verification now covers **238 unique tests**: 237 passed in the main run
+and the deferred checked-ledger test then passed with all five release
+consistency checks. The updated showcase executes both geometry schemas and
+accounts for 208 of 211 public functions plus the same three external actions.
+The real seven-state d02 export was checked in offline, isolated Chrome with
+explicit software WebGL: all four available fields at all seven times,
+mouse orbit/zoom, fixed terrain/camera/opacity, invariant physical heights,
+both section orientations and the section-only view passed. No external HTTP
+requests or JavaScript page errors occurred. TKE was explicitly unavailable
+in this real run. The [acceptance record](validation/diagnostic-viewer-acceptance.json)
+stores hashes and scope. Browser/platform coverage remains local Linux/Chrome,
+not a cross-platform graphics certification. The retained PDF is unchanged.
+
+The layout follow-up separates controls, plot and footer into normal-flow rows
+instead of overlaying fixed bars on Plotly's paper-relative legend. An offline
+browser regression passed at 1600x1000, 1280x720, 900x700, 1920x1080 and
+2560x1440, with methods expanded and collapsed: controls/plot/footer and
+legend/tools bounding boxes did not overlap. All prior diagnostic interaction
+checks passed again. The full 237-test run and subsequent deferred ledger check
+passed again (238 unique tests). Only presentation changed; saved geometry,
+field calculations and the report PDF are unchanged.
+
+The View selector also offers **Terrain + surfaces only**. The browser
+regression verifies that this keeps terrain/coastline and diagnostic meshes
+visible while hiding the section, including after a time redraw. This is a
+visibility-only option; no geometry or diagnostic values are recalculated.
+
+The browser height-window follow-up adds lower/upper MSL limits, full-export
+restoration and optional vertical auto-fit that reports the actual exaggeration.
+Existing triangles and coastline segments are geometrically clipped without
+adding caps; section values are interpolated only within saved column brackets
+at the bounds. Saved geometry/volumes and diagnostic calculations are unchanged.
+Offline Chrome checks passed independent triangle, line and section oracles,
+clipping across all four available fields at first/last times, camera retention,
+invalid-range rejection and exact terrain restoration. All prior interaction
+and five-size layout checks passed again. The 237-test main run and subsequent
+checked-ledger release checks passed again (238 unique tests). These are display
+and numerical-contract checks, not validation of unresolved turbine wakes or
+parameterized turbulence.
+
+Pre-push verification reran the complete suite in one pass: **238 tests passed**,
+including the checked source/capability ledger, followed by a successful core
+dependency check. Generated HTML, geometry, videos and browser screenshots
+remain ignored local artifacts; reusable examples and acceptance records are
+included in the source update.
+
+## v0.5.0 pre-release audit snapshot
+
 This is a source, documentation, numerical-regression and runnable-example
 audit. It is **not** certification, exhaustive branch coverage, validation of
 every possible WRF configuration, or proof of atmospheric/engineering accuracy.
@@ -13,7 +119,7 @@ Python 3.10/3.12; those remote matrix runs have not been performed here.
 
 ## Capability accounting
 
-The catalog currently contains **207 public top-level functions** (not 207
+The audited release catalog contained **207 public top-level functions** (not 207
 independent physical models). Facade re-exports do not count twice. Every entry
 has an execution route, method category, references/format contracts and caveat.
 Private helpers, data classes/methods and orchestration infrastructure are not

@@ -12,8 +12,13 @@ groups, editable recipes and explicit verification boundaries.
   readers, writers, station/WPS tools and external-data capabilities.
 - **Focused scripts:** averaging, multi-case comparisons, WRF-LES coupling,
   wind animations and actual-data 3-D contours remain available.
+  Terrain/ocean isosurfaces have a separate [editable example](ISOSURFACES.md)
+  and are exercised by the same capability showcase, not hidden helpers.
 - **Correctness:** a Q-gradient ordering defect was fixed with rotation/strain
   tests. The report's nominal Cartesian Q operator still neglects map metrics.
+  The optional diagnostic browser has a separate full-grid spherical-coordinate
+  reconstruction with wind rotation and explicit limits; it does not silently
+  replace the report helper or claim to reproduce WRF's discrete operators.
   The Stull budget is partial; hourly weather variance is not silently called
   turbulent energy.
 - **Verification:** discovery, numerical testing, real-WRF execution and

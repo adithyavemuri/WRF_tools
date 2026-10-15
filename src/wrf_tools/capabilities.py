@@ -39,7 +39,7 @@ def _catalog_entries():
                 source=f"src/wrf_tools/{path.relative_to(root).as_posix()}", line=node.lineno,
                 basis=_basis(module,node.name),
                 external_action=node.name in {"run_openfast", "setup_map_data", "add_cached_features", "create_hindcast_report",
-                                              "create_wind_animation", "export_contour_sequence"})
+                                              "create_wind_animation", "export_contour_sequence", "export_isosurface_sequence", "write_isosurface_html"})
     return result
 
 

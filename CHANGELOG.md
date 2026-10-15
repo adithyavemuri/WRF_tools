@@ -2,11 +2,35 @@
 
 ## Unreleased
 
+- Add an editable MSL height window with geometric surface/terrain/coastline
+  clipping, bracketed section interpolation at the bounds, full-export reset
+  and optional vertical auto-fit with explicitly updated exaggeration.
+- Add a **Terrain + surfaces only** view that hides the vertical section while
+  retaining the terrain, coastline and selected diagnostic isosurfaces.
+- Fix diagnostic-viewer text overlap by giving controls, plot and footer
+  separate responsive layout rows. Browser checks cover five window sizes,
+  with the methods panel both expanded and collapsed; calculations are unchanged.
+- Extend the offline viewer with a per-field diagnostic dropdown (wind speed,
+  W, vertical relative vorticity, Q and available model TKE) and movable native
+  x-z/y-z sections. Derivatives use full-grid spherical-coordinate Jacobians
+  and rotated wind, with analytical tensor tests and explicit reconstruction
+  limits. Schema v1 and existing Manim exports remain supported. Missing fields
+  are disabled; thresholds and section colour ranges stay fixed across time.
+- Explain unavailable WebGL before the browser plot initializes, and add a
+  local-file launcher with an explicit isolated-profile software-rendering
+  option. Normal browser settings and scientific calculations are unchanged.
+- Add terrain-aware wind/TKE isosurface geometry, a separate Manim model-cutout
+  scene with WRF terrain and ocean, editable examples and analytical mesh tests.
+  The optional `isosurface` extra supplies mesh extraction dependencies; the
+  offline interactive HTML viewer adds manual camera, actual-time, opacity and
+  vertical-scale controls with an invariant terrain layer. Full-column exports
+  distinguish the display height from the actual model top. The complete
+  showcase now accounts for 211 public functions.
 - Fix Windows test failures by explicitly reading UTF-8 source and API
   documentation. The discovery test now also simulates the Windows legacy
   CP1252 default on Linux to catch this regression before publication.
-- No package calculations, report artifacts or released tags are changed by
-  this test-only correction.
+- The Windows encoding correction itself does not change package calculations,
+  report artifacts or released tags.
 
 ## 0.5.0 — 2026-10-15
 

@@ -10,7 +10,7 @@ from wrf_tools.capabilities import capability_catalog
 
 
 def test_complete_showcase_has_no_unaccounted_capabilities(tmp_path):
-    for module in ("cartopy","reportlab","netCDF4","matplotlib","PIL"):
+    for module in ("cartopy","reportlab","netCDF4","matplotlib","PIL","skimage","plotly"):
         pytest.importorskip(module)
     root=Path(__file__).resolve().parents[1]
     output=tmp_path/"showcase"

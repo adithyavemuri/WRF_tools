@@ -121,6 +121,9 @@ Recipes are not safe for untrusted-code execution.
 | Multi-simulation overlays/differences | [compare_simulations.py](../examples/compare_simulations.py), `comparison.*` |
 | Actual-time wind GIF/MP4 | `wrf-tools animate-wind`, [animate_wrf_wind.py](../examples/animate_wrf_wind.py) |
 | Actual-data 3-D contours | [export_3d_contours.py](../examples/export_3d_contours.py) then [manim_wrf_contours.py](../examples/manim_wrf_contours.py); retained |
+| Terrain/ocean + 3-D isosurfaces | [export_3d_isosurfaces.py](../examples/export_3d_isosurfaces.py) then [manim_wrf_isosurfaces.py](../examples/manim_wrf_isosurfaces.py); [method and settings](ISOSURFACES.md) |
+| Interactive 3-D diagnostics + movable vertical sections | [interactive_isosurfaces.py](../examples/interactive_isosurfaces.py); offline field/time selectors, static terrain, physical heights and explicit Q/vorticity methods |
+| Open an existing browser figure / explicit software fallback | [open_interactive_viewer.py](../examples/open_interactive_viewer.py); no WRF rerun, normal settings untouched |
 | WRF-LES plane → BTS | [wrf_les_to_openfast.py](../examples/wrf_les_to_openfast.py), coupling recipe/API |
 | SGS energy, station TS/tslist, WPS, OpenFAST I/O | External-files recipe; own files and confirmed conventions required |
 | Observations and statistics | Observation recipe, `observations.*`, `validation.*` |

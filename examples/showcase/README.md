@@ -1,9 +1,10 @@
 # All capabilities, with honest inputs
 
 From the WRF_tools repository root after installing the plotting, report,
-NetCDF, science and animation extras:
+NetCDF, science, animation, isosurface and interactive extras:
 
 ```bash
+python -m pip install -e ".[netcdf,science,plot,report,animation,isosurface,interactive]"
 python examples/showcase_all_capabilities.py --output example_results/my_showcase
 ```
 
@@ -19,7 +20,8 @@ WRF, OpenFAST, a converter, or a network download.
    output and inflow-format round trips. No real instrument validation is implied.
 3. [wrf.py](wrf.py): create/read WRF-shaped files, select/destagger variables,
    calculate physical coordinates, exercise LES/model-TKE paths, render report,
-   animation and contour geometry. [data.py](data.py) declares all input fields.
+   animation, contour geometry, terrain-aware isosurfaces and offline HTML.
+   [data.py](data.py) declares all input fields.
 4. [plots.py](plots.py): basic plots, Taylor/scatter diagrams, named simulation
    comparisons, reports and environment checks.
 

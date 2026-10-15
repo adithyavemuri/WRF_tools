@@ -373,16 +373,25 @@ coupling checklist in [Scientific methods](docs/SCIENTIFIC_METHODS.md).
 
 ## Run the complete capability showcase
 
+For 3-D wind/TKE isosurfaces above WRF terrain and ocean, follow the
+[model-cutout walkthrough](docs/ISOSURFACES.md). Its Manim renderer is optional
+and separate from the PDF report and existing contour-stack example.
+For manual orbit/zoom, actual saved times, a wind/W/vorticity/Q/model-TKE
+selector and movable vertical sections, use the standalone offline
+[interactive browser example](examples/interactive_isosurfaces.py). Missing
+fields are disabled with reasons; methods and derivative assumptions are explicit.
+
 No WRF download or real observations are required for this explicitly synthetic
 demonstration. Read/edit the four chapters under `examples/showcase/`:
 
 ```bash
+python -m pip install -e ".[isosurface,interactive]"
 python examples/showcase_all_capabilities.py --output example_results/my_showcase
 ```
 
 It exercises equations, data selection, statistics, filters/spectra, file formats,
 plots, animations and reports. `capability-coverage.json`/`.md` accounts for every
-public function. The verified baseline exercised 204 of 207 and explicitly
+public function. The current showcase exercises 208 of 211 and explicitly
 documented three external prerequisites: map download, `wgrib2`, and OpenFAST.
 New unaccounted functions or execution failures make the showcase fail. This is
 entry-point coverage, NOT exhaustive branch coverage or atmospheric validation.

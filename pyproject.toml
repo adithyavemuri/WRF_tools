@@ -31,6 +31,8 @@ science = ["scipy>=1.11"]
 plot = ["matplotlib>=3.8", "cartopy>=0.22", "pyproj>=3.6"]
 report = ["reportlab>=4.0"]
 animation = ["Pillow>=10"]
+isosurface = ["scikit-image>=0.22", "scipy>=1.11", "matplotlib>=3.8", "netCDF4>=1.6"]
+interactive = ["plotly>=5.18"]
 manim = ["manim>=0.19"]
 wrf = ["wrf-python>=1.3.4.1"]
 test = ["pytest>=8"]
@@ -44,6 +46,8 @@ all = [
     "pytest>=8",
     "reportlab>=4.0",
     "Pillow>=10",
+    "scikit-image>=0.22",
+    "plotly>=5.18",
 ]
 
 [project.scripts]

@@ -4,7 +4,7 @@ SYNTHETIC — NOT A WRF SIMULATION OR REAL OBSERVATIONS
 
 Runtime entry-point coverage, not branch coverage or scientific validation. Failures invalidate the run.
 
-Catalog: 207 functions. Counts: {'EXERCISED_SYNTHETIC': 204, 'REQUIRES_EXTERNAL_INPUT': 3}.
+Catalog: 211 functions. Counts: {'EXERCISED_SYNTHETIC': 208, 'REQUIRES_EXTERNAL_INPUT': 3}.
 
 | Capability | Status | Chapter / required input |
 |---|---|---|
@@ -105,11 +105,15 @@ Catalog: 207 functions. Counts: {'EXERCISED_SYNTHETIC': 204, 'REQUIRES_EXTERNAL_
 | `grid.interpolation.regrid_regular` | EXERCISED_SYNTHETIC | wrf |
 | `hindcast.summarize_hindcast` | EXERCISED_SYNTHETIC | wrf |
 | `hindcast.create_hindcast_report` | EXERCISED_SYNTHETIC | wrf |
+| `interactive.isosurface_figure` | EXERCISED_SYNTHETIC | wrf |
+| `interactive.write_isosurface_html` | EXERCISED_SYNTHETIC | wrf |
 | `io.datasets.open_wrf` | EXERCISED_SYNTHETIC | wrf |
 | `io.datasets.open_wrf_sequence` | EXERCISED_SYNTHETIC | wrf |
 | `io.datasets.get_variable` | EXERCISED_SYNTHETIC | wrf |
 | `io.discovery.discover_wrfout` | EXERCISED_SYNTHETIC | wrf |
 | `io.validation.validate_wrf_dataset` | EXERCISED_SYNTHETIC | wrf |
+| `isosurfaces.isosurface_mesh` | EXERCISED_SYNTHETIC | wrf |
+| `isosurfaces.export_isosurface_sequence` | EXERCISED_SYNTHETIC | wrf |
 | `les.diagnostics.load_velocity` | EXERCISED_SYNTHETIC | wrf |
 | `les.diagnostics.calculate_fluxes` | EXERCISED_SYNTHETIC | wrf |
 | `les.diagnostics.calculate_total_tke` | EXERCISED_SYNTHETIC | wrf |
