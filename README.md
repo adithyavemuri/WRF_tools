@@ -1,6 +1,6 @@
 # WRF Tools
 
-Current release: **v0.5.0** (beta)
+Current version: **v0.6.0** (beta; unreleased).
 
 See the [release notes](CHANGELOG.md) for new workflows, calculation corrections,
 compatibility notes and verification limits.
@@ -391,8 +391,8 @@ python examples/showcase_all_capabilities.py --output example_results/my_showcas
 
 It exercises equations, data selection, statistics, filters/spectra, file formats,
 plots, animations and reports. `capability-coverage.json`/`.md` accounts for every
-public function. The current showcase exercises 208 of 211 and explicitly
-documented three external prerequisites: map download, `wgrib2`, and OpenFAST.
+public function. The current showcase exercises 209 of 212 and explicitly
+documents three external prerequisites: map download, `wgrib2`, and OpenFAST.
 New unaccounted functions or execution failures make the showcase fail. This is
 entry-point coverage, NOT exhaustive branch coverage or atmospheric validation.
 
@@ -414,7 +414,8 @@ wrf-tools extract WRFOUT OUTPUT LATITUDE LONGITUDE VARIABLE [VARIABLE ...] [--de
 wrf-tools filter INPUT.npy OUTPUT.npy --dx DX --cutoff WAVELENGTH
 wrf-tools spectra INPUT.npy OUTPUT.npz --spacing DT
 wrf-tools report WRFOUT report.json
-wrf-tools hindcast-report RUN_DIRECTORY OUTPUT_DIRECTORY [--domain d01]
+wrf-tools hindcast-report RUN_DIRECTORY OUTPUT_DIRECTORY [--domain d01] [--report-domains d02]
+wrf-tools ensemble-report OUTPUT_DIRECTORY --member control=RUN_A --member alternative=RUN_B --contour-member mean
 wrf-tools setup-maps [--resolution 10m|50m|110m]
 wrf-tools bts-info inflow.bts
 wrf-tools bts-compare first.bts second.bts
@@ -422,6 +423,10 @@ wrf-tools openfast-info simulation.outb
 ```
 
 ## Scope and limitations
+
+Named ensemble traces, mean/member maps and domain filtering are described in
+[ensemble reports](docs/ENSEMBLE_REPORTS.md), with an
+[editable Python example](examples/create_ensemble_report.py).
 
 - This is a post-processing package; it does not compile or configure WRF.
 - Multi-file concatenation handles sequential files from one domain, not

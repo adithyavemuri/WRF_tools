@@ -1,8 +1,23 @@
-# Pre-publication audit — 15 October 2026
+# Audit and verification record
 
-## Current development: terrain/ocean isosurfaces and offline interaction
+## v0.6.0 development — 6 November 2026
 
-The post-release geometry and browser additions bring the catalog to 211 entries.
+Named-member ensemble reports add one public function, bringing the current
+catalog to 212. The maintained showcase exercises 209 functions with explicit
+synthetic inputs and records three external prerequisites separately. The
+source-hashed ledger is refreshed for the current version; it is execution
+coverage, not branch coverage or atmospheric validation.
+
+Saved six-member Netherlands output was used to regenerate the ensemble PDF:
+all member traces plus their equal-weight mean, default mean maps, explicit
+domain filtering and both-domain layout context. Named-member maps were also
+checked at the same site without changing member/mean traces. Numerical tests
+cover nonlinear wind-speed averaging, NaN propagation, grid/time mismatches
+and precipitation counter resets. No new WRF simulation was run.
+
+## Earlier post-v0.5.0 development: terrain/ocean isosurfaces and offline interaction
+
+The earlier geometry and browser additions brought the catalog to 211 entries.
 All four new functions have an execution route in the chaptered showcase, with
 analytical mesh-coordinate and viewer-contract tests. See [the model-cutout guide](ISOSURFACES.md)
 for dependencies, methods, terrain/ocean semantics and rendering limitations.
@@ -298,7 +313,8 @@ explicitly unavailable. [Acceptance record](validation/final-report-acceptance.j
 stores the portable command, package-source and final-PDF checksums from that
 pre-release run. The retained PDF was generated with v0.4.0 metadata before the
 release version update; it is not relabelled as a v0.5.0-generated artifact.
-The capability ledger is refreshed against the v0.5.0 package source.
+The capability ledger tracks the current package source; the v0.5.0 audit
+results above remain a historical snapshot, not newly generated evidence.
 
 Deleted outputs: the old generated showcase (including its copy-operation demo
 folder), visualization-upgrade report tree, earlier demo PDF/preview and both

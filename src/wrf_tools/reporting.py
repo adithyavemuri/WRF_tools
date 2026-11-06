@@ -245,7 +245,21 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
     else:
         story=[Paragraph(title,styles["Title"]),Spacer(1,.4*cm)]
 
-    if "domains" not in report:
+    if "ensemble" in report:
+        ensemble = report["ensemble"]
+        story.extend([table_for([("Ensemble members",ensemble["member_count"]),
+                       ("Evaluated domains",", ".join(ensemble["report_domains"])),
+                       ("Contour source",ensemble["contour_member"])]),Spacer(1,.4*cm),
+            Paragraph("Named members and physics",styles["Heading1"])])
+        physics_rows = []
+        for name, record in ensemble["members"].items():
+            for domain, physics in record.get("physics_by_domain", {}).items():
+                labels = {"MP_PHYSICS":"microphysics", "RA_LW_PHYSICS":"longwave", "RA_SW_PHYSICS":"shortwave",
+                          "BL_PBL_PHYSICS":"PBL", "SF_SFCLAY_PHYSICS":"surface layer", "CU_PHYSICS":"cumulus"}
+                physics_rows.append((f"{name} / {domain}", "; ".join(f"{label}: {physics.get(key)}" for key,label in labels.items())))
+        story.append(table_for(physics_rows))
+        story.extend([Paragraph("Methods and scope",styles["Heading1"]),table_for(report["methods"].items())])
+    if "domains" not in report and "ensemble" not in report:
       for heading,value in report.items():
         if heading == "temporal":
             story.append(PageBreak())

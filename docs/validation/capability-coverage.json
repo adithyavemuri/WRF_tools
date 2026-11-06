@@ -1,9 +1,9 @@
 {
   "data_origin": "SYNTHETIC \u2014 NOT A WRF SIMULATION OR REAL OBSERVATIONS",
   "interpretation": "Runtime entry-point coverage, not branch coverage or scientific validation. Failures invalidate the run.",
-  "capability_count": 211,
+  "capability_count": 212,
   "counts": {
-    "EXERCISED_SYNTHETIC": 208,
+    "EXERCISED_SYNTHETIC": 209,
     "REQUIRES_EXTERNAL_INPUT": 3
   },
   "failures": [],
@@ -1755,6 +1755,35 @@
       }
     },
     {
+      "id": "ensemble.create_ensemble_report",
+      "status": "EXERCISED_SYNTHETIC",
+      "calls": 1,
+      "chapters": [
+        "wrf"
+      ],
+      "basis": {
+        "category": "ensemble report orchestration",
+        "caveat": "Equal weights; nonlinear diagnostics before averaging; exact grid/time matching. Model sensitivity, not calibrated uncertainty or skill.",
+        "references": [
+          {
+            "id": "wrf",
+            "title": "WRF-ARW v4 Technical Note",
+            "url": "https://doi.org/10.5065/1dfh-6p97"
+          },
+          {
+            "id": "numpy",
+            "title": "NumPy numerical operations",
+            "url": "https://numpy.org/doc/stable/reference/index.html"
+          },
+          {
+            "id": "xarray",
+            "title": "xarray labelled-array conventions",
+            "url": "https://docs.xarray.dev/en/stable/user-guide/index.html"
+          }
+        ]
+      }
+    },
+    {
       "id": "extract.point",
       "status": "EXERCISED_SYNTHETIC",
       "calls": 1,
@@ -2021,7 +2050,7 @@
     {
       "id": "grid.coordinates.nearest_grid_point",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 4,
+      "calls": 5,
       "chapters": [
         "wrf"
       ],
@@ -2275,7 +2304,7 @@
     {
       "id": "io.datasets.open_wrf_sequence",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 6,
+      "calls": 8,
       "chapters": [
         "wrf"
       ],
@@ -2323,7 +2352,7 @@
     {
       "id": "io.discovery.discover_wrfout",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 7,
+      "calls": 11,
       "chapters": [
         "wrf"
       ],
@@ -2605,7 +2634,7 @@
     {
       "id": "maps.add_cached_features",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 19,
+      "calls": 21,
       "chapters": [
         "plots",
         "wrf"
@@ -3279,7 +3308,7 @@
     {
       "id": "reporting.write_json_report",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 2,
+      "calls": 3,
       "chapters": [
         "plots",
         "wrf"
@@ -3353,7 +3382,7 @@
     {
       "id": "reporting.write_html_report",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 2,
+      "calls": 3,
       "chapters": [
         "plots",
         "wrf"
@@ -3378,7 +3407,7 @@
     {
       "id": "reporting.write_pdf_report",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 2,
+      "calls": 3,
       "chapters": [
         "plots",
         "wrf"
@@ -4277,7 +4306,7 @@
     {
       "id": "visualization.history_times",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 28,
+      "calls": 34,
       "chapters": [
         "wrf"
       ],
@@ -4306,7 +4335,7 @@
     {
       "id": "visualization.rotate_wind",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 10,
+      "calls": 12,
       "chapters": [
         "wrf"
       ],
@@ -4335,7 +4364,7 @@
     {
       "id": "visualization.surface_wind",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 8,
+      "calls": 10,
       "chapters": [
         "wrf"
       ],
@@ -4451,7 +4480,7 @@
     {
       "id": "visualization.wrf_projection",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 16,
+      "calls": 17,
       "chapters": [
         "plots",
         "wrf"
@@ -4481,7 +4510,7 @@
     {
       "id": "visualization.geographic_axis",
       "status": "EXERCISED_SYNTHETIC",
-      "calls": 15,
+      "calls": 16,
       "chapters": [
         "plots",
         "wrf"
@@ -4875,5 +4904,5 @@
       }
     }
   ],
-  "package_source_sha256": "4d455890607b01e04a70af1e5e0e31a3a5d44fba1fc59fd7551f59685af91bf6"
+  "package_source_sha256": "e4000920fd50840f3743a9b82e14e24f1ab1bf4ea20867f05ac3d7c5ec6add2f"
 }

@@ -47,6 +47,7 @@ REFERENCES = {
 # Numerical utilities and I/O need an algorithm/format contract, not invented
 # atmospheric-paper citations. Screening thresholds are explicitly empirical.
 _MODULES = {
+    "ensemble": ("ensemble report orchestration", ["wrf","numpy","xarray"], "Equal weights; nonlinear diagnostics before averaging; exact grid/time matching. Model sensitivity, not calibrated uncertainty or skill."),
     "diagnostics": ("physical diagnostic", ["stull","pope"], "Check units, coordinates and averaging assumptions in the function docstring."),
     "les": ("turbulence diagnostic", ["pope","wrf"], "Resolved statistics need justified averaging; SGS inputs need confirmed units/sign conventions."),
     "averaging": ("numerical reduction", ["numpy","wrf"], "Explicit weights and validity masks; model-index and physical-height means differ."),

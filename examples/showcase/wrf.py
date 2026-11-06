@@ -61,6 +61,13 @@ def run(c):
         "minimum_turbulence_samples":32,"max_turbulence_interval_seconds":10})
     # Compact report exercises the full writer; groups were exercised above.
     call("hindcast.create_hindcast_report",root,c.output/"synthetic-report",diagnostic_groups="none")
+    # Explicit synthetic second member: execution/mean checks, NOT an ensemble
+    # of atmospheric experiments or evidence of physical uncertainty calibration.
+    alternative = c.output/"synthetic-alternative"; alternative.mkdir()
+    other = ds.copy(deep=True); other["U10"] = other.U10 + 1
+    other.to_netcdf(alternative/"wrfout_d01_2025-01-01_00_00_00")
+    call("ensemble.create_ensemble_report", {"synthetic-control":root,"synthetic-alternative":alternative},
+        c.output/"synthetic-ensemble-report", variables=["wind_speed_10m"])
     call("contours3d.horizontal_contours",np.ones((2,8,8))*np.arange(8)[None,None,:],np.arange(8),np.arange(8),[100,200],[2,4])
     call("contours3d.export_contour_sequence",root,c.output/"synthetic-contours.json",domain="d01",
         heights=[100,200,300],thresholds=[6,7,8,9],maximum_frames=2)

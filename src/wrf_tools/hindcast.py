@@ -299,12 +299,19 @@ def create_hindcast_report(
     tke_variable: str | None = None,
     diagnostic_groups: str | list[str] = "all",
     diagnostic_options: dict[str, Any] | None = None,
+    report_domains: list[str] | None = None,
 ) -> dict[str, Path]:
     """Create JSON, HTML and PDF reports for a time-ordered WRF hindcast."""
     if (latitude is None) != (longitude is None):
         raise ValueError("latitude and longitude must be supplied together")
     all_files = discover_wrfout(run_directory)
     domains = sorted({item.name.split("_")[1] for item in all_files})
+    if report_domains is not None:
+        if not report_domains or len(set(report_domains)) != len(report_domains) or set(report_domains) - set(domains):
+            raise ValueError("report_domains must select unique available domains")
+        domains = list(report_domains)
+        if domain not in domains:
+            domain = domains[0]
     if domain not in domains:
         raise FileNotFoundError(f"no wrfout files for {domain} in {Path(run_directory).resolve()}")
     output = Path(output_directory).expanduser().resolve()

@@ -135,9 +135,26 @@ def _hindcast_report(args: argparse.Namespace) -> int:
         tke_variable=args.tke_variable,
         diagnostic_groups=args.diagnostics,
         diagnostic_options=_read_diagnostic_options(args.diagnostics_config),
+        report_domains=args.report_domains,
     )
     print(json.dumps({name: str(path) for name, path in paths.items()}, indent=2))
     return 0
+
+def _ensemble_report(args: argparse.Namespace) -> int:
+    from .ensemble import create_ensemble_report
+    members = {}
+    for value in args.member:
+        name, separator, directory = value.partition("=")
+        if not separator or not name.strip() or not directory or name in members:
+            raise ValueError("Use unique --member NAME=WRF_DIRECTORY entries")
+        members[name] = directory
+    paths = create_ensemble_report(members, args.output_directory,
+        report_domains=args.report_domains, contour_member=args.contour_member,
+        variables=args.variables.split(",") if args.variables else None,
+        latitude=args.latitude, longitude=args.longitude)
+    print(json.dumps({name: str(path) for name, path in paths.items()}, indent=2))
+    return 0
+
 
 def _openfast_info(args: argparse.Namespace) -> int:
     from .openfast import read_ascii_output,read_binary_output
@@ -259,6 +276,7 @@ def build_parser() -> argparse.ArgumentParser:
     hindcast.add_argument("run_directory")
     hindcast.add_argument("output_directory")
     hindcast.add_argument("--domain", default="d01")
+    hindcast.add_argument("--report-domains", nargs="+", help="only these domains; default retains all domains")
     hindcast.add_argument("--latitude", type=float)
     hindcast.add_argument("--longitude", type=float)
     hindcast.add_argument("--tke-variable", help="explicit model TKE source: QKE, TKE_PBL or TKE; default auto")
@@ -269,6 +287,16 @@ def build_parser() -> argparse.ArgumentParser:
     hindcast.add_argument("--build-manifest")
     hindcast.add_argument("--workflow-state")
     hindcast.set_defaults(handler=_hindcast_report)
+
+    ensemble = subparsers.add_parser("ensemble-report", help="PDF/HTML with named members, equal-weight mean and selectable contour source")
+    ensemble.add_argument("output_directory")
+    ensemble.add_argument("--member", action="append", required=True, metavar="NAME=WRF_DIRECTORY")
+    ensemble.add_argument("--report-domains", nargs="+", help="default: all domains present in every member")
+    ensemble.add_argument("--contour-member", default="mean", help="mean (default) or a named member")
+    ensemble.add_argument("--variables", help="comma-separated surface scalar names or wind_speed_10m,precipitation,model_tke_100m")
+    ensemble.add_argument("--latitude", type=float)
+    ensemble.add_argument("--longitude", type=float)
+    ensemble.set_defaults(handler=_ensemble_report)
 
     animate = subparsers.add_parser("animate-wind", help="export a fixed-scale wind animation, PNG frames and methods manifest")
     animate.add_argument("run_directory")

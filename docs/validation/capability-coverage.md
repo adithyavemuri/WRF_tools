@@ -4,7 +4,7 @@ SYNTHETIC — NOT A WRF SIMULATION OR REAL OBSERVATIONS
 
 Runtime entry-point coverage, not branch coverage or scientific validation. Failures invalidate the run.
 
-Catalog: 211 functions. Counts: {'EXERCISED_SYNTHETIC': 208, 'REQUIRES_EXTERNAL_INPUT': 3}.
+Catalog: 212 functions. Counts: {'EXERCISED_SYNTHETIC': 209, 'REQUIRES_EXTERNAL_INPUT': 3}.
 
 | Capability | Status | Chapter / required input |
 |---|---|---|
@@ -86,6 +86,7 @@ Catalog: 211 functions. Counts: {'EXERCISED_SYNTHETIC': 208, 'REQUIRES_EXTERNAL_
 | `doctor.dependency_status` | EXERCISED_SYNTHETIC | plots |
 | `doctor.environment_report` | EXERCISED_SYNTHETIC | plots |
 | `doctor.print_environment_report` | EXERCISED_SYNTHETIC | plots |
+| `ensemble.create_ensemble_report` | EXERCISED_SYNTHETIC | wrf |
 | `extract.point` | EXERCISED_SYNTHETIC | wrf |
 | `extract.vertical_profile` | EXERCISED_SYNTHETIC | wrf |
 | `extract.to_levels` | EXERCISED_SYNTHETIC | wrf |

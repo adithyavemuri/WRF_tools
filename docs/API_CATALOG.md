@@ -1294,6 +1294,26 @@ Method category: environment infrastructure. Dependency availability is not a nu
 
 References/conventions: [NumPy numerical operations](https://numpy.org/doc/stable/reference/index.html); [xarray labelled-array conventions](https://docs.xarray.dev/en/stable/user-guide/index.html).
 
+## ensemble
+
+### `ensemble.create_ensemble_report`
+
+```python
+create_ensemble_report(members, output_directory, *, report_domains=None, contour_member='mean', variables=None, latitude=None, longitude=None)
+```
+
+Members and mean in every time series; maps use mean or a named member.
+
+Contours show history-sample means except precipitation, which shows the
+period accumulation. A mean-speed map is NOT speed of mean wind vectors.
+Native surface scalars can be selected explicitly through variables.
+
+Source: [src/wrf_tools/ensemble.py](../src/wrf_tools/ensemble.py).
+
+Method category: ensemble report orchestration. Equal weights; nonlinear diagnostics before averaging; exact grid/time matching. Model sensitivity, not calibrated uncertainty or skill.
+
+References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh-6p97); [NumPy numerical operations](https://numpy.org/doc/stable/reference/index.html); [xarray labelled-array conventions](https://docs.xarray.dev/en/stable/user-guide/index.html).
+
 ## extract
 
 ### `extract.point`
@@ -1590,7 +1610,7 @@ References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh
 ### `hindcast.create_hindcast_report`
 
 ```python
-create_hindcast_report(run_directory: str | Path, output_directory: str | Path, *, domain: str='d01', latitude: float | None=None, longitude: float | None=None, configuration: dict[str, Any] | None=None, tke_variable: str | None=None, diagnostic_groups: str | list[str]='all', diagnostic_options: dict[str, Any] | None=None)
+create_hindcast_report(run_directory: str | Path, output_directory: str | Path, *, domain: str='d01', latitude: float | None=None, longitude: float | None=None, configuration: dict[str, Any] | None=None, tke_variable: str | None=None, diagnostic_groups: str | list[str]='all', diagnostic_options: dict[str, Any] | None=None, report_domains: list[str] | None=None)
 ```
 
 Create JSON, HTML and PDF reports for a time-ordered WRF hindcast.

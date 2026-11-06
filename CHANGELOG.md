@@ -1,6 +1,17 @@
 # Release notes
 
-## Unreleased
+## 0.6.0 — 2026-11-06 (unreleased)
+
+- Add named-member ensemble PDF/HTML/JSON reports: every member plus the
+  equal-weight mean in time series, mean maps by default, and optional named-
+  member contours. Compute nonlinear diagnostics per member before averaging.
+- Reject mismatched member timestamps, coordinates, terrain and grid metadata;
+  expose missing fields rather than changing the member count or filling zeros.
+- Add explicit `report_domains` / `--report-domains` filtering while retaining
+  all-domain single-run defaults and the nested-domain overview.
+- Add an editable ensemble report example, scientific-scope guide and numerical
+  tests; refresh the catalog/showcase to 212 public functions (209 exercised
+  with synthetic inputs; three require external inputs).
 
 - Add an editable MSL height window with geometric surface/terrain/coastline
   clipping, bracketed section interpolation at the bounds, full-export reset

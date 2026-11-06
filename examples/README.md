@@ -213,6 +213,12 @@ maps, even though the example displays only some profile curves and one map.
 Reopen it with `xarray.open_dataset()` to replot or supply reduced series/profiles
 to the comparison API. `SAVE_REDUCED_DATA = False` disables saving the means.
 
+For multiple simulations in a single PDF, edit
+[`create_ensemble_report.py`](create_ensemble_report.py): named member folders,
+domains, map source (`mean` or a member), variables and site coordinates.
+Every time series includes every member and the mean. Read the
+[ensemble guide](../docs/ENSEMBLE_REPORTS.md) for CLI commands and mean definitions.
+
 Time means are explicitly equal-sample means, not duration-weighted means for
 irregular output. Vertical means use layer-representative values; physical
 boundary layers are clipped by overlap thickness. Model-index plots are labelled
