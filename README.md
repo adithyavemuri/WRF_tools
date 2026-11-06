@@ -8,7 +8,7 @@ compatibility notes and verification limits.
 [![Tests](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml/badge.svg)](https://github.com/adithyavemuri/WRF_tools/actions/workflows/ci.yml)
 [![Python 3.10 | 3.12](https://img.shields.io/badge/python-3.10%20%7C%203.12-blue)](https://www.python.org/)
 [![MIT License](https://img.shields.io/github/license/adithyavemuri/WRF_tools)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/adithyavemuri/WRF_tools?include_prereleases)](https://github.com/adithyavemuri/WRF_tools/releases)
+[![Latest release](https://img.shields.io/github/v/release/adithyavemuri/WRF_tools?label=release&cacheSeconds=300)](https://github.com/adithyavemuri/WRF_tools/releases/latest)
 
 > **Scientific basis:** equations, assumptions, applicability limits, and
 > primary references are documented in

@@ -9,6 +9,16 @@ from wrf_tools.capabilities import capability_catalog, write_capability_guide
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def test_readme_release_label_matches_package_and_badge_tracks_regular_releases():
+    from wrf_tools import __version__
+    readme=(ROOT/"README.md").read_text(encoding="utf-8")
+    assert f"Current release: **v{__version__}**" in readme
+    badge=next(line for line in readme.splitlines() if line.startswith("[![Latest release]"))
+    assert "include_prereleases" not in badge
+    assert "cacheSeconds=300" in badge
+    assert badge.endswith("/WRF_tools/releases/latest)")
+
+
 def test_local_package_imports_in_source_scripts_examples_and_tests_exist():
     for directory in ("src","scripts","examples","tests"):
         for path in (ROOT/directory).rglob("*.py"):
