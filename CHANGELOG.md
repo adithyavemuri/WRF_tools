@@ -1,6 +1,6 @@
 # Release notes
 
-## 0.6.0 — 2026-11-06 (unreleased)
+## 0.6.0 — 2026-11-06
 
 - Add named-member ensemble PDF/HTML/JSON reports: every member plus the
   equal-weight mean in time series, mean maps by default, and optional named-
@@ -36,7 +36,8 @@
   offline interactive HTML viewer adds manual camera, actual-time, opacity and
   vertical-scale controls with an invariant terrain layer. Full-column exports
   distinguish the display height from the actual model top. The complete
-  showcase now accounts for 211 public functions.
+  geometry update brought the showcase to 211 public functions; ensemble
+  reporting brings the current catalog to 212.
 - Fix Windows test failures by explicitly reading UTF-8 source and API
   documentation. The discovery test now also simulates the Windows legacy
   CP1252 default on Linux to catch this regression before publication.

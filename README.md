@@ -1,6 +1,6 @@
 # WRF Tools
 
-Current version: **v0.6.0** (beta; unreleased).
+Current release: **v0.6.0** (beta).
 
 See the [release notes](CHANGELOG.md) for new workflows, calculation corrections,
 compatibility notes and verification limits.
