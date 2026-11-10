@@ -59,6 +59,20 @@ PDF. Standalone figure APIs can optionally export individual PDFs separately.
 The report automatically includes every WRF domain found in the run directory;
 `--domain d02` selects the primary domain for point-based diagnostics.
 
+### Optional wind-farm overlays
+
+For a normal run, use the command above unchanged. For small turbine dots on
+the standard report's geographic panels, add `--turbine-layout turbines.csv`;
+the CSV needs `latitude` and `longitude` columns and can include `farm` names.
+The optional custom-variable PNG remains a separate, unchanged example.
+
+To embed already calculated farm averages in the same complete PDF, also add
+`--farm-diagnostics /path/to/offshore-farms/farm-diagnostics.json`. Companion
+figures and input checksums must match the current run. No farm means are
+invented from the configured analysis point. Use the main `wrf-tools
+hindcast-report` CLI with `--case-manifest` for effective-namelist WFP status
+when it is absent from WRF attributes; see [report inputs](../README.md#hindcast-report).
+
 ## 2. Discover what your WRF run contains
 
 Different physics configurations write different variables. Ask the example

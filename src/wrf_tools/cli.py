@@ -98,6 +98,7 @@ def _hindcast_report(args: argparse.Namespace) -> int:
         import tomli as tomllib
     from .hindcast import create_hindcast_report
     configuration = {}
+    turbine_layout = args.turbine_layout
     for label, value in (
         ("case_configuration", args.configuration),
         ("case_manifest", args.case_manifest),
@@ -116,6 +117,11 @@ def _hindcast_report(args: argparse.Namespace) -> int:
                 configuration[label]["data"] = {
                     key: parsed.get(key, {}) for key in ("case", "analysis", "namelist")
                 }
+                farms = parsed.get("wind_farms", {})
+                if turbine_layout is None and farms.get("enabled") and farms.get("layout_csv"):
+                    turbine_layout = Path(farms["layout_csv"]).expanduser()
+                    if not turbine_layout.is_absolute():
+                        turbine_layout = path.parent / turbine_layout
             elif label == "case_manifest":
                 parsed = json.loads(path.read_text())
                 configuration[label]["data"] = {
@@ -136,6 +142,8 @@ def _hindcast_report(args: argparse.Namespace) -> int:
         diagnostic_groups=args.diagnostics,
         diagnostic_options=_read_diagnostic_options(args.diagnostics_config),
         report_domains=args.report_domains,
+        turbine_layout=turbine_layout,
+        farm_diagnostics=args.farm_diagnostics,
     )
     print(json.dumps({name: str(path) for name, path in paths.items()}, indent=2))
     return 0
@@ -286,6 +294,8 @@ def build_parser() -> argparse.ArgumentParser:
     hindcast.add_argument("--case-manifest")
     hindcast.add_argument("--build-manifest")
     hindcast.add_argument("--workflow-state")
+    hindcast.add_argument("--turbine-layout", help="CSV latitude/longitude positions; otherwise use enabled wind_farms.layout_csv in --configuration")
+    hindcast.add_argument("--farm-diagnostics", help="validated companion farm-diagnostics.json and its three PNG figures")
     hindcast.set_defaults(handler=_hindcast_report)
 
     ensemble = subparsers.add_parser("ensemble-report", help="PDF/HTML with named members, equal-weight mean and selectable contour source")

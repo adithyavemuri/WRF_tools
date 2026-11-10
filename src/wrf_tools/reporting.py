@@ -111,10 +111,15 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
             ("History files per domain",overview.get("file_count_per_domain")),
             ("Report scope","Meteorology, surface fluxes, precipitation, PBL and 10 m wind-resource screening"),
         ]))
+        if report.get("wind_farms"):
+            farms=report["wind_farms"]
+            count=farms.get("layout",{}).get("turbine_count","Not supplied")
+            status="; ".join(f"{name.upper()}: {record['wind_farms']['activation']}" for name,record in domains.items())
+            story.extend([Spacer(1,.2*cm),Paragraph(html.escape(f"Wind farms: {count} supplied turbine positions. {status}."),styles["BodyText"])])
         story.extend([Spacer(1,.5*cm),Paragraph("Interpretation boundary",styles["Heading2"]),Paragraph("This technical report verifies model output and summarizes the simulated period. It is not a climatology, validation against observations, bankable wind-resource assessment, or substitute for physics sensitivity testing.",styles["Callout"])])
         layout=next((Path(item) for item in figures if Path(item).name=="domain_layout.png"),None)
         if layout:
-            story.extend([Spacer(1,.5*cm),Image(str(layout),width=15.5*cm,height=11.4*cm),Paragraph("Figure 1. Computational-domain boundaries and nominal grid spacing.",styles["FigureCaption"])])
+            story.extend([Spacer(1,.5*cm),Image(str(layout),width=15.5*cm,height=11.4*cm),Paragraph("Figure 1. Computational-domain boundaries and nominal grid spacing. Small dots, when supplied, mark turbine locations; activation differs by domain.",styles["FigureCaption"])])
         story.extend([PageBreak(),Paragraph("Domain configuration comparison",styles["Title"]),Spacer(1,.3*cm)])
         temporal=overview.get("domain_time_steps_seconds",{})
         story.extend([Paragraph("Temporal configuration",styles["Heading1"]),table_for([
@@ -128,6 +133,8 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
         story.extend([Spacer(1,.25*cm),Paragraph("Grid",styles["Heading1"]),comparison_table(domains,grid_rows)])
         physics_keys=list(next(iter(domains.values())).get("physics",{}))
         story.extend([Spacer(1,.35*cm),Paragraph("Physics suite",styles["Heading1"]),comparison_table(domains,[(key.replace("_"," ").upper(),lambda s,key=key:s.get("physics",{}).get(key)) for key in physics_keys])])
+        if report.get("wind_farms"):
+            story.append(comparison_table(domains,[("Wind-farm parameterization",lambda s:s.get("wind_farms",{}).get("activation"))]))
         wind_labels={"height_metres":"Diagnostic height (m)","mean_speed_m_s":"Mean wind speed (m s-1)","maximum_speed_m_s":"Maximum wind speed (m s-1)","p50_speed_m_s":"50th-percentile wind speed (m s-1)","p90_speed_m_s":"90th-percentile wind speed (m s-1)","p95_speed_m_s":"95th-percentile wind speed (m s-1)","mean_direction_degrees":"Mean direction FROM (degrees)","mean_air_density_kg_m3":"Mean air density (kg m-3)","mean_power_density_w_m2":"Mean wind-power density (W m-2)"}
         def wind_value(summary,key):
             value=summary.get("wind_resource",{}).get(key)
@@ -170,6 +177,39 @@ def write_pdf_report(report, path, *, title="WRF Tools case report", figures=())
                 for name,record in summary.get("connected_diagnostics",{}).items():
                     if record["status"]=="UNAVAILABLE":
                         story.append(Paragraph(html.escape(f"{domain.upper()} {name.replace('_',' ')}: {record.get('reason','')}"),styles["BodyText"]))
+        if report.get("wind_farms"):
+            farms=report["wind_farms"]
+            story.extend([PageBreak(),Paragraph("Wind farms | locations and operation",styles["Title"]),
+                Paragraph(html.escape(farms["interpretation"]),styles["BodyText"]),Spacer(1,.25*cm),
+                comparison_table(domains,[
+                    ("Parameterization",lambda s:s["wind_farms"]["activation"]),
+                    ("Activation evidence",lambda s:s["wind_farms"]["flag_source"]),
+                    ("Saved power",lambda s:s["wind_farms"]["power_status"])]),Spacer(1,.2*cm)])
+            for name,record in domains.items():
+                evidence=record["wind_farms"]
+                if "fleet_power_mw" in evidence:
+                    powers=evidence["fleet_power_mw"]
+                    indices=list(dict.fromkeys([0,max(range(len(powers)),key=powers.__getitem__),len(powers)-1]))
+                    story.extend([Paragraph(f"{name.upper()} | total generated power",styles["Heading2"]),table_for([
+                        (record["timestamps"][i].replace("T"," ").replace("_"," ")+" UTC",f"{powers[i]:,.2f} MW | {evidence['powered_cells'][i]} powered cells")
+                        for i in indices])])
+            story.extend([Spacer(1,.2*cm),Paragraph("First, peak-power and final saved samples are shown (duplicates omitted); complete series are in JSON. POWER is summed once over cells, not multiplied by area or turbine count. Initialization values can be zero. [fitch2012; wrf_fitch]",styles["FigureCaption"]),
+                Paragraph(html.escape(farms["site_context"]),styles["Callout"])])
+            means=farms.get("farm_averages")
+            if means:
+                rows=[(farm,f"{stats['turbines']} turbines | {stats['unique_cells']} unique model cells") for farm,stats in means["farms"].items()]
+                story.extend([Spacer(1,.2*cm),Paragraph("Farm-footprint diagnostics | "+means["domain"].upper(),styles["Heading2"]),table_for(rows),
+                    Paragraph(html.escape(means["scope"]),styles["BodyText"])])
+                captions={
+                    "windfarm_offshore-map.png":"Final 100 m AGL wind speed and model TKE. Small coloured dots indicate turbine source positions, not resolved wakes.",
+                    "windfarm_farm-timeseries.png":"Farm-average time series: area-weighted unique turbine-containing cells (DX DY / MAPFAC_M squared). Columns are interpolated to common AGL heights before averaging. Power cannot be assigned to individual farms sharing a grid cell; those curves are omitted rather than artificially apportioned.",
+                    "windfarm_farm-profiles.png":"Final farm-average wind, model TKE and temperature profiles. MYNN QKE is divided by two; these are parameterized TKE, not resolved turbulent fluxes or total turbulence."}
+                for figure in figures:
+                    figure=Path(figure)
+                    if figure.name in captions:
+                        image=Image(str(figure)); image._restrictSize(17*cm,13*cm)
+                        story.extend([PageBreak(),Paragraph("Wind farms | "+figure.stem.removeprefix("windfarm_").replace("-"," ").title(),styles["Title"]),image,
+                            Paragraph(captions[figure.name],styles["BodyText"]),Spacer(1,.2*cm),Paragraph(html.escape(means["scope"]),styles["FigureCaption"])])
         for domain,summary in domains.items():
             domain_figures=[Path(item) for item in figures if Path(item).name.startswith(f"{domain}_")]
             connected_figures=[item for item in domain_figures if item.name.startswith(f"{domain}_analysis_")]

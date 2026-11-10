@@ -485,7 +485,7 @@ References/conventions: [OpenFAST Toolbox format reference](https://github.com/O
 ### `diagnostic_groups.run_diagnostic_groups`
 
 ```python
-run_diagnostic_groups(dataset, cell, output_directory, *, domain='d01', groups='all', options=None)
+run_diagnostic_groups(dataset, cell, output_directory, *, domain='d01', groups='all', options=None, turbine_layout=None, turbine_label='Turbine locations (context only)')
 ```
 
 Run selected connected groups and visibly report unmet prerequisites.
@@ -1610,7 +1610,7 @@ References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh
 ### `hindcast.create_hindcast_report`
 
 ```python
-create_hindcast_report(run_directory: str | Path, output_directory: str | Path, *, domain: str='d01', latitude: float | None=None, longitude: float | None=None, configuration: dict[str, Any] | None=None, tke_variable: str | None=None, diagnostic_groups: str | list[str]='all', diagnostic_options: dict[str, Any] | None=None, report_domains: list[str] | None=None)
+create_hindcast_report(run_directory: str | Path, output_directory: str | Path, *, domain: str='d01', latitude: float | None=None, longitude: float | None=None, configuration: dict[str, Any] | None=None, tke_variable: str | None=None, diagnostic_groups: str | list[str]='all', diagnostic_options: dict[str, Any] | None=None, report_domains: list[str] | None=None, turbine_layout: str | Path | None=None, farm_diagnostics: str | Path | None=None)
 ```
 
 Create JSON, HTML and PDF reports for a time-ordered WRF hindcast.
@@ -2812,7 +2812,7 @@ References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh
 ### `turbulence.save_tke_diagnostics`
 
 ```python
-save_tke_diagnostics(dataset, cell, prefix, *, source=None, top=2000, sources=(), formats=('png', 'pdf', 'svg'))
+save_tke_diagnostics(dataset, cell, prefix, *, source=None, top=2000, sources=(), formats=('png', 'pdf', 'svg'), turbine_layout=None, turbine_label='Turbine locations (context only)')
 ```
 
 Save a geographic map, site profiles, physical-height evolution and
@@ -3175,7 +3175,7 @@ References/conventions: [WRF-ARW v4 Technical Note](https://doi.org/10.5065/1dfh
 ### `visualization.save_wind_overview`
 
 ```python
-save_wind_overview(dataset: Any, cell: Any, prefix: str | Path, *, sources=(), formats=('png', 'pdf', 'svg'), **kwargs)
+save_wind_overview(dataset: Any, cell: Any, prefix: str | Path, *, sources=(), formats=('png', 'pdf', 'svg'), turbine_layout=None, turbine_label='Turbine locations (context only)', **kwargs)
 ```
 
 Save selected figure formats plus a JSON methods/provenance sidecar.

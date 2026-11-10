@@ -84,7 +84,7 @@ def tke_diagnostics_data(dataset, cell, *, source=None):
         negative_count=negative, nonfinite_count=missing, minimum=minimum)
 
 
-def save_tke_diagnostics(dataset, cell, prefix, *, source=None, top=2000, sources=(), formats=("png","pdf","svg")):
+def save_tke_diagnostics(dataset, cell, prefix, *, source=None, top=2000, sources=(), formats=("png","pdf","svg"), turbine_layout=None, turbine_label="Turbine locations (context only)"):
     """Save a geographic map, site profiles, physical-height evolution and
     time/native-level domain maxima, plus a JSON methods/statistics record.
     PNG is required; select optional PDF/SVG with formats. Complete reports
@@ -141,6 +141,8 @@ def save_tke_diagnostics(dataset, cell, prefix, *, source=None, top=2000, source
         "Model-written TKE only. No hourly-variance surrogate, energy-budget closure or automatic instability diagnosis.\n"
         "Physical-height interpolation: each time independently, no extrapolation. Domain levels are indexes, not common heights.", fontsize=8)
     prefix = Path(prefix); prefix.parent.mkdir(parents=True, exist_ok=True)
+    from .wind_farms import _overlay_turbines
+    _overlay_turbines(fig, turbine_layout, label=turbine_label)
     try:
         for extension in formats:
             fig.savefig(prefix.with_suffix("."+extension), dpi=180)

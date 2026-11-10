@@ -1,5 +1,22 @@
 # Audit and verification record
 
+## v0.7.0 — 10 November 2026
+
+Optional wind-farm reporting adds small map-only position markers, explicit
+per-domain activation provenance and saved cell-summed power. It does not
+change existing wind, TKE or averaging calculations. No-layout reporting is
+retained. Companion farm diagnostics require matching input checksums and are
+included in the same full PDF/HTML rather than replacing the site diagnostics.
+Regression tests cover marker size and map bounds, cell-summed power, missing
+activation evidence, mismatched companions and full-report rendering. These
+software checks are not validation of turbine curves or wake physics.
+
+An existing two-hour, two-domain Netherlands offshore run supplied real-output
+report acceptance data: 670 positions in nine named farms, Fitch only in d02,
+and nonzero saved power. It is an integration scenario with generic similarity
+curves, not an as-built fleet assessment or spin-up-qualified wake experiment.
+No simulation data, private case files or workstation paths are published here.
+
 ## v0.6.0 development — 6 November 2026
 
 Named-member ensemble reports add one public function, bringing the current

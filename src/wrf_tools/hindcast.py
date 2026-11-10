@@ -16,6 +16,7 @@ from .reporting import provenance, write_html_report, write_json_report, write_p
 from .maps import add_cached_features
 from .turbulence import model_tke_sources, model_tke, save_tke_diagnostics
 from .visualization import REFERENCES, history_times, surface_wind, mass_heights, temperature_celsius, save_wind_overview
+from .wind_farms import _load_turbine_layout, _overlay_turbines, _wind_farm_evidence, _load_farm_diagnostics
 
 
 SURFACE_VARIABLES = ("T2", "PSFC", "Q2", "U10", "V10", "PBLH", "RAINC", "RAINNC", "HFX", "LH", "SWDOWN", "GLW", "UST")
@@ -161,7 +162,7 @@ def _vertical_diagnostics(dataset: Any, cell: Any, *, shear_bottom: float = 40, 
     return {"height": height, "speed": speed, "temperature": temperature, "tke": tke, "tke_name": tke_name, "shear_alpha": np.asarray(alpha)}
 
 
-def _save_figures(dataset: Any, output: Path, cell: Any, times: list[str], *, domain: str, vertical: dict[str, Any] | None = None, profile_top: float = 2000, overview: bool = False) -> list[Path]:
+def _save_figures(dataset: Any, output: Path, cell: Any, times: list[str], *, domain: str, vertical: dict[str, Any] | None = None, profile_top: float = 2000, overview: bool = False, turbine_layout=None, turbine_label="Turbine locations (context only)") -> list[Path]:
     try:
         import matplotlib
         matplotlib.use("Agg")
@@ -186,6 +187,7 @@ def _save_figures(dataset: Any, output: Path, cell: Any, times: list[str], *, do
         grid=ax.gridlines(draw_labels=True,linewidth=.4,color="0.25",alpha=.5,linestyle="--"); grid.top_labels=False; grid.right_labels=False
         ax.set_title(title)
         ax.legend(loc="best")
+        _overlay_turbines(fig, turbine_layout, label=turbine_label)
         fig.colorbar(mesh, ax=ax, label=label)
         target = output / f"{domain}_{filename}"
         fig.tight_layout(); fig.savefig(target, dpi=180); plt.close(fig); figures.append(target)
@@ -265,7 +267,7 @@ def _save_figures(dataset: Any, output: Path, cell: Any, times: list[str], *, do
     return figures
 
 
-def _domain_layout(datasets: dict[str, Any], output: Path) -> Path:
+def _domain_layout(datasets: dict[str, Any], output: Path, *, turbine_layout=None) -> Path:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -283,7 +285,9 @@ def _domain_layout(datasets: dict[str, Any], output: Path) -> Path:
     ax.set_extent([float(np.nanmin(all_lon))-.3,float(np.nanmax(all_lon))+.3,float(np.nanmin(all_lat))-.2,float(np.nanmax(all_lat))+.2],crs=projection)
     add_cached_features(ax)
     grid=ax.gridlines(draw_labels=True,linewidth=.4,color="0.25",alpha=.5,linestyle="--"); grid.top_labels=False; grid.right_labels=False
-    ax.set_title("WRF computational domains"); ax.legend(loc="lower right"); fig.tight_layout()
+    ax.set_title("WRF computational domains"); ax.legend(loc="lower right")
+    _overlay_turbines(fig, turbine_layout, label="Turbine locations; activation is domain-specific")
+    fig.tight_layout()
     target = output / "domain_layout.png"; fig.savefig(target, dpi=200); plt.close(fig)
     return target
 
@@ -300,6 +304,8 @@ def create_hindcast_report(
     diagnostic_groups: str | list[str] = "all",
     diagnostic_options: dict[str, Any] | None = None,
     report_domains: list[str] | None = None,
+    turbine_layout: str | Path | None = None,
+    farm_diagnostics: str | Path | None = None,
 ) -> dict[str, Path]:
     """Create JSON, HTML and PDF reports for a time-ordered WRF hindcast."""
     if (latitude is None) != (longitude is None):
@@ -319,6 +325,8 @@ def create_hindcast_report(
     case_data = (configuration or {}).get("case_configuration", {}).get("data", {})
     manifest_data = (configuration or {}).get("case_manifest", {}).get("data", {})
     effective = manifest_data.get("effective_namelist", {})
+    layout = _load_turbine_layout(turbine_layout) if turbine_layout is not None else None
+    farm_means = None
     analysis_options = case_data.get("analysis", {})
     profile_top = float(analysis_options.get("profile_top_metres", 2000))
     shear_bottom = float(analysis_options.get("shear_bottom_metres", 40))
@@ -340,10 +348,20 @@ def create_hindcast_report(
                 point_lat, point_lon = float(lat[y, x]), float(lon[y, x])
             cell = nearest_grid_point(lat, lon, float(point_lat), float(point_lon))
             summaries[domain_name] = summarize_hindcast(dataset, files=files, cell=cell)
+            flags = effective.get("physics", {}).get("windfarm_opt")
+            domain_index = int(dataset.attrs.get("GRID_ID", int(domain_name[1:]))) - 1
+            flag = flags[domain_index] if isinstance(flags, list) and domain_index < len(flags) else (flags if not isinstance(flags, list) else None)
+            evidence = _wind_farm_evidence(dataset, flag=flag)
+            summaries[domain_name]["wind_farms"] = evidence
+            turbine_label = "Turbines | " + evidence["activation"]
+            if farm_diagnostics is not None and domain_name == domain:
+                farm_means = _load_farm_diagnostics(farm_diagnostics, files=files,
+                    times=summaries[domain_name]["timestamps"], domain=domain_name, layout=layout,
+                    configuration_hash=(configuration or {}).get("case_configuration", {}).get("sha256"))
             sources = model_tke_sources(dataset)
             if sources:
                 image, energy_summary = save_tke_diagnostics(dataset, cell, output / f"{domain_name}_tke_diagnostics",
-                    source=tke_variable, top=profile_top, sources=files,formats=("png","svg"))
+                    source=tke_variable, top=profile_top, sources=files,formats=("png","svg"), turbine_layout=layout, turbine_label=turbine_label)
                 energy_summary["available_sources"] = sources
                 energy_summary["source_files"] = [item.name for item in files]
                 figures.append(image)
@@ -362,20 +380,20 @@ def create_hindcast_report(
             overview = False
             if {"U10", "V10", "U", "V", "PH", "PHB", "HGT"} <= set(dataset):
                 paths, metadata = save_wind_overview(dataset, cell, output / f"{domain_name}_wind_overview",
-                    sources=files, domain=domain_name, top=profile_top,formats=("png","svg"))
+                    sources=files, domain=domain_name, top=profile_top,formats=("png","svg"), turbine_layout=layout, turbine_label=turbine_label)
                 figures.append(paths["png"])
                 summaries[domain_name]["figure_methods"] = metadata
                 overview = True
             else:
                 summaries[domain_name]["figure_methods"] = {"status": "overview unavailable",
                     "reason": "Required three-dimensional wind/height or surface wind fields are missing"}
-            figures.extend(_save_figures(dataset, output, cell, summaries[domain_name]["timestamps"], domain=domain_name, vertical=vertical, profile_top=profile_top, overview=overview))
+            figures.extend(_save_figures(dataset, output, cell, summaries[domain_name]["timestamps"], domain=domain_name, vertical=vertical, profile_top=profile_top, overview=overview, turbine_layout=layout, turbine_label=turbine_label))
             from .diagnostic_groups import run_diagnostic_groups
             connected = run_diagnostic_groups(dataset, cell, output, domain=domain_name,
-                groups=diagnostic_groups, options={"profile_top_metres":profile_top, **(diagnostic_options or {})})
+                groups=diagnostic_groups, options={"profile_top_metres":profile_top, **(diagnostic_options or {})}, turbine_layout=layout, turbine_label=turbine_label)
             summaries[domain_name]["connected_diagnostics"] = connected
             figures.extend(output / record["figure"] for record in connected.values() if record["status"] == "COMPLETE")
-        figures.insert(0, _domain_layout(opened, output))
+        figures.insert(0, _domain_layout(opened, output, turbine_layout=layout))
     finally:
         for dataset in opened.values(): dataset.close()
     selected = summaries[domain]
@@ -417,6 +435,24 @@ def create_hindcast_report(
         },
         "provenance": provenance(inputs=all_files, configuration=configuration, software_version=f"wrf-tools {__version__}"),
     }
+    if layout is not None or farm_means is not None or any(s["wind_farms"]["windfarm_opt"] not in (None, 0) or s["wind_farms"]["power_status"] == "Nonzero generated power" for s in summaries.values()):
+        from .wind_farms import REFERENCES as FARM_REFERENCES
+        report["wind_farms"] = {
+            "layout": {key: value for key, value in (layout or {}).items() if key not in {"latitude", "longitude"}},
+            "interpretation": "Small dots show supplied turbine positions, not resolved rotor footprints or proof of a wake. Activation is domain-specific. Nonzero POWER confirms generated power, not a causal wind/TKE change. Quantifying atmospheric impact needs a matching no-farm control and adequate spin-up.",
+            "site_context": "General site time series and profiles use the configured analysis point, not a farm average. Farm-footprint averages, when supplied, are labelled separately below.",
+        }
+        report["scientific_methods"]["references"].update(FARM_REFERENCES)
+        report["scientific_methods"]["definitions"]["wind_farm_power"] = "WRF Fitch POWER is the sum of turbine power within each model grid cell (W). Sum cells once, divide by 1e6 for MW; do not multiply by cell area or turbine count. Zero at initialization does not imply inactivity. Small map markers are locations, not turbine-scale resolved wakes."
+        if farm_means is not None:
+            import shutil
+            report["wind_farms"]["farm_averages"] = farm_means
+            for name in ("offshore-map.png", "farm-timeseries.png", "farm-profiles.png"):
+                source = Path(farm_diagnostics).parent / name
+                target = output / ("windfarm_" + name)
+                if source.resolve() != target.resolve():
+                    shutil.copyfile(source, target)
+                figures.append(target)
     paths = {
         "summary": write_json_report(report, output / "hindcast-summary.json"),
         "html": write_html_report(report, output / "hindcast-report.html", title="WRF hindcast report", figures=figures),

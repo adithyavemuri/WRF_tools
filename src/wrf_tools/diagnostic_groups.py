@@ -278,7 +278,7 @@ _REQUIRED={
 }
 
 
-def run_diagnostic_groups(dataset,cell,output_directory,*,domain="d01",groups="all",options=None):
+def run_diagnostic_groups(dataset,cell,output_directory,*,domain="d01",groups="all",options=None,turbine_layout=None,turbine_label="Turbine locations (context only)"):
     """Run selected connected groups and visibly report unmet prerequisites.
 
     Every group is listed even when not selected. Missing input is UNAVAILABLE;
@@ -305,6 +305,8 @@ def run_diagnostic_groups(dataset,cell,output_directory,*,domain="d01",groups="a
         except (KeyError,_Unavailable,ImportError) as exc:
             results[name]=dict(status="UNAVAILABLE",reason=str(exc)); continue
         prefix=output/f"{domain}_analysis_{name}"
+        from .wind_farms import _overlay_turbines
+        _overlay_turbines(figure,turbine_layout,label=turbine_label)
         try:
             figure.savefig(prefix.with_suffix(".png"),dpi=180)
             figure.savefig(prefix.with_suffix(".svg"))

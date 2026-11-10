@@ -319,7 +319,7 @@ def plot_wind_overview(dataset: Any, cell: Any, *, domain: str = "d01", time: in
     return fig, metadata
 
 
-def save_wind_overview(dataset: Any, cell: Any, prefix: str | Path, *, sources=(), formats=("png","pdf","svg"), **kwargs):
+def save_wind_overview(dataset: Any, cell: Any, prefix: str | Path, *, sources=(), formats=("png","pdf","svg"), turbine_layout=None, turbine_label="Turbine locations (context only)", **kwargs):
     """Save selected figure formats plus a JSON methods/provenance sidecar.
 
     Standalone default: PNG/PDF/SVG. The complete report requests PNG/SVG only
@@ -333,6 +333,8 @@ def save_wind_overview(dataset: Any, cell: Any, prefix: str | Path, *, sources=(
     prefix = Path(prefix)
     prefix.parent.mkdir(parents=True, exist_ok=True)
     fig, metadata = plot_wind_overview(dataset, cell, **kwargs)
+    from .wind_farms import _overlay_turbines
+    _overlay_turbines(fig, turbine_layout, label=turbine_label)
     metadata["source_files"] = [Path(source).name for source in sources]
     try:
         paths = {}

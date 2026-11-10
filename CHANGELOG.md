@@ -1,5 +1,16 @@
 # Release notes
 
+## 0.7.0 — 2026-11-10
+
+- Add small turbine-position markers to all hindcast geographic panels, with
+  per-domain WFP activation and model-written fleet power in the full report.
+- Embed optional checksum-verified farm-average companion figures in that same
+  PDF/HTML, while retaining clearly distinguished site diagnostics. No change
+  to WRF physics, wind, TKE or averaging calculations.
+- Expose optional turbine-layout and companion inputs in the beginner report
+  example. Ordinary no-WFP reporting remains the default; layouts alone do not
+  establish parameterization activation or atmospheric impacts.
+
 ## 0.6.0 — 2026-11-06
 
 - Add named-member ensemble PDF/HTML/JSON reports: every member plus the

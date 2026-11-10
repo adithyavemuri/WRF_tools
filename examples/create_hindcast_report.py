@@ -56,6 +56,14 @@ DIAGNOSTIC_OPTIONS = {
 TARGET_LATITUDE: float | None = None
 TARGET_LONGITUDE: float | None = None
 
+# Optional: small turbine dots in the standard report's geographic panels.
+# CSV columns: latitude, longitude; optionally farm. No file is needed for
+# ordinary runs. Locations alone do not prove that WFP was enabled in WRF.
+TURBINE_LAYOUT: Path | None = None
+# Optional precomputed farm averages and companion PNGs; input hashes must
+# match this run. This is separate from the single analysis-point diagnostics.
+FARM_DIAGNOSTICS: Path | None = None
+
 # Examples: "PBLH", "HFX", "LH", "PSFC", "T2", "RAINC", or "RAINNC".
 # Leave as None when you only want the standard report.
 EXTRA_MAP_VARIABLE: str | None = None
@@ -76,6 +84,10 @@ def parse_arguments() -> argparse.Namespace:
                         help="all, none, or comma-separated group names; see docs/CONNECTED_WORKFLOWS.md")
     parser.add_argument("--latitude", type=float, default=TARGET_LATITUDE)
     parser.add_argument("--longitude", type=float, default=TARGET_LONGITUDE)
+    parser.add_argument("--turbine-layout", type=Path, default=TURBINE_LAYOUT,
+                        help="optional turbine CSV for small dots in standard-report maps")
+    parser.add_argument("--farm-diagnostics", type=Path, default=FARM_DIAGNOSTICS,
+                        help="optional checksum-verified farm-diagnostics.json companion")
     parser.add_argument("--list-variables", action="store_true",
                         help="print every available variable and its dimensions")
     parser.add_argument("--plot-variable", default=EXTRA_MAP_VARIABLE,
@@ -196,6 +208,7 @@ def main() -> int:
         run_directory, output_directory, domain=arguments.domain,
         latitude=arguments.latitude, longitude=arguments.longitude,
         diagnostic_groups=arguments.diagnostics, diagnostic_options=DIAGNOSTIC_OPTIONS,
+        turbine_layout=arguments.turbine_layout, farm_diagnostics=arguments.farm_diagnostics,
     )
 
     print("\nFinished. Open these files:")

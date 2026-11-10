@@ -19,6 +19,25 @@ The overview and report profile reconstruction use WRF `g=9.81 m/s²` and dry
 References document the method; analytical numerical checks and output checks
 verify its implementation. They do not validate the input meteorology.
 
+### Optional wind-farm evidence
+
+Small map dots represent supplied turbine coordinates, not resolved rotors or
+proof of wakes. Activation is recorded separately for each domain from the WRF
+attribute or supplied effective namelist; without either it remains unknown.
+For Fitch output, `fleet_power_MW = sum_cells(POWER_W) / 1e6`: POWER already
+contains the sum of turbines in each cell. Do not multiply again by cell area
+or turbine count. Initialization zeros do not establish inactivity. See the
+[WRF v4.7.1 implementation](https://github.com/wrf-model/WRF/blob/v4.7.1/phys/module_wind_fitch.F)
+and [Fitch et al. (2012)](https://doi.org/10.1175/MWR-D-11-00352.1).
+
+Optional companion farm means carry matching history/layout/configuration
+checksums and remain distinct from general site diagnostics. The maintained
+offshore producer averages unique actual turbine-containing cells with physical
+area weights, interpolating columns to common AGL heights first. Farm power is
+unavailable where different farms share cells rather than artificially split.
+Nonzero power demonstrates generation, not an atmospheric impact estimate;
+quantifying that impact needs a matched no-farm experiment and adequate spin-up.
+
 ## Explicit averaging
 
 The [averaging example](../examples/average_wrf_fields.py) exposes uniform-cell,

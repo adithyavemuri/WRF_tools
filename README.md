@@ -1,6 +1,6 @@
 # WRF Tools
 
-Current release: **v0.6.0** (beta).
+Current release: **v0.7.0** (beta).
 
 See the [release notes](CHANGELOG.md) for new workflows, calculation corrections,
 compatibility notes and verification limits.
@@ -277,6 +277,28 @@ wrf-tools hindcast-report /data/wrf/run reports/my_case \
   --build-manifest build-manifest.txt \
   --workflow-state workflow-state.json
 ```
+
+For wind-farm runs, add `--turbine-layout turbines.csv` (columns `latitude`,
+`longitude`, optionally `farm`). With `--configuration`, an enabled
+`[wind_farms].layout_csv` is picked up automatically, relative to that TOML.
+All geographic panels then show small turbine dots; site/profile axes do not.
+The report distinguishes per-domain activation from turbine locations: use a
+case manifest containing `effective_namelist.physics.windfarm_opt` when WRF
+does not write the `WINDFARM_OPT` attribute. Context dots on an inactive outer
+domain do not imply that Fitch ran there. Model-written `POWER` is summed once
+over cells and reported in MW. Nonzero power demonstrates generation, not a
+causal wake effect; that comparison needs a matched no-farm run and spin-up.
+
+Optional `--farm-diagnostics /data/report/offshore-farms/farm-diagnostics.json`
+embeds companion farm-average maps, time series and profiles in the **same**
+full PDF/HTML. The JSON must provide domain/timestamps, `input_sha256` (history
+filenames to SHA-256), `layout_sha256`, and `configuration_sha256` when a case
+configuration is supplied; mismatches fail instead of mixing runs. Its sibling
+`offshore-map.png`, `farm-timeseries.png` and `farm-profiles.png` are required.
+The WRF-Forge offshore example produces these companion files. WRF_tools
+itself remains standalone; the companion is optional. General site diagnostics
+are not silently relabelled as farm averages, and shared-cell farm power is
+not artificially split between farms.
 
 The compact PDF compares all discovered domains, normally placing two figures
 per row. It includes accumulated precipitation, model-level wind and

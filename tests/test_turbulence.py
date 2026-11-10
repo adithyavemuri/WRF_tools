@@ -84,4 +84,5 @@ def test_report_includes_tke_without_needing_wind_temperature_profiles(dataset, 
     paths = create_hindcast_report(tmp_path, tmp_path/"report")
     summary = json.loads(paths["summary"].read_text())
     assert summary["domains"]["d01"]["turbulence"]["status"] == "available"
+    assert "wind_farms" not in summary  # Ordinary reports need no turbine inputs.
     assert paths["pdf"].stat().st_size > 0
