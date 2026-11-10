@@ -121,7 +121,8 @@ def test_full_report_contains_farm_section_and_companion_images(tmp_path,monkeyp
         "HGT":(dims,np.zeros((2,2,2))),
         "POWER":(dims,np.full((2,2,2),1e6),{"units":"W"}),
     },attrs={"GRID_ID":2,"DX":3000.,"DY":3000.,"MAP_PROJ":1})
-    history=tmp_path/"wrfout_d02_2025-01-10_00:00:00"; ds.to_netcdf(history)
+    # Colons are valid in WRF Times, but not Windows filenames.
+    history=tmp_path/"wrfout_d02_2025-01-10_00_00_00"; ds.to_netcdf(history)
     layout=tmp_path/"turbines.csv"; layout.write_text("farm,latitude,longitude\nA,52.05,4.05\n")
     companion=tmp_path/"farm-diagnostics.json"
     record=dict(domain="d02",times_utc=[stamp.replace("_","T") for stamp in times],inputs=[history.name],input_sha256={history.name:file_hash(history)},
